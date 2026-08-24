@@ -80,7 +80,7 @@ def parse_fraction_inches(token):
         return None
 
 
-def fmt_mm(x, decimals=1):
+def fmt_mm(x, decimals=0):
     if x is None:
         return None
     r = round(x, decimals)

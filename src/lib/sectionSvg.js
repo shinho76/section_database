@@ -167,10 +167,17 @@ export function drawShapeSVG(s, u) {
               fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
     hDim(dim, id, x0, x0 + bw, y0 - 22, y0, `bf=${p.bf}${unit}`);
     vDim(dim, id, y0, y0 + bh, x0 - 24, x0, `d=${p.d}${unit}`);
+    // tf on the top flange, k mirrored onto the bottom flange — vertically
+    // separated by the full web height so the two callouts never collide.
     microV(dim, id, y0, y0 + tfpx, x0 + bw + 26, `tf=${p.tf}${unit}`);
-    if (p.kdes) microV(dim, id, y0, y0 + sx(g('kdes')), x0 + bw + 56, `k=${p.kdes}${unit}`);
-    microH(dim, id, cx - twpx / 2, cx + twpx / 2, y0 + bh + 22, `tw=${p.tw}${unit}`, 1);
-    if (p.k1) microH(dim, id, cx, cx + sx(g('k1')), y0 + bh + 44, `k1=${p.k1}${unit}`, 1);
+    if (p.kdes) {
+      const kpx = sx(g('kdes'));
+      microV(dim, id, y0 + bh - kpx, y0 + bh, x0 + bw + 26, `k=${p.kdes}${unit}`);
+    }
+    // tw threaded through the web at mid-height (inside the shape, like the
+    // reference drawing), k1 below the shape — different zones from tf/k.
+    microH(dim, id, cx - twpx / 2, cx + twpx / 2, cy, `tw=${p.tw}${unit}`, 1);
+    if (p.k1) microH(dim, id, cx, cx + sx(g('k1')), y0 + bh + 24, `k1=${p.k1}${unit}`, 1);
   }
 
   return `<svg viewBox="0 0 ${W} ${H}" class="section-svg" role="img"
