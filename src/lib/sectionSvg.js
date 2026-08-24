@@ -14,6 +14,12 @@ function defsBlock(id) {
     <marker id="arr-${id}" markerWidth="9" markerHeight="9" refX="0.5" refY="4" orient="auto" markerUnits="strokeWidth">
       <path d="M8,1 L1,4 L8,7" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
     </marker>
+    <marker id="ars-${id}" markerWidth="6" markerHeight="6" refX="5" refY="2.7" orient="auto" markerUnits="strokeWidth">
+      <path d="M0.7,0.7 L5.3,2.7 L0.7,4.7" fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+    </marker>
+    <marker id="arrs-${id}" markerWidth="6" markerHeight="6" refX="0.3" refY="2.7" orient="auto" markerUnits="strokeWidth">
+      <path d="M5.3,0.7 L0.7,2.7 L5.3,4.7" fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+    </marker>
     <pattern id="hatch-${id}" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
       <rect width="6" height="6" fill="var(--steel-fill)"/>
       <line x1="0" y1="0" x2="0" y2="6" stroke="var(--steel-line)" stroke-opacity=".5" stroke-width="1.2"/>
@@ -50,8 +56,8 @@ function vDim(dim, id, y1, y2, x, extFromX, label) {
 function microV(dim, id, y1, y2, x, label, side = 1) {
   const mid = (y1 + y2) / 2;
   const lx = x + side * 18;
-  dim.push(`<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="currentColor" stroke-width="1.1"
-    marker-start="url(#arr-${id})" marker-end="url(#ar-${id})"/>`);
+  dim.push(`<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="currentColor" stroke-width="1"
+    marker-start="url(#arrs-${id})" marker-end="url(#ars-${id})"/>`);
   dim.push(`<line x1="${x}" y1="${mid}" x2="${lx - side * 4}" y2="${mid}" stroke="currentColor" stroke-width=".7" opacity=".7"/>`);
   dim.push(text(lx, mid, label, side > 0 ? 'start' : 'end'));
 }
@@ -59,15 +65,15 @@ function microV(dim, id, y1, y2, x, label, side = 1) {
 function microH(dim, id, x1, x2, y, label, side = 1) {
   const mid = (x1 + x2) / 2;
   const ly = y + side * 17;
-  dim.push(`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="currentColor" stroke-width="1.1"
-    marker-start="url(#arr-${id})" marker-end="url(#ar-${id})"/>`);
+  dim.push(`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="currentColor" stroke-width="1"
+    marker-start="url(#arrs-${id})" marker-end="url(#ars-${id})"/>`);
   dim.push(`<line x1="${mid}" y1="${y}" x2="${mid}" y2="${ly - side * 4}" stroke="currentColor" stroke-width=".7" opacity=".7"/>`);
   dim.push(text(mid, ly, label));
 }
 
 /** Leader from a point on the shape to an offset label (used for round/OD walls). */
 function leader(dim, id, x, y, tx, ty, label, anchor = 'start') {
-  dim.push(`<line x1="${x}" y1="${y}" x2="${tx}" y2="${ty}" stroke="currentColor" stroke-width="1.1" marker-start="url(#arr-${id})"/>`);
+  dim.push(`<line x1="${x}" y1="${y}" x2="${tx}" y2="${ty}" stroke="currentColor" stroke-width="1" marker-start="url(#arrs-${id})"/>`);
   dim.push(text(tx + (anchor === 'end' ? -5 : 5), ty, label, anchor));
 }
 
@@ -162,9 +168,29 @@ export function drawShapeSVG(s, u) {
     // I-shapes: W, M, S, HP
     const bw = sx(g('bf')), bh = sx(g('d')), twpx = sx(g('tw')), tfpx = sx(g('tf'));
     const x0 = cx - bw / 2, y0 = cy - bh / 2, sh = (bw - twpx) / 2;
-    body = `<path d="M${x0},${y0} h${bw} v${tfpx} h${-sh} v${bh - 2 * tfpx} h${sh} v${tfpx} h${-bw}
-              v${-tfpx} h${sh} v${-(bh - 2 * tfpx)} h${-sh} Z"
-              fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+    // Fillet radius at the flange/web junction, approximated as kdes - tf
+    // (the AISC k-dimension already includes the flange thickness).
+    const kdesVal = g('kdes');
+    let r = kdesVal ? sx(kdesVal) - tfpx : 0;
+    r = Math.max(0, Math.min(r, sh - 1, (bh - 2 * tfpx) / 2 - 1));
+    if (r > 0.75) {
+      const webSpan = bh - 2 * tfpx - 2 * r;
+      body = `<path d="M${x0},${y0} h${bw} v${tfpx} h${-(sh - r)}
+                a${r},${r} 0 0,0 ${-r},${r}
+                v${webSpan}
+                a${r},${r} 0 0,0 ${r},${r}
+                h${sh - r} v${tfpx} h${-bw}
+                v${-tfpx} h${sh - r}
+                a${r},${r} 0 0,0 ${r},${-r}
+                v${-webSpan}
+                a${r},${r} 0 0,0 ${-r},${-r}
+                h${-(sh - r)} Z"
+                fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+    } else {
+      body = `<path d="M${x0},${y0} h${bw} v${tfpx} h${-sh} v${bh - 2 * tfpx} h${sh} v${tfpx} h${-bw}
+                v${-tfpx} h${sh} v${-(bh - 2 * tfpx)} h${-sh} Z"
+                fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+    }
     hDim(dim, id, x0, x0 + bw, y0 - 22, y0, `bf=${p.bf}${unit}`);
     vDim(dim, id, y0, y0 + bh, x0 - 24, x0, `d=${p.d}${unit}`);
     // tf on the top flange, k mirrored onto the bottom flange — vertically
