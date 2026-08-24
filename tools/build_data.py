@@ -104,13 +104,13 @@ def ks_label(shape):
         d, bf, tw, tf = g("d"), g("bf"), g("tw"), g("tf")
         if None in (d, bf, tw, tf):
             return None
-        return f"{t}{fmt_mm(d)}×{fmt_mm(bf)}×{fmt_mm(tw)}×{fmt_mm(tf)}"
+        return f"{t}-{fmt_mm(d)}X{fmt_mm(bf)}X{fmt_mm(tw)}X{fmt_mm(tf)}"
 
     if t == "L":
         d, b, th = g("d"), g("b"), g("t")
         if None in (d, b, th):
             return None
-        return f"L{fmt_mm(d)}×{fmt_mm(b)}×{fmt_mm(th)}"
+        return f"L-{fmt_mm(d)}X{fmt_mm(b)}X{fmt_mm(th)}"
 
     if t == "2L":
         d, b, th = g("d"), g("b"), g("t")
@@ -118,17 +118,17 @@ def ks_label(shape):
             return None
         gap_in = shape.pop("_gap_in", 0.0)
         gap_mm = fmt_mm(gap_in * 25.4, decimals=0)
-        return f"2L{fmt_mm(d)}×{fmt_mm(b)}×{fmt_mm(th)} (갭{gap_mm})"
+        return f"2L-{fmt_mm(d)}X{fmt_mm(b)}X{fmt_mm(th)} (갭{gap_mm})"
 
     if t == "HSS":
         ht, b = g("Ht"), g("B")
         tnom = g("tnom")
         if ht is not None and b is not None and tnom is not None:
-            return f"□{fmt_mm(ht)}×{fmt_mm(b)}×{fmt_mm(tnom)}"
+            return f"□-{fmt_mm(ht)}X{fmt_mm(b)}X{fmt_mm(tnom)}"
         od_in = to_float(us.get("OD"))
         tnom_v = g("tnom")
         if od_in is not None and tnom_v is not None:
-            return f"Ø{fmt_mm(od_in * 25.4)}×{fmt_mm(tnom_v)}"
+            return f"Ø-{fmt_mm(od_in * 25.4)}X{fmt_mm(tnom_v)}"
         return None
 
     if t == "PIPE":
@@ -136,7 +136,7 @@ def ks_label(shape):
         tnom_v = g("tnom")
         if od_in is None or tnom_v is None:
             return None
-        return f"Ø{fmt_mm(od_in * 25.4)}×{fmt_mm(tnom_v)}"
+        return f"Ø-{fmt_mm(od_in * 25.4)}X{fmt_mm(tnom_v)}"
 
     return None
 

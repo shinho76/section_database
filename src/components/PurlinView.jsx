@@ -30,7 +30,7 @@ function CeeTable({ rows }) {
       <tbody>
         {rows.map((r, i) => (
           <tr key={i}>
-            <td className="mono ks">C{r.d}×{r.b}×{r.ga}GA</td>
+            <td className="mono ks">C-{r.d}X{r.b}X{r.ga}GA</td>
             <td className="r mono">{r.d}</td>
             <td className="r mono">{r.b}</td>
             <td className="r mono">{r.ga}</td>
@@ -58,7 +58,7 @@ function ZeeTable({ rows }) {
       <tbody>
         {rows.map((r, i) => (
           <tr key={i}>
-            <td className="mono ks">Z{r.d}×{r.b}×{r.ga}GA</td>
+            <td className="mono ks">Z-{r.d}X{r.b}X{r.ga}GA</td>
             <td className="r mono">{r.d}</td>
             <td className="r mono">{r.b}</td>
             <td className="r mono">{r.ga}</td>
@@ -85,7 +85,7 @@ function EasyLapTable({ rows }) {
       <tbody>
         {rows.map((r, i) => (
           <tr key={i}>
-            <td className="mono ks">ZEL{r.d}×{r.b1}/{r.b2}×{r.ga}GA</td>
+            <td className="mono ks">ZEL-{r.d}X{r.b1}/{r.b2}X{r.ga}GA</td>
             <td className="r mono">{r.d}</td>
             <td className="r mono">{r.b1}</td>
             <td className="r mono">{r.b2}</td>
