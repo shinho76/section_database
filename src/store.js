@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 export const GROUPS = [
-  { label: 'I-SHAPES', items: ['W', 'M', 'S', 'HP'] },
+  { label: 'H-SHAPES', items: ['W', 'M', 'S', 'HP'] },
   { label: 'TEES', items: ['WT', 'MT', 'ST'] },
   { label: 'HOLLOW', items: ['HSS', 'PIPE'] },
   { label: 'ANGLES', items: ['L', '2L'] },
