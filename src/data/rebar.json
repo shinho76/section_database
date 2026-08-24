@@ -1,0 +1,18 @@
+{
+  "source": "irebar.com — U.S. Standard Diameters with Imperial Specifications",
+  "sourceUrl": "https://www.irebar.com/BarDiameters.html",
+  "note": "PLAN_1.md 5절 확정 데이터. 인치 표준 규격(#3~#18)만 수록.",
+  "bars": [
+    { "size": "#3",  "diaIn": 0.3750, "diaMm": 9.5,  "areaIn2": 0.11, "weightLbFt": 0.376 },
+    { "size": "#4",  "diaIn": 0.5000, "diaMm": 12.7, "areaIn2": 0.20, "weightLbFt": 0.668 },
+    { "size": "#5",  "diaIn": 0.6250, "diaMm": 15.9, "areaIn2": 0.31, "weightLbFt": 1.043 },
+    { "size": "#6",  "diaIn": 0.7500, "diaMm": 19.1, "areaIn2": 0.44, "weightLbFt": 1.502 },
+    { "size": "#7",  "diaIn": 0.8750, "diaMm": 22.2, "areaIn2": 0.60, "weightLbFt": 2.044 },
+    { "size": "#8",  "diaIn": 1.0000, "diaMm": 25.4, "areaIn2": 0.79, "weightLbFt": 2.670 },
+    { "size": "#9",  "diaIn": 1.1280, "diaMm": 28.7, "areaIn2": 1.00, "weightLbFt": 3.400 },
+    { "size": "#10", "diaIn": 1.2700, "diaMm": 32.3, "areaIn2": 1.27, "weightLbFt": 4.303 },
+    { "size": "#11", "diaIn": 1.4100, "diaMm": 35.8, "areaIn2": 1.56, "weightLbFt": 5.313 },
+    { "size": "#14", "diaIn": 1.6930, "diaMm": 43.0, "areaIn2": 2.25, "weightLbFt": 7.650 },
+    { "size": "#18", "diaIn": 2.2570, "diaMm": 57.3, "areaIn2": 4.00, "weightLbFt": 13.600 }
+  ]
+}

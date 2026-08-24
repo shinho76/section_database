@@ -1,0 +1,13 @@
+{
+  "source": "Vulcraft Composite Floor Deck",
+  "sourceUrl": "https://vulcraft.com/products/compositedeck",
+  "catalogUrl": "https://vulcraft.com/catalogs/Deck/CompositeDeck/LRFD-1.5VL-36-1.5VLI-36-1.5PLVLI-36_Composite_Deck-Slab.pdf",
+  "note": "PLAN_1.md 확인사항 M: 프로파일 명칭·깊이만 확인됨. 게이지별 LRFD 하중표는 1단계 구현 시 카탈로그 PDF에서 발췌해야 합니다 (미정 필드는 null).",
+  "profiles": [
+    { "name": "1.5VL-36",   "depthIn": 1.5, "widthIn": 36, "gauges": null },
+    { "name": "1.5VLI-36",  "depthIn": 1.5, "widthIn": 36, "gauges": null },
+    { "name": "1.5PLVLI-36","depthIn": 1.5, "widthIn": 36, "gauges": null },
+    { "name": "2VLI-36",    "depthIn": 2,   "widthIn": 36, "gauges": null },
+    { "name": "3VLI-36",    "depthIn": 3,   "widthIn": 36, "gauges": null }
+  ]
+}
