@@ -225,3 +225,63 @@ export function drawBarSVG(diaValue, unit) {
   return `<svg viewBox="0 0 ${W} ${H}" class="section-svg" role="img"
     aria-label="rebar cross section in ${unit}">${defsBlock(id)}${body}${dim.join('')}</svg>`;
 }
+
+// Nominal design thickness by gauge (in.) — schematic wall thickness only;
+// the source tables give gauge, not a tabulated thickness value.
+const GAUGE_THICKNESS_IN = { 10: 0.1345, 12: 0.1017, 14: 0.0713, 16: 0.0566, 18: 0.0451 };
+
+/** Cee/Zee/Easy-Lap-Zee light-gauge purlin, drawn as a lipped-channel
+ * centerline (open thin-walled profile) with D/B/L dimension lines. */
+export function drawPurlinSVG(row, kind, unit) {
+  const id = `dp${uid++}`;
+  const isMetric = unit === 'mm';
+  const conv = isMetric ? 25.4 : 1; // row.d/b/l are in inches; convert for metric view
+  const d = row.d * conv, l = row.l * conv;
+  const b = kind === 'easyLap' ? Math.max(row.b1, row.b2) * conv : row.b * conv;
+  const b1 = kind === 'easyLap' ? row.b1 * conv : row.b * conv;
+  const b2 = kind === 'easyLap' ? row.b2 * conv : row.b * conv;
+  const tIn = GAUGE_THICKNESS_IN[row.ga] || 0.06;
+  const tw = tIn * (isMetric ? 25.4 : 1);
+
+  const gutter = { l: 70, t: 50, r: 90, b: 60 };
+  const bboxW = W - gutter.l - gutter.r;
+  const bboxH = H - gutter.t - gutter.b;
+  const ow = kind === 'zee' || kind === 'easyLap' ? b1 + b2 : b;
+  const k = Math.min(bboxW / ow, bboxH / d);
+  const sx = (v) => v * k;
+  const cx = gutter.l + bboxW / 2;
+  const cy = gutter.t + bboxH / 2;
+
+  const D = sx(d), L = sx(l), B1 = sx(b1), B2 = sx(b2);
+  const stroke = 'var(--steel-line)';
+  const strokeW = Math.max(2.5, sx(tw));
+  // x0 = the web's x-position; the shape's overall bbox is centered on cx.
+  const x0 = kind === 'cee' ? cx - B1 / 2 : cx + (B2 - B1) / 2;
+  const y0 = cy - D / 2;
+
+  let pts;
+  if (kind === 'cee') {
+    pts = [[x0 + B1, y0 + L], [x0 + B1, y0], [x0, y0], [x0, y0 + D], [x0 + B1, y0 + D], [x0 + B1, y0 + D - L]];
+  } else {
+    // zee / easyLap: top flange extends right of the web, bottom flange left
+    pts = [[x0 + B1, y0 + L], [x0 + B1, y0], [x0, y0], [x0, y0 + D],
+           [x0 - B2, y0 + D], [x0 - B2, y0 + D - L]];
+  }
+  const d3 = pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p[0]},${p[1]}`).join(' ');
+  const body = `<path d="${d3}" fill="none" stroke="${stroke}" stroke-width="${strokeW}"
+    stroke-linejoin="round" stroke-linecap="round"/>`;
+
+  const dim = [];
+  vDim(dim, id, y0, y0 + D, x0 - 30, x0, `D=${isMetric ? d.toFixed(0) : d}${unit}`);
+  if (kind === 'cee') {
+    hDim(dim, id, x0, x0 + B1, y0 - 26, y0, `B=${isMetric ? b.toFixed(0) : b}${unit}`);
+  } else {
+    hDim(dim, id, x0, x0 + B1, y0 - 26, y0, `B1=${isMetric ? b1.toFixed(0) : b1}${unit}`);
+    hDim(dim, id, x0 - B2, x0, y0 + D + 26, y0 + D, `B2=${isMetric ? b2.toFixed(0) : b2}${unit}`);
+  }
+  microV(dim, id, y0, y0 + L, x0 + B1 + 20, `L=${isMetric ? l.toFixed(0) : l}${unit}`);
+  dim.push(text(cx, y0 + D + (kind === 'cee' ? 46 : 50), `${row.ga}GA`, 'middle'));
+
+  return `<svg viewBox="0 0 ${W} ${H}" class="section-svg" role="img"
+    aria-label="${kind} purlin cross section in ${unit}">${defsBlock(id)}${body}${dim.join('')}</svg>`;
+}
