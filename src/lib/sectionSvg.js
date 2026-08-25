@@ -5,8 +5,11 @@ const num = (v) => (v === undefined || v === '' || v === null ? null : parseFloa
 
 const W = 460, H = 320;
 let uid = 0;
+export const CANVAS_W = W;
+export const CANVAS_H = H;
+export const nextId = (prefix) => `${prefix}${uid++}`;
 
-function defsBlock(id) {
+export function defsBlock(id) {
   return `<defs>
     <marker id="ar-${id}" markerWidth="9" markerHeight="9" refX="7.5" refY="4" orient="auto" markerUnits="strokeWidth">
       <path d="M1,1 L8,4 L1,7" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
@@ -27,7 +30,7 @@ function defsBlock(id) {
   </defs>`;
 }
 
-function text(x, y, label, anchor = 'middle') {
+export function text(x, y, label, anchor = 'middle') {
   return `<text x="${x}" y="${y}" text-anchor="${anchor}" dominant-baseline="middle"
     font-size="11.5" font-family="ui-monospace,monospace" stroke="var(--bg-card)" stroke-width="3.2"
     paint-order="stroke" fill="currentColor">${label}</text>`;
@@ -35,7 +38,7 @@ function text(x, y, label, anchor = 'middle') {
 
 /** Full-span dimension: extension lines from the two feature points out to the
  * dimension line, then a double-arrow line between them with a centered label. */
-function hDim(dim, id, x1, x2, y, extFromY, label) {
+export function hDim(dim, id, x1, x2, y, extFromY, label) {
   dim.push(`<line x1="${x1}" y1="${extFromY}" x2="${x1}" y2="${y}" stroke="currentColor" stroke-width=".7" opacity=".55"/>`);
   dim.push(`<line x1="${x2}" y1="${extFromY}" x2="${x2}" y2="${y}" stroke="currentColor" stroke-width=".7" opacity=".55"/>`);
   dim.push(`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="currentColor" stroke-width="1.2"
@@ -43,7 +46,7 @@ function hDim(dim, id, x1, x2, y, extFromY, label) {
   dim.push(text((x1 + x2) / 2, y - 9, label));
 }
 
-function vDim(dim, id, y1, y2, x, extFromX, label) {
+export function vDim(dim, id, y1, y2, x, extFromX, label) {
   dim.push(`<line x1="${extFromX}" y1="${y1}" x2="${x}" y2="${y1}" stroke="currentColor" stroke-width=".7" opacity=".55"/>`);
   dim.push(`<line x1="${extFromX}" y1="${y2}" x2="${x}" y2="${y2}" stroke="currentColor" stroke-width=".7" opacity=".55"/>`);
   dim.push(`<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="currentColor" stroke-width="1.2"
@@ -53,7 +56,7 @@ function vDim(dim, id, y1, y2, x, extFromX, label) {
 
 /** Short thickness callout: a tight double-arrow span across the feature, with
  * the label offset to the side (there isn't room to center it on the line). */
-function microV(dim, id, y1, y2, x, label, side = 1) {
+export function microV(dim, id, y1, y2, x, label, side = 1) {
   const mid = (y1 + y2) / 2;
   const lx = x + side * 20;
   // halo behind the arrow line so it stays legible over the hatch fill
@@ -64,7 +67,7 @@ function microV(dim, id, y1, y2, x, label, side = 1) {
   dim.push(text(lx, mid, label, side > 0 ? 'start' : 'end'));
 }
 
-function microH(dim, id, x1, x2, y, label, side = 1) {
+export function microH(dim, id, x1, x2, y, label, side = 1) {
   const mid = (x1 + x2) / 2;
   const ly = y + side * 17;
   dim.push(`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="var(--bg-card)" stroke-width="4" opacity=".85"/>`);
@@ -284,4 +287,51 @@ export function drawPurlinSVG(row, kind, unit) {
 
   return `<svg viewBox="0 0 ${W} ${H}" class="section-svg" role="img"
     aria-label="${kind} purlin cross section in ${unit}">${defsBlock(id)}${body}${dim.join('')}</svg>`;
+}
+
+/** H-shape with a T-bar welded stem-down onto the top flange (BH modes 2/3).
+ * hDims/tDims are plain {d,bf,tw,tf} objects already in the target unit. */
+export function drawHPlusTSVG(hDims, tDims, unit) {
+  const id = nextId('dt');
+  const gutter = { l: 58, t: 40, r: 60, b: 40 };
+  const bboxW = W - gutter.l - gutter.r;
+  const bboxH = H - gutter.t - gutter.b;
+  const ow = Math.max(hDims.bf, tDims.bf);
+  const oh = hDims.d + tDims.d;
+  const k = Math.min(bboxW / ow, bboxH / oh);
+  const sx = (v) => v * k;
+  const cx = gutter.l + bboxW / 2;
+  const topY = gutter.t + (bboxH - oh * k) / 2;
+
+  const bwH = sx(hDims.bf), bhH = sx(hDims.d), twH = sx(hDims.tw), tfH = sx(hDims.tf);
+  const bwT = sx(tDims.bf), bhT = sx(tDims.d), twT = sx(tDims.tw), tfT = sx(tDims.tf);
+  const shH = (bwH - twH) / 2;
+
+  const yHtop = topY + bhT;
+  const yHbot = yHtop + bhH;
+  const x0H = cx - bwH / 2;
+  const x0T = cx - bwT / 2;
+
+  const fill = `url(#hatch-${id})`, stroke = 'var(--steel-line)';
+  const bodyH = `<path d="M${x0H},${yHtop} h${bwH} v${tfH} h${-shH} v${bhH - 2 * tfH} h${shH} v${tfH} h${-bwH}
+    v${-tfH} h${shH} v${-(bhH - 2 * tfH)} h${-shH} Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+  const bodyT = `<path d="M${x0T},${topY} h${bwT} v${tfT} h${-(bwT - twT) / 2} v${bhT - tfT} h${-twT}
+    v${-(bhT - tfT)} h${-(bwT - twT) / 2} Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+  // weld fillet marks at the T-stem / H-flange junction
+  const wf = Math.min(8, twH / 2);
+  const weld = `<path d="M${cx - twT / 2 - wf},${yHtop} L${cx - twT / 2},${yHtop - wf} L${cx - twT / 2},${yHtop} Z
+    M${cx + twT / 2 + wf},${yHtop} L${cx + twT / 2},${yHtop - wf} L${cx + twT / 2},${yHtop} Z"
+    fill="var(--val-warn)" opacity=".85"/>`;
+
+  const dim = [];
+  vDim(dim, id, topY, yHbot, x0H - 26, Math.min(x0H, x0T), `D=${hDims.d + tDims.d}${unit}`);
+  hDim(dim, id, x0H, x0H + bwH, yHbot + 24, yHbot, `bf(H)=${hDims.bf}${unit}`);
+  hDim(dim, id, x0T, x0T + bwT, topY - 22, topY, `bf(T)=${tDims.bf}${unit}`);
+  microV(dim, id, yHtop, yHtop + tfH, x0H + bwH + 20, `tf(H)=${hDims.tf}${unit}`);
+  microH(dim, id, cx - twH / 2, cx + twH / 2, (yHtop + yHbot) / 2, `tw(H)=${hDims.tw}${unit}`, 1);
+  microV(dim, id, topY, topY + tfT, x0T - 20, `tf(T)=${tDims.tf}${unit}`, -1);
+  microH(dim, id, cx - twT / 2, cx + twT / 2, topY + tfT + (bhT - tfT) / 2, `tw(T)=${tDims.tw}${unit}`, -1);
+
+  return `<svg viewBox="0 0 ${W} ${H}" class="section-svg" role="img"
+    aria-label="H+T built-up cross section in ${unit}">${defsBlock(id)}${bodyH}${bodyT}${weld}${dim.join('')}</svg>`;
 }

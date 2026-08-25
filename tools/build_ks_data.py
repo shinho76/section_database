@@ -67,8 +67,9 @@ def build_h():
         if len(row) < 15 or not row[0].strip():
             continue
         label, lt, H, B, tw, tf, r, A, W, Ix, Iy, ix, iy, Zx, Zy = row[:15]
-        name, ks = ks_norm(label, "H")
+        name, _ = ks_norm(label, "H")
         d_mm, bf_mm, tw_mm, tf_mm, r_mm = fnum(H), fnum(B), fnum(tw), fnum(tf), fnum(r)
+        ks = f"H-{fmt(d_mm)}X{fmt(bf_mm)}X{fmt(tw_mm)}X{fmt(tf_mm)}"
         A_mm2 = fnum(A) * 100 if fnum(A) is not None else None
         W_kgm = fnum(W)
         Ix_disp = fnum(Ix) * CM4_TO_MM4E6 if fnum(Ix) is not None else None
