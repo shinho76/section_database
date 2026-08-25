@@ -1,16 +1,21 @@
 import { create } from 'zustand';
 
-export const GROUPS = [
-  { label: 'H-SHAPES', items: ['W', 'M', 'S', 'HP'] },
-  { label: 'TEES', items: ['WT', 'MT', 'ST'] },
-  { label: 'HOLLOW', items: ['HSS', 'PIPE'] },
-  { label: 'ANGLES', items: ['L', '2L'] },
-  { label: 'CHANNELS', items: ['C', 'MC'] },
+// Top grid: category spine | AISC column | KS column (rowspan when the KS
+// side has fewer sub-types than the AISC side), per SIDEBAR.dxf layout.
+export const GRID_GROUPS = [
+  { label: 'H-SHAPE', aisc: ['W', 'M', 'S', 'HP'], ks: ['KSH'] },
+  { label: 'TEES', aisc: ['WT', 'MT', 'ST'], ks: ['KST'] },
+  { label: 'HOLLOW', aisc: ['HSS', 'PIPE'], ks: ['KSB', 'KSP'] },
+  { label: 'ANGLES', aisc: ['L', '2L'], ks: ['KSL'] },
+  { label: 'CHANNELS', aisc: ['C', 'MC'], ks: ['KSC'] },
+];
+
+// Below the grid: single-column groups with no AISC/KS split.
+export const BELOW_GROUPS = [
   { label: 'BUILT-UP', items: ['BH'] },
   { label: 'PURLIN', items: ['PURLIN-CEE', 'PURLIN-ZEE'] },
   { label: 'METAL DECK', items: ['METALDECK'] },
   { label: 'REBAR', items: ['REBAR'] },
-  { label: 'KS D 3502', items: ['KSH', 'KST', 'KSC', 'KSL', 'KSB', 'KSP'] },
 ];
 
 export const DB_TYPES = new Set([
