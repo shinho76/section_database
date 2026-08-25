@@ -20,8 +20,9 @@ export default function ShapeDetail({ shape }) {
           <h1 className="mono">{shape.name}</h1>
           <div className="alias">
             <span className="chip chip-ks">KS &nbsp;<b className="mono">{shape.ks}</b></span>
-            <span className="chip">EDI 명칭 &nbsp;<b className="mono">{shape.edi}</b></span>
+            {shape.edi && <span className="chip">EDI 명칭 &nbsp;<b className="mono">{shape.edi}</b></span>}
             <span className="chip">Type &nbsp;<b className="mono">{shape.type}</b></span>
+            {shape.type.startsWith('KS') && <span className="chip">KS D 3502:2022</span>}
           </div>
         </div>
       </div>

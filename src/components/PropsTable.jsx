@@ -3,7 +3,8 @@ const UNITS = {
   d: ['in', 'mm'], ddet: ['in', 'mm'], Ht: ['in', 'mm'], h: ['in', 'mm'], OD: ['in', 'mm'],
   bf: ['in', 'mm'], bfdet: ['in', 'mm'], B: ['in', 'mm'], b: ['in', 'mm'], ID: ['in', 'mm'],
   tw: ['in', 'mm'], twdet: ['in', 'mm'], 'twdet/2': ['in', 'mm'], tf: ['in', 'mm'],
-  tfdet: ['in', 'mm'], t: ['in', 'mm'], tnom: ['in', 'mm'], tdes: ['in', 'mm'],
+  tfdet: ['in', 'mm'], t: ['in', 'mm'], t2: ['in', 'mm'], r: ['in', 'mm'],
+  tnom: ['in', 'mm'], tdes: ['in', 'mm'],
   kdes: ['in', 'mm'], kdet: ['in', 'mm'], k1: ['in', 'mm'],
   x: ['in', 'mm'], y: ['in', 'mm'], eo: ['in', 'mm'], xp: ['in', 'mm'], yp: ['in', 'mm'],
   Ix: ['in⁴', '×10⁶ mm⁴'], Iy: ['in⁴', '×10⁶ mm⁴'], Iz: ['in⁴', '×10⁶ mm⁴'],
@@ -50,8 +51,10 @@ export default function PropsTable({ shape, defs }) {
         </tbody>
       </table>
       <p className="note">
-        Metric 값은 AISC Shapes Database v16.0의 SI 표에 있는 값을 그대로 사용합니다.
-        KS 호칭은 depth × width × t<sub>w</sub> × t<sub>f</sub> (mm) 형태로 파생됩니다.
+        {shape.type.startsWith('KS')
+          ? 'Metric 값은 KS D 3502:2022 규격표의 값을 그대로 사용합니다. Imperial 값은 단위 환산값입니다.'
+          : <>Metric 값은 AISC Shapes Database v16.0의 SI 표에 있는 값을 그대로 사용합니다.
+              KS 호칭은 depth × width × t<sub>w</sub> × t<sub>f</sub> (mm) 형태로 파생됩니다.</>}
       </p>
     </div>
   );

@@ -55,19 +55,22 @@ function vDim(dim, id, y1, y2, x, extFromX, label) {
  * the label offset to the side (there isn't room to center it on the line). */
 function microV(dim, id, y1, y2, x, label, side = 1) {
   const mid = (y1 + y2) / 2;
-  const lx = x + side * 18;
-  dim.push(`<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="currentColor" stroke-width="1"
+  const lx = x + side * 20;
+  // halo behind the arrow line so it stays legible over the hatch fill
+  dim.push(`<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="var(--bg-card)" stroke-width="4" opacity=".85"/>`);
+  dim.push(`<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="currentColor" stroke-width="1.4"
     marker-start="url(#arrs-${id})" marker-end="url(#ars-${id})"/>`);
-  dim.push(`<line x1="${x}" y1="${mid}" x2="${lx - side * 4}" y2="${mid}" stroke="currentColor" stroke-width=".7" opacity=".7"/>`);
+  dim.push(`<line x1="${x}" y1="${mid}" x2="${lx - side * 4}" y2="${mid}" stroke="currentColor" stroke-width=".8" opacity=".8"/>`);
   dim.push(text(lx, mid, label, side > 0 ? 'start' : 'end'));
 }
 
 function microH(dim, id, x1, x2, y, label, side = 1) {
   const mid = (x1 + x2) / 2;
   const ly = y + side * 17;
-  dim.push(`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="currentColor" stroke-width="1"
+  dim.push(`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="var(--bg-card)" stroke-width="4" opacity=".85"/>`);
+  dim.push(`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="currentColor" stroke-width="1.4"
     marker-start="url(#arrs-${id})" marker-end="url(#ars-${id})"/>`);
-  dim.push(`<line x1="${mid}" y1="${y}" x2="${mid}" y2="${ly - side * 4}" stroke="currentColor" stroke-width=".7" opacity=".7"/>`);
+  dim.push(`<line x1="${mid}" y1="${y}" x2="${mid}" y2="${ly - side * 4}" stroke="currentColor" stroke-width=".8" opacity=".8"/>`);
   dim.push(text(mid, ly, label));
 }
 
@@ -84,11 +87,11 @@ export function drawShapeSVG(s, u) {
   const id = `dw${uid++}`;
   const unit = u === 'us' ? '"' : 'mm';
 
-  const isRound = t === 'PIPE' || (t === 'HSS' && p.OD);
-  const isBox = t === 'HSS' && !p.OD;
-  const isAng = t === 'L' || t === '2L';
-  const isTee = t === 'WT' || t === 'MT' || t === 'ST';
-  const isChan = t === 'C' || t === 'MC';
+  const isRound = t === 'PIPE' || t === 'KSP' || (t === 'HSS' && p.OD);
+  const isBox = t === 'KSB' || (t === 'HSS' && !p.OD);
+  const isAng = t === 'L' || t === '2L' || t === 'KSL';
+  const isTee = t === 'WT' || t === 'MT' || t === 'ST' || t === 'KST';
+  const isChan = t === 'C' || t === 'MC' || t === 'KSC';
 
   let ow, oh;
   if (isRound) { ow = oh = g('OD'); }
@@ -149,7 +152,8 @@ export function drawShapeSVG(s, u) {
   } else if (isTee) {
     const bw = sx(g('bf')), bh = sx(g('d')), twpx = sx(g('tw')), tfpx = sx(g('tf'));
     const x0 = cx - bw / 2, y0 = cy - bh / 2;
-    body = `<path d="M${x0},${y0} h${bw} v${tfpx} h${-(bw - twpx) / 2} v${bh - tfpx} h${-twpx} v${-(bh - tfpx)} Z"
+    body = `<path d="M${x0},${y0} h${bw} v${tfpx} h${-(bw - twpx) / 2} v${bh - tfpx} h${-twpx}
+              v${-(bh - tfpx)} h${-(bw - twpx) / 2} Z"
               fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
     hDim(dim, id, x0, x0 + bw, y0 - 22, y0, `bf=${p.bf}${unit}`);
     vDim(dim, id, y0, y0 + bh, x0 - 24, x0, `d=${p.d}${unit}`);

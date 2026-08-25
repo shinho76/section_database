@@ -1,10 +1,12 @@
 const TYPE_FILE = {
   W: 'w', M: 'm', S: 's', HP: 'hp', WT: 'wt', MT: 'mt', ST: 'st',
   HSS: 'hss', PIPE: 'pipe', L: 'l', '2L': '2l', C: 'c', MC: 'mc',
+  KSH: 'ksh', KSL: 'ksl', KSP: 'ksp', KST: 'kst', KSB: 'ksb', KSC: 'ksc',
 };
 
 const typeCache = new Map();
 let searchIndex = null;
+let ksSearchIndex = null;
 
 export async function loadType(type) {
   if (typeCache.has(type)) return typeCache.get(type);
@@ -22,13 +24,20 @@ async function loadSearchIndex() {
   return searchIndex;
 }
 
+async function loadKsSearchIndex() {
+  if (ksSearchIndex) return ksSearchIndex;
+  const mod = await import('../data/ks_index.json');
+  ksSearchIndex = mod.default;
+  return ksSearchIndex;
+}
+
 const norm = (s) => (s || '').toString().toUpperCase().replace(/\s/g, '');
 
 export async function findByQuery(query) {
   const q = norm(query);
   if (!q) return null;
-  const idx = await loadSearchIndex();
-  const hit = idx.find(
+  const [idx, ksIdx] = await Promise.all([loadSearchIndex(), loadKsSearchIndex()]);
+  const hit = [...idx, ...ksIdx].find(
     (s) => norm(s.name) === q || norm(s.edi) === q || norm(s.ks) === q,
   );
   if (!hit) return null;
