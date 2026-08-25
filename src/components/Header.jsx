@@ -1,18 +1,7 @@
-import { useStore, DB_TYPES } from '../store.js';
-import { findByQuery } from '../lib/dataLoader.js';
+import { useStore } from '../store.js';
 
 export default function Header() {
-  const { query, setQuery, setActiveKey, selectShape, theme, toggleTheme } = useStore();
-
-  const onInput = async (e) => {
-    const q = e.target.value;
-    setQuery(q);
-    const hit = await findByQuery(q);
-    if (hit) {
-      setActiveKey(hit.type);
-      selectShape(hit);
-    }
-  };
+  const { query, setQuery, theme, toggleTheme } = useStore();
 
   return (
     <header>
@@ -24,7 +13,7 @@ export default function Header() {
         placeholder="Search  W24X370  ·  711×348  ·  Pipe26STD"
         autoComplete="off"
         value={query}
-        onChange={onInput}
+        onChange={(e) => setQuery(e.target.value)}
       />
       <button id="theme" onClick={toggleTheme}>
         {theme === 'dark' ? '☀ Light' : '☾ Dark'}

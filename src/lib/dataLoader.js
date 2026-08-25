@@ -33,18 +33,6 @@ async function loadKsSearchIndex() {
 
 const norm = (s) => (s || '').toString().toUpperCase().replace(/\s/g, '');
 
-export async function findByQuery(query) {
-  const q = norm(query);
-  if (!q) return null;
-  const [idx, ksIdx] = await Promise.all([loadSearchIndex(), loadKsSearchIndex()]);
-  const hit = [...idx, ...ksIdx].find(
-    (s) => norm(s.name) === q || norm(s.edi) === q || norm(s.ks) === q,
-  );
-  if (!hit) return null;
-  const rows = await loadType(hit.type);
-  return rows.find((s) => s.name === hit.name) || null;
-}
-
 export async function searchType(type, query) {
   const rows = await loadType(type);
   const q = norm(query);
@@ -52,6 +40,23 @@ export async function searchType(type, query) {
   return rows.filter(
     (s) => norm(s.name).includes(q) || norm(s.ks).includes(q),
   );
+}
+
+/** Search across every AISC + KS shape, regardless of the active sidebar
+ * selection. Returns lightweight index entries {name, edi, ks, type}. */
+export async function searchAll(query) {
+  const q = norm(query);
+  if (!q) return [];
+  const [idx, ksIdx] = await Promise.all([loadSearchIndex(), loadKsSearchIndex()]);
+  return [...idx, ...ksIdx].filter(
+    (s) => norm(s.name).includes(q) || norm(s.edi).includes(q) || norm(s.ks).includes(q),
+  );
+}
+
+/** Resolve a lightweight index entry (from searchAll) to its full shape record. */
+export async function resolveShape(entry) {
+  const rows = await loadType(entry.type);
+  return rows.find((s) => s.name === entry.name) || null;
 }
 
 export async function loadDefs() {

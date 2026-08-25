@@ -3,16 +3,21 @@ import Header from './components/Header.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import ShapeList from './components/ShapeList.jsx';
 import ShapeDetail from './components/ShapeDetail.jsx';
+import SearchResults from './components/SearchResults.jsx';
 import BuiltUpBuilder from './components/builtup/BuiltUpBuilder.jsx';
 import PurlinView from './components/PurlinView.jsx';
 import MetalDeckView from './components/MetalDeckView.jsx';
 import RebarView from './components/RebarView.jsx';
 
 export default function App() {
-  const { activeKey, shape } = useStore();
+  const { activeKey, shape, query } = useStore();
 
   let main;
-  if (DB_TYPES.has(activeKey)) {
+  if (query.trim()) {
+    // The search box always searches the full inventory, independent of
+    // whichever sidebar item is currently selected.
+    main = <SearchResults />;
+  } else if (DB_TYPES.has(activeKey)) {
     main = shape ? <ShapeDetail shape={shape} /> : <ShapeList />;
   } else if (activeKey === 'BH') {
     main = <BuiltUpBuilder />;

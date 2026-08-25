@@ -1,27 +1,27 @@
 import { useEffect, useState } from 'react';
 import { useStore, TYPE_LABEL } from '../store.js';
-import { searchType } from '../lib/dataLoader.js';
+import { loadType } from '../lib/dataLoader.js';
 
 const seriesKey = (name) => name.split(/[X×]/)[0];
 
 export default function ShapeList() {
-  const { activeKey, query, selectShape } = useStore();
+  const { activeKey, selectShape } = useStore();
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    searchType(activeKey, query).then((r) => {
+    loadType(activeKey).then((r) => {
       if (!cancelled) { setRows(r); setLoading(false); }
     });
     return () => { cancelled = true; };
-  }, [activeKey, query]);
+  }, [activeKey]);
 
   if (loading) return <div className="empty">불러오는 중…</div>;
 
   if (!rows.length) {
-    return <div className="empty">“{query}”와 일치하는 단면이 없습니다. W24X370, 711×348 같은 형태로 검색해보세요.</div>;
+    return <div className="empty">데이터가 없습니다.</div>;
   }
 
   const isKs = activeKey.startsWith('KS');
