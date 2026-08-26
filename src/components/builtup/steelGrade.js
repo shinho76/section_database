@@ -12,7 +12,7 @@ export function gradesForThicknessIn(inches) {
 
 export function gradeLabel(inches) {
   const grades = gradesForThicknessIn(inches);
-  if (grades.length === 2) return `(${grades[0]} & ${grades[1]})`;
-  if (grades.length === 1) return grades[0];
+  if (grades.length === 2) return `${grades[0]} & ${grades[1]}`;
+  if (grades.length === 1) return `ONLY ${grades[0]}`;
   return '';
 }
