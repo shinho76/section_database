@@ -1,20 +1,14 @@
 import { useStore } from '../store.js';
+import SearchBox from './SearchBox.jsx';
 
 export default function Header() {
-  const { query, setQuery, theme, toggleTheme } = useStore();
+  const { theme, toggleTheme } = useStore();
 
   return (
     <header>
       <span className="brand">SECTION DATABASE</span>
       <span className="badge">AISC v16.0</span>
-      <input
-        id="search"
-        type="search"
-        placeholder="Search  W24X370  ·  711×348  ·  Pipe26STD"
-        autoComplete="off"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
+      <SearchBox />
       <button id="theme" onClick={toggleTheme}>
         {theme === 'dark' ? '☀ Light' : '☾ Dark'}
       </button>
