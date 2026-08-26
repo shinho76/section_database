@@ -1,12 +1,15 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { manualHProps, manualTProps, composeSection, IN_TO_MM, IN2_TO_MM2, IN4_TO_MM4, LBFT_TO_KGM } from './compose.js';
-import { loadType } from '../../lib/dataLoader.js';
 import { displayType } from '../../store.js';
 import { drawHPlusTSVG } from '../../lib/sectionSvg.js';
 import BHDimTable from './BHDimTable.jsx';
+import ShapeAutocomplete from './ShapeAutocomplete.jsx';
 
 const MM_TO_IN = 1 / 25.4;
-const H_TYPES = ['W', 'M', 'S', 'HP', 'KSH'];
+const H_TYPES = ['W', 'M', 'S', 'KSH'];
+// AISC/KS tee paired with each H type - WT/MT/ST are literally an H cut in
+// half, KST likewise from KSH, so this pairing is exact (HP has no tee).
+const T_TYPE_FOR_H = { W: 'WT', M: 'MT', S: 'ST', KSH: 'KST' };
 
 const H_FIELDS = [
   { key: 'd', label: 'd (높이)' },
@@ -21,70 +24,94 @@ const T_FIELDS = [
   { key: 'tf', label: 'T tf (두께)', thickness: true },
 ];
 
-/** BH modes 2 & 3: a T-bar welded stem-down onto an H-shape's top flange.
- * baseKind 'db' selects the H from the AISC/KS database; 'custom' uses the
- * 4-number custom H (same inputs as CustomHPanel). Either way the T-bar
- * itself is always fully parametric (d/bf/tw/tf editable in mm). */
+/** Section properties for a T pulled straight from the database. AISC WT/MT/ST
+ * rows carry real Ix/Iy/y (distance from flange face to centroid); KST rows
+ * only carry W/A, so its geometry (and therefore Ix/Iy/centroid) is derived
+ * from d/bf/tw/tf via the same formula used for the fully-custom T-bar - the
+ * real tabulated W/A are kept over the formula's estimate either way. */
+function tPropsFromDbShape(t) {
+  const d = parseFloat(t.us.d), bf = parseFloat(t.us.bf), tw = parseFloat(t.us.tw), tf = parseFloat(t.us.tf);
+  const A = parseFloat(t.us.A), W = parseFloat(t.us.W);
+  if (t.us.Ix !== undefined && t.us.y !== undefined) {
+    const y = parseFloat(t.us.y);
+    return { A, Ix: parseFloat(t.us.Ix), Iy: parseFloat(t.us.Iy), W, d, bf, tw, tf, yTopExtent: y, yBotExtent: d - y };
+  }
+  const geo = manualTProps({ d, bf, tw, tf });
+  return { ...geo, A: A || geo.A, W: W || geo.W, d, bf, tw, tf };
+}
+
+/** BH modes 3 & 4: a T-bar welded stem-down onto an H-shape's top flange.
+ * baseKind 'db' picks both the H and its paired T (WT/MT/ST/KST) from the
+ * database via search-as-you-type; 'custom' uses the 4-number custom H
+ * (same inputs as CustomHPanel) with a fully free-parametric T-bar. */
 export default function HPlusTPanel({ baseKind }) {
-  const [dbType, setDbType] = useState('W');
-  const [dbShapes, setDbShapes] = useState([]);
-  const [dbName, setDbName] = useState('');
+  const [hType, setHType] = useState('W');
+  const [hShape, setHShape] = useState(null);
+  const [tShape, setTShape] = useState(null);
   const [customH, setCustomH] = useState({ d: 400, bf: 200, tw: 7.9375, tf: 12.7 });
   const [tBar, setTBar] = useState({ d: 150, bf: 150, tw: 7.9375, tf: 12.7 });
-
-  useEffect(() => {
-    if (baseKind !== 'db') return;
-    loadType(dbType).then(setDbShapes);
-    setDbName('');
-  }, [baseKind, dbType]);
 
   const setCustomField = (field) => (v) => setCustomH((m) => ({ ...m, [field]: v }));
   const setTField = (field) => (v) => setTBar((m) => ({ ...m, [field]: v }));
 
-  const dbShape = baseKind === 'db' ? dbShapes.find((s) => s.name === dbName) : null;
+  const onPickH = (s) => { setHShape(s); setTShape(null); };
+  const onHTypeChange = (t) => { setHType(t); setHShape(null); setTShape(null); };
 
   const hDimsIn = useMemo(() => {
     if (baseKind === 'db') {
-      if (!dbShape) return null;
+      if (!hShape) return null;
       return {
-        d: parseFloat(dbShape.us.d), bf: parseFloat(dbShape.us.bf ?? dbShape.us.B),
-        tw: parseFloat(dbShape.us.tw), tf: parseFloat(dbShape.us.tf),
+        d: parseFloat(hShape.us.d), bf: parseFloat(hShape.us.bf ?? hShape.us.B),
+        tw: parseFloat(hShape.us.tw), tf: parseFloat(hShape.us.tf),
       };
     }
     return { d: customH.d * MM_TO_IN, bf: customH.bf * MM_TO_IN, tw: customH.tw * MM_TO_IN, tf: customH.tf * MM_TO_IN };
-  }, [baseKind, dbShape, customH]);
+  }, [baseKind, hShape, customH]);
 
   const hDimsMm = useMemo(() => {
     if (baseKind === 'db') {
-      if (!dbShape) return null;
+      if (!hShape) return null;
       return {
-        d: parseFloat(dbShape.mt.d), bf: parseFloat(dbShape.mt.bf ?? dbShape.mt.B),
-        tw: parseFloat(dbShape.mt.tw), tf: parseFloat(dbShape.mt.tf),
+        d: parseFloat(hShape.mt.d), bf: parseFloat(hShape.mt.bf ?? hShape.mt.B),
+        tw: parseFloat(hShape.mt.tw), tf: parseFloat(hShape.mt.tf),
       };
     }
     return customH;
-  }, [baseKind, dbShape, customH]);
+  }, [baseKind, hShape, customH]);
 
   const hPropsIn = useMemo(() => {
     if (!hDimsIn) return null;
     if (baseKind === 'db') {
       return {
-        A: parseFloat(dbShape.us.A), Ix: parseFloat(dbShape.us.Ix), Iy: parseFloat(dbShape.us.Iy),
-        W: parseFloat(dbShape.us.W), d: hDimsIn.d, bf: hDimsIn.bf, tw: hDimsIn.tw, tf: hDimsIn.tf,
+        A: parseFloat(hShape.us.A), Ix: parseFloat(hShape.us.Ix), Iy: parseFloat(hShape.us.Iy),
+        W: parseFloat(hShape.us.W), d: hDimsIn.d, bf: hDimsIn.bf, tw: hDimsIn.tw, tf: hDimsIn.tf,
       };
     }
     return manualHProps(hDimsIn);
-  }, [hDimsIn, baseKind, dbShape]);
+  }, [hDimsIn, baseKind, hShape]);
 
-  const tDimsIn = useMemo(() => ({
+  const tDimsInCustom = useMemo(() => ({
     d: tBar.d * MM_TO_IN, bf: tBar.bf * MM_TO_IN, tw: tBar.tw * MM_TO_IN, tf: tBar.tf * MM_TO_IN,
   }), [tBar]);
-  const tPropsIn = useMemo(() => manualTProps(tDimsIn), [tDimsIn]);
 
-  const tValid = tBar.d > tBar.tf && tBar.bf > tBar.tw && tBar.d > 0 && tBar.bf > 0 && tBar.tw > 0 && tBar.tf > 0;
+  const tPropsIn = useMemo(() => {
+    if (baseKind === 'db') return tShape ? tPropsFromDbShape(tShape) : null;
+    return manualTProps(tDimsInCustom);
+  }, [baseKind, tShape, tDimsInCustom]);
+
+  const tDimsIn = baseKind === 'db'
+    ? (tPropsIn ? { d: tPropsIn.d, bf: tPropsIn.bf, tw: tPropsIn.tw, tf: tPropsIn.tf } : null)
+    : tDimsInCustom;
+  const tDimsMm = baseKind === 'db'
+    ? (tShape ? { d: parseFloat(tShape.mt.d), bf: parseFloat(tShape.mt.bf), tw: parseFloat(tShape.mt.tw), tf: parseFloat(tShape.mt.tf) } : null)
+    : tBar;
+
+  const tValid = baseKind === 'db'
+    ? !!tPropsIn
+    : tBar.d > tBar.tf && tBar.bf > tBar.tw && tBar.d > 0 && tBar.bf > 0 && tBar.tw > 0 && tBar.tf > 0;
 
   const composite = useMemo(() => {
-    if (!hPropsIn || !tValid) return null;
+    if (!hPropsIn || !tPropsIn || !tValid) return null;
     const layers = [
       { yOffset: 0, props: hPropsIn },
       { yOffset: hPropsIn.d / 2 + tPropsIn.yBotExtent, props: tPropsIn },
@@ -92,29 +119,27 @@ export default function HPlusTPanel({ baseKind }) {
     return composeSection(layers);
   }, [hPropsIn, tPropsIn, tValid]);
 
-  const svgUs = hDimsIn && tValid ? drawHPlusTSVG(hDimsIn, tDimsIn, '"') : null;
-  const svgMm = hDimsMm && tValid ? drawHPlusTSVG(hDimsMm, tBar, 'mm') : null;
+  const svgUs = hDimsIn && tDimsIn && tValid ? drawHPlusTSVG(hDimsIn, tDimsIn, '"') : null;
+  const svgMm = hDimsMm && tDimsMm && tValid ? drawHPlusTSVG(hDimsMm, tDimsMm, 'mm') : null;
 
   const title = baseKind === 'db' ? 'Rolled H-Section + T-Bar' : 'Built-up H-Shape + T-Bar';
+  const tType = T_TYPE_FOR_H[hType];
 
   return (
     <>
       <div className="detail-head"><div><h1 className="mono">{title}</h1></div></div>
 
       <div className="panel">
-        <div className="panel-head"><h2>기준 H-SHAPE</h2></div>
+        <div className="panel-head"><h2>① 기준 H-SHAPE</h2></div>
         {baseKind === 'db' ? (
           <div className="field-row">
             <label>Type
-              <select value={dbType} onChange={(e) => setDbType(e.target.value)}>
+              <select value={hType} onChange={(e) => onHTypeChange(e.target.value)}>
                 {H_TYPES.map((t) => <option key={t} value={t}>{displayType(t)}</option>)}
               </select>
             </label>
-            <label>Shape
-              <select value={dbName} onChange={(e) => setDbName(e.target.value)}>
-                <option value="">선택…</option>
-                {dbShapes.map((s) => <option key={s.name} value={s.name}>{s.name}</option>)}
-              </select>
+            <label>Shape (검색)
+              <ShapeAutocomplete type={hType} onSelect={onPickH} placeholder={`${hType} 형강 검색…`} />
             </label>
           </div>
         ) : (
@@ -124,14 +149,31 @@ export default function HPlusTPanel({ baseKind }) {
         )}
       </div>
 
-      <div className="panel">
-        <div className="panel-head"><h2>T-BAR (용접 부재, 자유 입력)</h2></div>
-        <div style={{ padding: 14 }}>
-          <BHDimTable fields={T_FIELDS} mm={tBar} onChangeMm={setTField} />
+      {baseKind === 'db' ? (
+        <div className="panel">
+          <div className="panel-head"><h2>② T-BAR — {displayType(tType)} (검색)</h2></div>
+          <div className="field-row">
+            <label>Shape (검색)
+              <ShapeAutocomplete
+                key={tType}
+                type={tType}
+                onSelect={setTShape}
+                placeholder={hShape ? `${tType} 검색…` : '먼저 ①에서 H-SHAPE를 선택하세요'}
+              />
+            </label>
+          </div>
+          {!hShape && <p className="note">① H-SHAPE를 먼저 선택하면 짝이 되는 {displayType(tType)}에서 검색할 수 있습니다.</p>}
         </div>
-        {!tValid && <p className="note">T-BAR 치수가 유효하지 않습니다.</p>}
-        <p className="note">T-BAR 높이(d)를 바꾸면 tw를 자유롭게 조정해 웹 접합부에 맞출 수 있습니다. H의 상부 플랜지 위에 T의 웨브(스템)를 용접하는 방식입니다.</p>
-      </div>
+      ) : (
+        <div className="panel">
+          <div className="panel-head"><h2>T-BAR (용접 부재, 자유 입력)</h2></div>
+          <div style={{ padding: 14 }}>
+            <BHDimTable fields={T_FIELDS} mm={tBar} onChangeMm={setTField} />
+          </div>
+          {!tValid && <p className="note">T-BAR 치수가 유효하지 않습니다.</p>}
+          <p className="note">T-BAR 높이(d)를 바꾸면 tw를 자유롭게 조정해 웹 접합부에 맞출 수 있습니다. H의 상부 플랜지 위에 T의 웨브(스템)를 용접하는 방식입니다.</p>
+        </div>
+      )}
 
       {svgUs && svgMm && composite && (
         <div className="draw-grid">
