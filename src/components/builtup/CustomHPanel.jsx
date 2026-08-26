@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { manualHProps, IN2_TO_MM2, IN4_TO_MM4, LBFT_TO_KGM } from './compose.js';
 import { ksLabel, usLabel } from './labels.js';
 import { drawShapeSVG } from '../../lib/sectionSvg.js';
-import BHDimTable from './BHDimTable.jsx';
+import { BHDimCards } from './BHDimTable.jsx';
 
 const MM_TO_IN = 1 / 25.4;
 
@@ -43,19 +43,19 @@ export default function CustomHPanel() {
     <>
       <div className="detail-head"><div><h1 className="mono">Built-up H-Section</h1></div></div>
 
-      <div className="panel">
-        <div className="panel-head"><h2>치수 입력</h2></div>
-        <div style={{ padding: 14 }}>
-          <BHDimTable fields={FIELDS} mm={mm} onChangeMm={set} />
+      <BHDimCards fields={FIELDS} mm={mm} onChangeMm={set} />
+
+      {(!valid || shape) && (
+        <div className="panel">
+          {!valid && <p className="note" style={{ borderTop: 'none' }}>치수가 유효하지 않습니다 (d &gt; 2×tf, bf &gt; tw 필요).</p>}
+          {shape && (
+            <div className="alias" style={{ padding: '14px 18px' }}>
+              <span className="chip chip-ks">KS &nbsp;<b className="mono">{ksLabel(mm)}</b></span>
+              <span className="chip">US &nbsp;<b className="mono">{usLabel(propsIn)}</b></span>
+            </div>
+          )}
         </div>
-        {!valid && <p className="note">치수가 유효하지 않습니다 (d &gt; 2×tf, bf &gt; tw 필요).</p>}
-        {shape && (
-          <div className="alias" style={{ padding: '0 14px 14px' }}>
-            <span className="chip chip-ks">KS &nbsp;<b className="mono">{ksLabel(mm)}</b></span>
-            <span className="chip">US &nbsp;<b className="mono">{usLabel(propsIn)}</b></span>
-          </div>
-        )}
-      </div>
+      )}
 
       {shape && (
         <div className="draw-grid">

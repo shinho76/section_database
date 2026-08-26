@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { manualHUnequalProps, IN2_TO_MM2, IN4_TO_MM4, LBFT_TO_KGM } from './compose.js';
 import { drawUnequalHSVG, fmtDim } from '../../lib/sectionSvg.js';
-import BHDimTable from './BHDimTable.jsx';
+import { BHDimCards } from './BHDimTable.jsx';
 
 const MM_TO_IN = 1 / 25.4;
 
@@ -37,13 +37,11 @@ export default function UnequalHPanel() {
     <>
       <div className="detail-head"><div><h1 className="mono">Unequal Flange Built-up H-Section</h1></div></div>
 
+      <BHDimCards fields={FIELDS} mm={mm} onChangeMm={set} />
+
       <div className="panel">
-        <div className="panel-head"><h2>치수 입력</h2></div>
-        <div style={{ padding: 14 }}>
-          <BHDimTable fields={FIELDS} mm={mm} onChangeMm={set} />
-        </div>
-        {!valid && <p className="note">치수가 유효하지 않습니다 (d &gt; tf-top+tf-bot, bf &gt; tw 필요).</p>}
-        <p className="note">상하부 플랜지의 폭·두께를 독립적으로 입력할 수 있습니다.</p>
+        {!valid && <p className="note" style={{ borderTop: 'none' }}>치수가 유효하지 않습니다 (d &gt; tf-top+tf-bot, bf &gt; tw 필요).</p>}
+        <p className="note" style={valid ? { borderTop: 'none' } : undefined}>상하부 플랜지의 폭·두께를 독립적으로 입력할 수 있습니다.</p>
       </div>
 
       {svgUs && svgMm && (

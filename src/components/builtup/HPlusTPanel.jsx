@@ -67,10 +67,13 @@ function filletR(rec) {
 export default function HPlusTPanel({ baseKind }) {
   const [hType, setHType] = useState('W');
   const [hShape, setHShape] = useState(null);
+  const [hGen, setHGen] = useState(0);
   const [botType, setBotType] = useState('WT');
   const [botShape, setBotShape] = useState(null);
+  const [botGen, setBotGen] = useState(0);
   const [topType, setTopType] = useState('WT');
   const [topShape, setTopShape] = useState(null);
+  const [topGen, setTopGen] = useState(0);
 
   const [customH, setCustomH] = useState({ d: 400, bf: 200, tw: 7.9375, tf: 12.7 });
   const [botBar, setBotBar] = useState({ d: 150, bf: 150, tw: 7.9375, tf: 12.7 });
@@ -84,6 +87,12 @@ export default function HPlusTPanel({ baseKind }) {
   const onHTypeChange = (t) => { setHType(t); setHShape(null); };
   const onBotTypeChange = (t) => { setBotType(t); setBotShape(null); };
   const onTopTypeChange = (t) => { setTopType(t); setTopShape(null); };
+
+  // Delete buttons next to each selected shape: clear the selection and force
+  // the search box to remount (via the gen key) so its displayed text resets.
+  const clearHShape = () => { setHShape(null); setHGen((g) => g + 1); };
+  const clearBotShape = () => { setBotShape(null); setBotGen((g) => g + 1); };
+  const clearTopShape = () => { setTopShape(null); setTopGen((g) => g + 1); };
 
   // Pre-select a representative H+bottom-T pair on first load (baseKind='db')
   // so the panel shows a real section immediately instead of an empty state.
@@ -203,7 +212,10 @@ export default function HPlusTPanel({ baseKind }) {
                 </select>
               </label>
               <label>상부 T-BAR (검색)
-                <ShapeAutocomplete key={topType} type={topType} onSelect={setTopShape} initialName={topShape?.name} placeholder={`${topType} 검색… (선택 안 해도 됨)`} />
+                <div className="combo-with-delete">
+                  <ShapeAutocomplete key={`${topType}-${topGen}`} type={topType} onSelect={setTopShape} initialName={topShape?.name} placeholder={`${topType} 검색… (선택 안 해도 됨)`} />
+                  {topShape && <button type="button" className="combo-delete" title="상부 T-BAR 삭제" onClick={clearTopShape}>×</button>}
+                </div>
               </label>
             </div>
             <div className="field-row">
@@ -213,7 +225,10 @@ export default function HPlusTPanel({ baseKind }) {
                 </select>
               </label>
               <label>중앙부 H-SHAPE (검색)
-                <ShapeAutocomplete key={hType} type={hType} onSelect={setHShape} initialName={hShape?.name} placeholder={`${hType} 형강 검색…`} />
+                <div className="combo-with-delete">
+                  <ShapeAutocomplete key={`${hType}-${hGen}`} type={hType} onSelect={setHShape} initialName={hShape?.name} placeholder={`${hType} 형강 검색…`} />
+                  {hShape && <button type="button" className="combo-delete" title="중앙부 H-SHAPE 삭제" onClick={clearHShape}>×</button>}
+                </div>
               </label>
             </div>
             <div className="field-row">
@@ -223,7 +238,10 @@ export default function HPlusTPanel({ baseKind }) {
                 </select>
               </label>
               <label>하부 T-BAR (검색)
-                <ShapeAutocomplete key={botType} type={botType} onSelect={setBotShape} initialName={botShape?.name} placeholder={`${botType} 검색…`} />
+                <div className="combo-with-delete">
+                  <ShapeAutocomplete key={`${botType}-${botGen}`} type={botType} onSelect={setBotShape} initialName={botShape?.name} placeholder={`${botType} 검색…`} />
+                  {botShape && <button type="button" className="combo-delete" title="하부 T-BAR 삭제" onClick={clearBotShape}>×</button>}
+                </div>
               </label>
             </div>
             <p className="note">
