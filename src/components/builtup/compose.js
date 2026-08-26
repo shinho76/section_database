@@ -1,7 +1,7 @@
 // Parallel-axis composite section properties for the BH (Built-up) builder.
 // All calculations are in US units (in, in^2, in^4, lb/ft); mm/kg-m are derived by conversion.
 
-const STEEL_DENSITY_LB_FT3 = 490; // A36/A992 steel, ~7850 kg/m3
+export const STEEL_DENSITY_LB_FT3 = 490; // A36/A992 steel, ~7850 kg/m3
 
 export function manualHProps({ d, bf, tw, tf }) {
   const A = 2 * bf * tf + (d - 2 * tf) * tw;

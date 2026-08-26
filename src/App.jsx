@@ -10,6 +10,7 @@ import HPlusTPanel from './components/builtup/HPlusTPanel.jsx';
 import PurlinView from './components/PurlinView.jsx';
 import MetalDeckView from './components/MetalDeckView.jsx';
 import RebarView from './components/RebarView.jsx';
+import PlatePanel from './components/PlatePanel.jsx';
 
 export default function App() {
   const { activeKey, shape, query } = useStore();
@@ -35,6 +36,8 @@ export default function App() {
     main = <MetalDeckView />;
   } else if (activeKey === 'REBAR') {
     main = <RebarView />;
+  } else if (activeKey === 'PLATE') {
+    main = <PlatePanel />;
   }
 
   return (

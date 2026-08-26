@@ -11,7 +11,9 @@ export const GRID_GROUPS = [
 ];
 
 // Below the grid: single-column groups with no AISC/KS split.
+// PLATE is listed first so it sits directly under the CHANNELS row of the grid above.
 export const BELOW_GROUPS = [
+  { label: 'PLATE', items: ['PLATE'] },
   { label: 'BUILT-UP H-SECTION', items: ['BH-1', 'BH-2', 'BH-3', 'BH-4'] },
   { label: 'PURLIN', items: ['PURLIN-CEE', 'PURLIN-ZEE'] },
   { label: 'METAL DECK', items: ['METALDECK'] },
@@ -20,6 +22,7 @@ export const BELOW_GROUPS = [
 
 // Short sidebar labels for BELOW_GROUPS items whose key isn't already readable.
 export const NAV_ITEM_LABEL = {
+  PLATE: 'Plate',
   'BH-1': '① Built-up H-Section',
   'BH-2': '② Unequal Flange H',
   'BH-3': '③ Rolled H + T-Bar',
@@ -38,6 +41,7 @@ export const TYPE_LABEL = {
   HP: 'HP — Bearing Pile', WT: 'WT — Tee (from W)', MT: 'MT — Tee (from M)',
   ST: 'ST — Tee (from S)', HSS: 'HSS — Hollow Section', PIPE: 'PIPE — Steel Pipe',
   L: 'L — Angle', '2L': '2L — Double Angle', C: 'C — Channel', MC: 'MC — Misc. Channel',
+  PLATE: 'Plate (강판)',
   'BH-1': 'Built-up H-Section', 'BH-2': 'Unequal Flange Built-up H-Section',
   'BH-3': 'Rolled H-Section + T-Bar', 'BH-4': 'Built-up H-Shape + T-Bar',
   'PURLIN-CEE': 'Purlin-CEE', 'PURLIN-ZEE': 'Purlin-ZEE',
