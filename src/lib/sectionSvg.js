@@ -357,6 +357,77 @@ export function drawHPlusTSVG(hDims, tDims, unit) {
     aria-label="H+T built-up cross section in ${unit}">${defsBlock(id)}${bodyH}${bodyT}${weld}${dim.join('')}</svg>`;
 }
 
+/** H-shape with a required T-bar welded stem-up onto its BOTTOM flange, and
+ * an optional second T-bar welded stem-down onto its TOP flange (BH mode 3's
+ * 상부/중앙부/하부 layout). hDims/botDims are required; topDims is null when
+ * no top T is selected. All dims are plain {d,bf,tw,tf} in the target unit. */
+export function drawHBotTopTSVG(hDims, botDims, topDims, unit) {
+  const id = nextId('dtt');
+  const gutter = { l: 58, t: 40, r: 60, b: 40 };
+  const bboxW = W - gutter.l - gutter.r;
+  const bboxH = H - gutter.t - gutter.b;
+  const ow = Math.max(hDims.bf, botDims.bf, topDims ? topDims.bf : 0);
+  const oh = hDims.d + botDims.d + (topDims ? topDims.d : 0);
+  const k = Math.min(bboxW / ow, bboxH / oh);
+  const sx = (v) => v * k;
+  const cx = gutter.l + bboxW / 2;
+  const topY = gutter.t + (bboxH - oh * k) / 2;
+
+  const bwH = sx(hDims.bf), bhH = sx(hDims.d), twH = sx(hDims.tw), tfH = sx(hDims.tf);
+  const bwBot = sx(botDims.bf), bhBot = sx(botDims.d), twBot = sx(botDims.tw), tfBot = sx(botDims.tf);
+  const shH = (bwH - twH) / 2;
+
+  const hasTop = !!topDims;
+  const bwTop = hasTop ? sx(topDims.bf) : 0, bhTop = hasTop ? sx(topDims.d) : 0;
+  const twTop = hasTop ? sx(topDims.tw) : 0, tfTop = hasTop ? sx(topDims.tf) : 0;
+
+  const yHtop = topY + bhTop;
+  const yHbot = yHtop + bhH;
+  const yBotEnd = yHbot + bhBot;
+  const x0H = cx - bwH / 2;
+  const x0Bot = cx - bwBot / 2;
+  const x0Top = cx - bwTop / 2;
+
+  const fill = `url(#hatch-${id})`, stroke = 'var(--steel-line)';
+  const bodyH = `<path d="M${x0H},${yHtop} h${bwH} v${tfH} h${-shH} v${bhH - 2 * tfH} h${shH} v${tfH} h${-bwH}
+    v${-tfH} h${shH} v${-(bhH - 2 * tfH)} h${-shH} Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+  // bottom T, stem-up (anchored at its stem's top-left corner, touching H's bottom flange)
+  const bodyBot = `<path d="M${cx - twBot / 2},${yHbot} h${twBot} v${bhBot - tfBot} h${(bwBot - twBot) / 2}
+    v${tfBot} h${-bwBot} v${-tfBot} h${(bwBot - twBot) / 2} v${-(bhBot - tfBot)} Z"
+    fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+  const bodyTop = hasTop ? `<path d="M${x0Top},${topY} h${bwTop} v${tfTop} h${-(bwTop - twTop) / 2} v${bhTop - tfTop} h${-twTop}
+    v${-(bhTop - tfTop)} h${-(bwTop - twTop) / 2} Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>` : '';
+
+  const wfBot = Math.min(8, twH / 2);
+  let weld = `<path d="M${cx - twBot / 2 - wfBot},${yHbot} L${cx - twBot / 2},${yHbot + wfBot} L${cx - twBot / 2},${yHbot} Z
+    M${cx + twBot / 2 + wfBot},${yHbot} L${cx + twBot / 2},${yHbot + wfBot} L${cx + twBot / 2},${yHbot} Z"
+    fill="var(--val-warn)" opacity=".85"/>`;
+  if (hasTop) {
+    const wfTop = Math.min(8, twH / 2);
+    weld += `<path d="M${cx - twTop / 2 - wfTop},${yHtop} L${cx - twTop / 2},${yHtop - wfTop} L${cx - twTop / 2},${yHtop} Z
+      M${cx + twTop / 2 + wfTop},${yHtop} L${cx + twTop / 2},${yHtop - wfTop} L${cx + twTop / 2},${yHtop} Z"
+      fill="var(--val-warn)" opacity=".85"/>`;
+  }
+
+  const dim = [];
+  const totalD = hDims.d + botDims.d + (topDims ? topDims.d : 0);
+  vDim(dim, id, topY, yBotEnd, x0H - 26, Math.min(x0H, x0Bot, hasTop ? x0Top : x0H), `D=${fmtDim(totalD, unit)}${unit}`);
+  hDim(dim, id, x0H, x0H + bwH, yHbot + 24, yHbot, `bf(H)=${fmtDim(hDims.bf, unit)}${unit}`);
+  hDim(dim, id, x0Bot, x0Bot + bwBot, yBotEnd + 24, yBotEnd, `bf(bot)=${fmtDim(botDims.bf, unit)}${unit}`);
+  microV(dim, id, yHtop, yHtop + tfH, x0H + bwH + 20, `tf(H)=${fmtDim(hDims.tf, unit)}${unit}`);
+  microH(dim, id, cx - twH / 2, cx + twH / 2, (yHtop + yHbot) / 2, `tw(H)=${fmtDim(hDims.tw, unit)}${unit}`, 1);
+  microV(dim, id, yBotEnd - tfBot, yBotEnd, x0Bot + bwBot + 20, `tf(bot)=${fmtDim(botDims.tf, unit)}${unit}`, 1);
+  microH(dim, id, cx - twBot / 2, cx + twBot / 2, yHbot + (bhBot - tfBot) / 2, `tw(bot)=${fmtDim(botDims.tw, unit)}${unit}`, 1);
+  if (hasTop) {
+    hDim(dim, id, x0Top, x0Top + bwTop, topY - 22, topY, `bf(top)=${fmtDim(topDims.bf, unit)}${unit}`);
+    microV(dim, id, topY, topY + tfTop, x0Top - 20, `tf(top)=${fmtDim(topDims.tf, unit)}${unit}`, -1);
+    microH(dim, id, cx - twTop / 2, cx + twTop / 2, topY + tfTop + (bhTop - tfTop) / 2, `tw(top)=${fmtDim(topDims.tw, unit)}${unit}`, -1);
+  }
+
+  return `<svg viewBox="0 0 ${W} ${H}" class="section-svg" role="img"
+    aria-label="H with top/bottom T-bar built-up cross section in ${unit}">${defsBlock(id)}${bodyH}${bodyBot}${bodyTop}${weld}${dim.join('')}</svg>`;
+}
+
 /** Repeating trapezoidal flute profile for a Vulcraft-style composite metal
  * deck "Nominal Dimensions" drawing. `p` = {depthIn,pitchIn,crestIn,valleyIn,
  * widthIn} always in inches (used for proportions); `unit` picks the label

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { manualHProps, manualTProps, composeSection, IN_TO_MM, IN2_TO_MM2, IN4_TO_MM4, LBFT_TO_KGM } from './compose.js';
 import { displayType } from '../../store.js';
-import { drawHPlusTSVG } from '../../lib/sectionSvg.js';
+import { drawHPlusTSVG, drawHBotTopTSVG } from '../../lib/sectionSvg.js';
 import BHDimTable from './BHDimTable.jsx';
 import ShapeAutocomplete from './ShapeAutocomplete.jsx';
 
@@ -38,25 +38,30 @@ function tPropsFromDbShape(t) {
   return { ...geo, A: A || geo.A, W: W || geo.W, d, bf, tw, tf };
 }
 
-/** BH modes 3 & 4: a T-bar welded stem-down onto an H-shape's top flange.
- * baseKind 'db' picks both the H and its paired T (WT/MT/ST/KST) from the
- * database via search-as-you-type; 'custom' uses the 4-number custom H
- * (same inputs as CustomHPanel) with a fully free-parametric T-bar. */
+/** BH modes 3 & 4: T-bar(s) welded onto an H-shape's flange(s).
+ * baseKind 'db': picks the H (중앙부, required) and a T welded to its BOTTOM
+ * flange (하부, required) from the database via search; a second T welded to
+ * the TOP flange (상부) is optional - if not picked, the composite is just
+ * 중앙부(H) + 하부(T). 'custom' (BH-4) is unchanged: a 4-number custom H with
+ * a single fully free-parametric T-bar on the top flange. */
 export default function HPlusTPanel({ baseKind }) {
   const [hType, setHType] = useState('W');
   const [hShape, setHShape] = useState(null);
-  const [tType, setTType] = useState('WT');
-  const [tShape, setTShape] = useState(null);
+  const [botType, setBotType] = useState('WT');
+  const [botShape, setBotShape] = useState(null);
+  const [topType, setTopType] = useState('WT');
+  const [topShape, setTopShape] = useState(null);
   const [customH, setCustomH] = useState({ d: 400, bf: 200, tw: 7.9375, tf: 12.7 });
   const [tBar, setTBar] = useState({ d: 150, bf: 150, tw: 7.9375, tf: 12.7 });
 
   const setCustomField = (field) => (v) => setCustomH((m) => ({ ...m, [field]: v }));
   const setTField = (field) => (v) => setTBar((m) => ({ ...m, [field]: v }));
 
-  const onPickH = (s) => setHShape(s);
   const onHTypeChange = (t) => { setHType(t); setHShape(null); };
-  const onTTypeChange = (t) => { setTType(t); setTShape(null); };
+  const onBotTypeChange = (t) => { setBotType(t); setBotShape(null); };
+  const onTopTypeChange = (t) => { setTopType(t); setTopShape(null); };
 
+  // --- H (중앙부), required in both baseKinds ---------------------------
   const hDimsIn = useMemo(() => {
     if (baseKind === 'db') {
       if (!hShape) return null;
@@ -90,37 +95,55 @@ export default function HPlusTPanel({ baseKind }) {
     return manualHProps(hDimsIn);
   }, [hDimsIn, baseKind, hShape]);
 
+  // --- BH-4 (custom): single free-parametric T-bar on the top flange ----
   const tDimsInCustom = useMemo(() => ({
     d: tBar.d * MM_TO_IN, bf: tBar.bf * MM_TO_IN, tw: tBar.tw * MM_TO_IN, tf: tBar.tf * MM_TO_IN,
   }), [tBar]);
+  const tPropsInCustom = useMemo(() => manualTProps(tDimsInCustom), [tDimsInCustom]);
+  const tValidCustom = tBar.d > tBar.tf && tBar.bf > tBar.tw && tBar.d > 0 && tBar.bf > 0 && tBar.tw > 0 && tBar.tf > 0;
 
-  const tPropsIn = useMemo(() => {
-    if (baseKind === 'db') return tShape ? tPropsFromDbShape(tShape) : null;
-    return manualTProps(tDimsInCustom);
-  }, [baseKind, tShape, tDimsInCustom]);
-
-  const tDimsIn = baseKind === 'db'
-    ? (tPropsIn ? { d: tPropsIn.d, bf: tPropsIn.bf, tw: tPropsIn.tw, tf: tPropsIn.tf } : null)
-    : tDimsInCustom;
-  const tDimsMm = baseKind === 'db'
-    ? (tShape ? { d: parseFloat(tShape.mt.d), bf: parseFloat(tShape.mt.bf), tw: parseFloat(tShape.mt.tw), tf: parseFloat(tShape.mt.tf) } : null)
-    : tBar;
-
-  const tValid = baseKind === 'db'
-    ? !!tPropsIn
-    : tBar.d > tBar.tf && tBar.bf > tBar.tw && tBar.d > 0 && tBar.bf > 0 && tBar.tw > 0 && tBar.tf > 0;
-
-  const composite = useMemo(() => {
-    if (!hPropsIn || !tPropsIn || !tValid) return null;
+  const compositeCustom = useMemo(() => {
+    if (baseKind !== 'custom' || !hPropsIn || !tValidCustom) return null;
     const layers = [
       { yOffset: 0, props: hPropsIn },
-      { yOffset: hPropsIn.d / 2 + tPropsIn.yBotExtent, props: tPropsIn },
+      { yOffset: hPropsIn.d / 2 + tPropsInCustom.yBotExtent, props: tPropsInCustom },
     ];
     return composeSection(layers);
-  }, [hPropsIn, tPropsIn, tValid]);
+  }, [baseKind, hPropsIn, tPropsInCustom, tValidCustom]);
 
-  const svgUs = hDimsIn && tDimsIn && tValid ? drawHPlusTSVG(hDimsIn, tDimsIn, '"') : null;
-  const svgMm = hDimsMm && tDimsMm && tValid ? drawHPlusTSVG(hDimsMm, tDimsMm, 'mm') : null;
+  const svgUsCustom = baseKind === 'custom' && hDimsIn && tValidCustom ? drawHPlusTSVG(hDimsIn, tDimsInCustom, '"') : null;
+  const svgMmCustom = baseKind === 'custom' && hDimsMm && tValidCustom ? drawHPlusTSVG(hDimsMm, tBar, 'mm') : null;
+
+  // --- BH-3 (db): required bottom T + H, optional top T ------------------
+  const botPropsIn = useMemo(() => (botShape ? tPropsFromDbShape(botShape) : null), [botShape]);
+  const topPropsIn = useMemo(() => (topShape ? tPropsFromDbShape(topShape) : null), [topShape]);
+
+  const botDimsIn = botPropsIn ? { d: botPropsIn.d, bf: botPropsIn.bf, tw: botPropsIn.tw, tf: botPropsIn.tf } : null;
+  const botDimsMm = botShape ? { d: parseFloat(botShape.mt.d), bf: parseFloat(botShape.mt.bf), tw: parseFloat(botShape.mt.tw), tf: parseFloat(botShape.mt.tf) } : null;
+  const topDimsIn = topPropsIn ? { d: topPropsIn.d, bf: topPropsIn.bf, tw: topPropsIn.tw, tf: topPropsIn.tf } : null;
+  const topDimsMm = topShape ? { d: parseFloat(topShape.mt.d), bf: parseFloat(topShape.mt.bf), tw: parseFloat(topShape.mt.tw), tf: parseFloat(topShape.mt.tf) } : null;
+
+  const compositeDb = useMemo(() => {
+    if (baseKind !== 'db' || !hPropsIn || !botPropsIn) return null;
+    const layers = [
+      { yOffset: 0, props: hPropsIn },
+      // bottom T mirrored (flange facing down/outward): swap its natural
+      // yTopExtent/yBotExtent since "toward flange" now points globally down.
+      {
+        yOffset: -(hPropsIn.d / 2 + botPropsIn.yBotExtent),
+        props: { ...botPropsIn, yTopExtent: botPropsIn.yBotExtent, yBotExtent: botPropsIn.yTopExtent },
+      },
+    ];
+    if (topPropsIn) layers.push({ yOffset: hPropsIn.d / 2 + topPropsIn.yBotExtent, props: topPropsIn });
+    return composeSection(layers);
+  }, [baseKind, hPropsIn, botPropsIn, topPropsIn]);
+
+  const svgUsDb = baseKind === 'db' && hDimsIn && botDimsIn ? drawHBotTopTSVG(hDimsIn, botDimsIn, topDimsIn, '"') : null;
+  const svgMmDb = baseKind === 'db' && hDimsMm && botDimsMm ? drawHBotTopTSVG(hDimsMm, botDimsMm, topDimsMm, 'mm') : null;
+
+  const composite = baseKind === 'db' ? compositeDb : compositeCustom;
+  const svgUs = baseKind === 'db' ? svgUsDb : svgUsCustom;
+  const svgMm = baseKind === 'db' ? svgMmDb : svgMmCustom;
 
   const title = baseKind === 'db' ? 'Rolled H-Section + T-Bar' : 'Built-up H-Shape + T-Bar';
 
@@ -131,28 +154,41 @@ export default function HPlusTPanel({ baseKind }) {
       {baseKind === 'db' ? (
         <div className="rolled-row">
           <div className="panel panel-combo">
-            <div className="panel-head"><h2>H-SHAPE + T-BAR 선택</h2></div>
+            <div className="panel-head"><h2>상부 · 중앙부 · 하부 형강 선택</h2></div>
             <div className="field-row">
-              <label>T Type (상부)
-                <select value={tType} onChange={(e) => onTTypeChange(e.target.value)}>
+              <label>T Type (상부, 선택)
+                <select value={topType} onChange={(e) => onTopTypeChange(e.target.value)}>
                   {T_TYPES.map((t) => <option key={t} value={t}>{displayType(t)}</option>)}
                 </select>
               </label>
-              <label>T-BAR (검색)
-                <ShapeAutocomplete key={tType} type={tType} onSelect={setTShape} placeholder={`${tType} 검색…`} />
+              <label>상부 T-BAR (검색)
+                <ShapeAutocomplete key={topType} type={topType} onSelect={setTopShape} placeholder={`${topType} 검색… (선택 안 해도 됨)`} />
               </label>
             </div>
             <div className="field-row">
-              <label>H Type (하부)
+              <label>H Type (중앙부)
                 <select value={hType} onChange={(e) => onHTypeChange(e.target.value)}>
                   {H_TYPES.map((t) => <option key={t} value={t}>{displayType(t)}</option>)}
                 </select>
               </label>
-              <label>H-SHAPE (검색)
-                <ShapeAutocomplete key={hType} type={hType} onSelect={onPickH} placeholder={`${hType} 형강 검색…`} />
+              <label>중앙부 H-SHAPE (검색)
+                <ShapeAutocomplete key={hType} type={hType} onSelect={setHShape} placeholder={`${hType} 형강 검색…`} />
               </label>
             </div>
-            <p className="note">T-BAR(상부)와 H-SHAPE(하부)를 각각 독립적으로 선택할 수 있습니다. T-BAR는 H의 상부 플랜지 위에 스템을 맞대어 용접됩니다.</p>
+            <div className="field-row">
+              <label>T Type (하부)
+                <select value={botType} onChange={(e) => onBotTypeChange(e.target.value)}>
+                  {T_TYPES.map((t) => <option key={t} value={t}>{displayType(t)}</option>)}
+                </select>
+              </label>
+              <label>하부 T-BAR (검색)
+                <ShapeAutocomplete key={botType} type={botType} onSelect={setBotShape} placeholder={`${botType} 검색…`} />
+              </label>
+            </div>
+            <p className="note">
+              상부는 선택하지 않아도 됩니다 — 상부를 선택하지 않으면 중앙부(H)+하부(T)만으로 계산합니다.
+              하부 T-BAR는 H의 하부 플랜지에, 상부 T-BAR는 H의 상부 플랜지에 스템을 맞대어 용접됩니다.
+            </p>
           </div>
 
           <figure className="panel draw">
@@ -167,7 +203,7 @@ export default function HPlusTPanel({ baseKind }) {
                   </div>
                 )}
               </>
-            ) : <p className="note">H-SHAPE와 T-BAR를 선택하면 단면도가 표시됩니다.</p>}
+            ) : <p className="note">중앙부(H)와 하부(T-BAR)를 선택하면 단면도가 표시됩니다.</p>}
           </figure>
           <figure className="panel draw">
             <figcaption className="draw-cap">Metric<span>mm</span></figcaption>
@@ -181,7 +217,7 @@ export default function HPlusTPanel({ baseKind }) {
                   </div>
                 )}
               </>
-            ) : <p className="note">H-SHAPE와 T-BAR를 선택하면 단면도가 표시됩니다.</p>}
+            ) : <p className="note">중앙부(H)와 하부(T-BAR)를 선택하면 단면도가 표시됩니다.</p>}
           </figure>
         </div>
       ) : (
@@ -198,7 +234,7 @@ export default function HPlusTPanel({ baseKind }) {
             <div style={{ padding: 14 }}>
               <BHDimTable fields={T_FIELDS} mm={tBar} onChangeMm={setTField} />
             </div>
-            {!tValid && <p className="note">T-BAR 치수가 유효하지 않습니다.</p>}
+            {!tValidCustom && <p className="note">T-BAR 치수가 유효하지 않습니다.</p>}
             <p className="note">T-BAR 높이(d)를 바꾸면 tw를 자유롭게 조정해 웹 접합부에 맞출 수 있습니다. H의 상부 플랜지 위에 T의 웨브(스템)를 용접하는 방식입니다.</p>
           </div>
 
@@ -236,12 +272,12 @@ export default function HPlusTPanel({ baseKind }) {
               <tr><td className="sym mono">Iy</td><td className="r mono">{composite.Iy.toFixed(1)} <em>in⁴</em></td><td className="r mono">{(composite.Iy * IN4_TO_MM4 / 1e6).toFixed(1)} <em>×10⁶ mm⁴</em></td><td className="desc">y축 관성모멘트</td></tr>
               <tr><td className="sym mono">rx</td><td className="r mono">{composite.rx.toFixed(2)} <em>in</em></td><td className="r mono">{(composite.rx * IN_TO_MM).toFixed(0)} <em>mm</em></td><td className="desc">x축 회전반경</td></tr>
               <tr><td className="sym mono">ry</td><td className="r mono">{composite.ry.toFixed(2)} <em>in</em></td><td className="r mono">{(composite.ry * IN_TO_MM).toFixed(0)} <em>mm</em></td><td className="desc">y축 회전반경</td></tr>
-              {composite.Sx_top && <tr><td className="sym mono">Sx(top)</td><td className="r mono">{composite.Sx_top.toFixed(1)} <em>in³</em></td><td className="r mono">{(composite.Sx_top * IN4_TO_MM4 / IN_TO_MM / 1e3).toFixed(1)} <em>×10³ mm³</em></td><td className="desc">상연(T측) 단면계수</td></tr>}
-              {composite.Sx_bot && <tr><td className="sym mono">Sx(bot)</td><td className="r mono">{composite.Sx_bot.toFixed(1)} <em>in³</em></td><td className="r mono">{(composite.Sx_bot * IN4_TO_MM4 / IN_TO_MM / 1e3).toFixed(1)} <em>×10³ mm³</em></td><td className="desc">하연(H측) 단면계수</td></tr>}
-              <tr><td className="sym mono">W</td><td className="r mono">{composite.W.toFixed(1)} <em>lb/ft</em></td><td className="r mono">{(composite.W * LBFT_TO_KGM).toFixed(1)} <em>kg/m</em></td><td className="desc">단위중량 (H + T)</td></tr>
+              {composite.Sx_top && <tr><td className="sym mono">Sx(top)</td><td className="r mono">{composite.Sx_top.toFixed(1)} <em>in³</em></td><td className="r mono">{(composite.Sx_top * IN4_TO_MM4 / IN_TO_MM / 1e3).toFixed(1)} <em>×10³ mm³</em></td><td className="desc">상연 단면계수</td></tr>}
+              {composite.Sx_bot && <tr><td className="sym mono">Sx(bot)</td><td className="r mono">{composite.Sx_bot.toFixed(1)} <em>in³</em></td><td className="r mono">{(composite.Sx_bot * IN4_TO_MM4 / IN_TO_MM / 1e3).toFixed(1)} <em>×10³ mm³</em></td><td className="desc">하연 단면계수</td></tr>}
+              <tr><td className="sym mono">W</td><td className="r mono">{composite.W.toFixed(1)} <em>lb/ft</em></td><td className="r mono">{(composite.W * LBFT_TO_KGM).toFixed(1)} <em>kg/m</em></td><td className="desc">단위중량</td></tr>
             </tbody>
           </table>
-          <p className="note">⚠ 계산값입니다 (필렛·용접부 미고려). T-BAR는 H의 상부 플랜지 외측면에 스템을 맞대어 용접하는 것으로 가정합니다. A572 GR50/A36 표기는 두께에 따른 일반적 유통 규격 안내이며, 실제 조달 가능 여부는 제작사에 확인하시기 바랍니다.</p>
+          <p className="note">⚠ 계산값입니다 (필렛·용접부 미고려). T-BAR는 H의 플랜지 외측면에 스템을 맞대어 용접하는 것으로 가정합니다. A572 GR50/A36 표기는 두께에 따른 일반적 유통 규격 안내이며, 실제 조달 가능 여부는 제작사에 확인하시기 바랍니다.</p>
         </div>
       )}
     </>
