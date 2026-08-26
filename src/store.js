@@ -23,10 +23,10 @@ export const BELOW_GROUPS = [
 // Short sidebar labels for BELOW_GROUPS items whose key isn't already readable.
 export const NAV_ITEM_LABEL = {
   PLATE: 'Plate',
-  'BH-1': '① Built-up H-Section',
-  'BH-2': '② Unequal Flange H',
-  'BH-3': '③ Rolled H + T-Bar',
-  'BH-4': '④ Built-up H + T-Bar',
+  'BH-1': 'Built-up H-Shape',
+  'BH-2': 'Unequal Built-up H-Shape',
+  'BH-3': 'Rolled : H+T-Bar',
+  'BH-4': 'Built-up : H+T-Bar',
   'PURLIN-CEE': 'Purlin-CEE', 'PURLIN-ZEE': 'Purlin-ZEE',
   METALDECK: 'Metal Deck', REBAR: 'Rebar',
 };

@@ -40,11 +40,7 @@ export default function BHDimTable({ fields, mm, onChangeMm }) {
                 {f.thickness && (
                   <select value={selId} onChange={onSelect}>
                     <option value="">직접입력…</option>
-                    {thicknesses.map((t) => (
-                      <option key={t.id} value={t.id}>
-                        {t.thickness_in}" — {gradeLabel(t.thickness_mm * MM_TO_IN)}
-                      </option>
-                    ))}
+                    {thicknesses.map((t) => <option key={t.id} value={t.id}>{t.thickness_in}"</option>)}
                   </select>
                 )}
                 <input
