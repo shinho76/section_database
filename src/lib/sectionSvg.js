@@ -371,31 +371,35 @@ function tBodyStemUpPath(xStem0, yTop, bw, bh, tw, tf, r, fill, stroke) {
     v${tf} h${-bw} v${-tf} h${sh} v${-(bh - tf)} Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
 }
 
-/** H-shape with a required T-bar welded stem-up onto its BOTTOM flange, and
+/** H-shape with an optional T-bar welded stem-up onto its BOTTOM flange and
  * an optional second T-bar welded stem-down onto its TOP flange (BH modes
- * 3/4's 상부/중앙부/하부 layout). hDims/botDims are required; topDims is null
- * when no top T is selected. All dims are plain {d,bf,tw,tf,r?} in the target
- * unit — `r` is the flange/web fillet radius (0/undefined draws sharp corners,
- * as for built-up welded plates which have no rolled fillet). */
+ * 3/4's 상부/중앙부/하부 layout). Any of hDims/botDims/topDims may be null —
+ * whichever pieces are present are stacked top-to-bottom in that order and
+ * drawn; at least one must be non-null. All dims are plain {d,bf,tw,tf,r?}
+ * in the target unit — `r` is the flange/web fillet radius (0/undefined
+ * draws sharp corners, as for built-up welded plates with no rolled fillet). */
 export function drawHBotTopTSVG(hDims, botDims, topDims, unit) {
   const id = nextId('dtt');
   const gutter = { l: 58, t: 40, r: 60, b: 40 };
   const bboxW = W - gutter.l - gutter.r;
   const bboxH = H - gutter.t - gutter.b;
-  const ow = Math.max(hDims.bf, botDims.bf, topDims ? topDims.bf : 0);
-  const oh = hDims.d + botDims.d + (topDims ? topDims.d : 0);
+  const hasH = !!hDims, hasBot = !!botDims, hasTop = !!topDims;
+  const ow = Math.max(hDims?.bf || 0, botDims?.bf || 0, topDims?.bf || 0);
+  const oh = (hDims?.d || 0) + (botDims?.d || 0) + (topDims?.d || 0);
   const k = Math.min(bboxW / ow, bboxH / oh);
   const sx = (v) => v * k;
   const cx = gutter.l + bboxW / 2;
   const topY = gutter.t + (bboxH - oh * k) / 2;
 
-  const bwH = sx(hDims.bf), bhH = sx(hDims.d), twH = sx(hDims.tw), tfH = sx(hDims.tf), rH = sx(hDims.r || 0);
-  const bwBot = sx(botDims.bf), bhBot = sx(botDims.d), twBot = sx(botDims.tw), tfBot = sx(botDims.tf), rBot = sx(botDims.r || 0);
-
-  const hasTop = !!topDims;
   const bwTop = hasTop ? sx(topDims.bf) : 0, bhTop = hasTop ? sx(topDims.d) : 0;
   const twTop = hasTop ? sx(topDims.tw) : 0, tfTop = hasTop ? sx(topDims.tf) : 0;
   const rTop = hasTop ? sx(topDims.r || 0) : 0;
+
+  const bwH = hasH ? sx(hDims.bf) : 0, bhH = hasH ? sx(hDims.d) : 0;
+  const twH = hasH ? sx(hDims.tw) : 0, tfH = hasH ? sx(hDims.tf) : 0, rH = hasH ? sx(hDims.r || 0) : 0;
+
+  const bwBot = hasBot ? sx(botDims.bf) : 0, bhBot = hasBot ? sx(botDims.d) : 0;
+  const twBot = hasBot ? sx(botDims.tw) : 0, tfBot = hasBot ? sx(botDims.tf) : 0, rBot = hasBot ? sx(botDims.r || 0) : 0;
 
   const yHtop = topY + bhTop;
   const yHbot = yHtop + bhH;
@@ -405,33 +409,45 @@ export function drawHBotTopTSVG(hDims, botDims, topDims, unit) {
   const x0Top = cx - bwTop / 2;
 
   const fill = `url(#hatch-${id})`, stroke = 'var(--steel-line)';
-  const bodyH = iBodyPath(x0H, yHtop, bwH, bhH, twH, tfH, rH, fill, stroke);
-  // bottom T, stem-up (anchored at its stem's top-left corner, touching H's bottom flange)
-  const bodyBot = tBodyStemUpPath(cx - twBot / 2, yHbot, bwBot, bhBot, twBot, tfBot, rBot, fill, stroke);
+  const bodyH = hasH ? iBodyPath(x0H, yHtop, bwH, bhH, twH, tfH, rH, fill, stroke) : '';
+  // bottom T, stem-up (anchored at its stem's top-left corner, touching whatever sits above it)
+  const bodyBot = hasBot ? tBodyStemUpPath(cx - twBot / 2, yHbot, bwBot, bhBot, twBot, tfBot, rBot, fill, stroke) : '';
   const bodyTop = hasTop ? tBodyStemDownPath(x0Top, topY, bwTop, bhTop, twTop, tfTop, rTop, fill, stroke) : '';
 
-  const wfBot = Math.min(8, twH / 2);
-  let weld = `<path d="M${cx - twBot / 2 - wfBot},${yHbot} L${cx - twBot / 2},${yHbot + wfBot} L${cx - twBot / 2},${yHbot} Z
-    M${cx + twBot / 2 + wfBot},${yHbot} L${cx + twBot / 2},${yHbot + wfBot} L${cx + twBot / 2},${yHbot} Z"
-    fill="var(--val-warn)" opacity=".85"/>`;
-  if (hasTop) {
-    const wfTop = Math.min(8, twH / 2);
+  // Weld marks at each junction that actually exists between two present pieces.
+  let weld = '';
+  if (hasBot && (hasH || hasTop)) {
+    const refTw = hasH ? twH : twTop;
+    const wfBot = Math.min(8, Math.max(refTw, 2) / 2);
+    weld += `<path d="M${cx - twBot / 2 - wfBot},${yHbot} L${cx - twBot / 2},${yHbot + wfBot} L${cx - twBot / 2},${yHbot} Z
+      M${cx + twBot / 2 + wfBot},${yHbot} L${cx + twBot / 2},${yHbot + wfBot} L${cx + twBot / 2},${yHbot} Z"
+      fill="var(--val-warn)" opacity=".85"/>`;
+  }
+  if (hasTop && (hasH || hasBot)) {
+    const refTw = hasH ? twH : twBot;
+    const wfTop = Math.min(8, Math.max(refTw, 2) / 2);
     weld += `<path d="M${cx - twTop / 2 - wfTop},${yHtop} L${cx - twTop / 2},${yHtop - wfTop} L${cx - twTop / 2},${yHtop} Z
       M${cx + twTop / 2 + wfTop},${yHtop} L${cx + twTop / 2},${yHtop - wfTop} L${cx + twTop / 2},${yHtop} Z"
       fill="var(--val-warn)" opacity=".85"/>`;
   }
 
   const dim = [];
-  const totalD = hDims.d + botDims.d + (topDims ? topDims.d : 0);
-  vDim(dim, id, topY, yBotEnd, x0H - 26, Math.min(x0H, x0Bot, hasTop ? x0Top : x0H), `D=${fmtDim(totalD, unit)}${unit}`);
-  hDim(dim, id, x0H, x0H + bwH, yHbot + 24, yHbot, `bf(H)=${fmtDim(hDims.bf, unit)}${unit}`);
-  hDim(dim, id, x0Bot, x0Bot + bwBot, yBotEnd + 24, yBotEnd, `bf(bot)=${fmtDim(botDims.bf, unit)}${unit}`);
-  microV(dim, id, yHtop, yHtop + tfH, x0H + bwH + 20, `tf(H)=${fmtDim(hDims.tf, unit)}${unit}`);
-  microH(dim, id, cx - twH / 2, cx + twH / 2, (yHtop + yHbot) / 2, `tw(H)=${fmtDim(hDims.tw, unit)}${unit}`, 1);
-  microV(dim, id, yBotEnd - tfBot, yBotEnd, x0Bot + bwBot + 20, `tf(bot)=${fmtDim(botDims.tf, unit)}${unit}`, 1);
-  microH(dim, id, cx - twBot / 2, cx + twBot / 2, yHbot + (bhBot - tfBot) / 2, `tw(bot)=${fmtDim(botDims.tw, unit)}${unit}`, 1);
-  if (hDims.r) dim.push(text(x0H + (bwH - twH) / 4, yHtop + tfH + Math.max(rH, 10) * 0.6, `r(H)=${fmtDim(hDims.r, unit)}${unit}`));
-  if (botDims.r) dim.push(text(x0Bot + (bwBot - twBot) / 4, yHbot + bhBot - tfBot - Math.max(rBot, 10) * 0.6, `r(bot)=${fmtDim(botDims.r, unit)}${unit}`));
+  const totalD = (hDims?.d || 0) + (botDims?.d || 0) + (topDims?.d || 0);
+  const xs = [hasH && x0H, hasBot && x0Bot, hasTop && x0Top].filter((v) => v !== false);
+  const extX = Math.min(...xs);
+  vDim(dim, id, topY, yBotEnd, extX - 26, extX, `D=${fmtDim(totalD, unit)}${unit}`);
+  if (hasH) {
+    hDim(dim, id, x0H, x0H + bwH, yHbot + 24, yHbot, `bf(H)=${fmtDim(hDims.bf, unit)}${unit}`);
+    microV(dim, id, yHtop, yHtop + tfH, x0H + bwH + 20, `tf(H)=${fmtDim(hDims.tf, unit)}${unit}`);
+    microH(dim, id, cx - twH / 2, cx + twH / 2, (yHtop + yHbot) / 2, `tw(H)=${fmtDim(hDims.tw, unit)}${unit}`, 1);
+    if (hDims.r) dim.push(text(x0H + (bwH - twH) / 4, yHtop + tfH + Math.max(rH, 10) * 0.6, `r(H)=${fmtDim(hDims.r, unit)}${unit}`));
+  }
+  if (hasBot) {
+    hDim(dim, id, x0Bot, x0Bot + bwBot, yBotEnd + 24, yBotEnd, `bf(bot)=${fmtDim(botDims.bf, unit)}${unit}`);
+    microV(dim, id, yBotEnd - tfBot, yBotEnd, x0Bot + bwBot + 20, `tf(bot)=${fmtDim(botDims.tf, unit)}${unit}`, 1);
+    microH(dim, id, cx - twBot / 2, cx + twBot / 2, yHbot + (bhBot - tfBot) / 2, `tw(bot)=${fmtDim(botDims.tw, unit)}${unit}`, 1);
+    if (botDims.r) dim.push(text(x0Bot + (bwBot - twBot) / 4, yHbot + bhBot - tfBot - Math.max(rBot, 10) * 0.6, `r(bot)=${fmtDim(botDims.r, unit)}${unit}`));
+  }
   if (hasTop) {
     hDim(dim, id, x0Top, x0Top + bwTop, topY - 22, topY, `bf(top)=${fmtDim(topDims.bf, unit)}${unit}`);
     microV(dim, id, topY, topY + tfTop, x0Top - 20, `tf(top)=${fmtDim(topDims.tf, unit)}${unit}`, -1);

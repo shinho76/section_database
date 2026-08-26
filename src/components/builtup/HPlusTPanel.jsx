@@ -175,27 +175,44 @@ export default function HPlusTPanel({ baseKind }) {
     ? (topActive && topShape ? { d: parseFloat(topShape.mt.d), bf: parseFloat(topShape.mt.bf), tw: parseFloat(topShape.mt.tw), tf: parseFloat(topShape.mt.tf), r: filletR(topShape.mt) } : null)
     : (topPropsIn ? { ...topBar, r: 0 } : null);
 
-  // --- composite: H(중앙부) + 하부(mirrored) + optional 상부 ----------------
+  // --- composite: any subset of 상부/중앙부/하부, stacked top-to-bottom -----
+  // Pieces are placed by tracking the y-position of the next piece's top
+  // surface (world-up positive), starting arbitrarily at 0 — a constant
+  // shift of every yOffset doesn't change Ix/Sx/rx/ry/W (only the unused
+  // absolute ybar), so this reduces to the exact same relative spacing as
+  // the old H-anchored-at-0 formula when all three (or H+하부) are present.
   const composite = useMemo(() => {
-    if (!hPropsIn || !botPropsIn) return null;
-    const layers = [
-      { yOffset: 0, props: hPropsIn },
-      // bottom T mirrored (flange facing down/outward): swap its natural
-      // yTopExtent/yBotExtent since "toward flange" now points globally down.
-      {
-        yOffset: -(hPropsIn.d / 2 + botPropsIn.yBotExtent),
+    const layers = [];
+    let cursor = 0;
+    if (topPropsIn) {
+      // natural orientation (flange up): top surface = flange face (yTopExtent away).
+      const centroidY = cursor - topPropsIn.yTopExtent;
+      layers.push({ yOffset: centroidY, props: topPropsIn });
+      cursor = centroidY - topPropsIn.yBotExtent;
+    }
+    if (hPropsIn) {
+      const half = hPropsIn.d / 2;
+      const centroidY = cursor - half;
+      layers.push({ yOffset: centroidY, props: hPropsIn });
+      cursor = centroidY - half;
+    }
+    if (botPropsIn) {
+      // mirrored orientation (flange down): top surface = stem tip (natural yBotExtent away).
+      const centroidY = cursor - botPropsIn.yBotExtent;
+      layers.push({
+        yOffset: centroidY,
         props: { ...botPropsIn, yTopExtent: botPropsIn.yBotExtent, yBotExtent: botPropsIn.yTopExtent },
-      },
-    ];
-    if (topPropsIn) layers.push({ yOffset: hPropsIn.d / 2 + topPropsIn.yBotExtent, props: topPropsIn });
-    return composeSection(layers);
+      });
+      cursor = centroidY - botPropsIn.yTopExtent;
+    }
+    return layers.length ? composeSection(layers) : null;
   }, [hPropsIn, botPropsIn, topPropsIn]);
 
-  const svgUs = hDimsIn && botDimsIn ? drawHBotTopTSVG(hDimsIn, botDimsIn, topDimsIn, '"') : null;
-  const svgMm = hDimsMm && botDimsMm ? drawHBotTopTSVG(hDimsMm, botDimsMm, topDimsMm, 'mm') : null;
+  const svgUs = hDimsIn || botDimsIn || topDimsIn ? drawHBotTopTSVG(hDimsIn, botDimsIn, topDimsIn, '"') : null;
+  const svgMm = hDimsMm || botDimsMm || topDimsMm ? drawHBotTopTSVG(hDimsMm, botDimsMm, topDimsMm, 'mm') : null;
 
   const title = baseKind === 'db' ? 'Rolled H-Section + T-Bar' : 'Built-up H-Shape + T-Bar';
-  const emptyNote = '중앙부(H)와 하부(T-BAR)를 선택하면 단면도가 표시됩니다.';
+  const emptyNote = '상부·중앙부·하부 중 하나 이상을 선택하면 단면도가 표시됩니다.';
 
   return (
     <>
@@ -219,34 +236,34 @@ export default function HPlusTPanel({ baseKind }) {
               </label>
             </div>
             <div className="field-row">
-              <label>H Type (중앙부)
+              <label>H Type (중앙부, 선택)
                 <select value={hType} onChange={(e) => onHTypeChange(e.target.value)}>
                   {H_TYPES.map((t) => <option key={t} value={t}>{displayType(t)}</option>)}
                 </select>
               </label>
               <label>중앙부 H-SHAPE (검색)
                 <div className="combo-with-delete">
-                  <ShapeAutocomplete key={`${hType}-${hGen}`} type={hType} onSelect={setHShape} initialName={hShape?.name} placeholder={`${hType} 형강 검색…`} />
+                  <ShapeAutocomplete key={`${hType}-${hGen}`} type={hType} onSelect={setHShape} initialName={hShape?.name} placeholder={`${hType} 형강 검색… (선택 안 해도 됨)`} />
                   {hShape && <button type="button" className="combo-delete" title="중앙부 H-SHAPE 삭제" onClick={clearHShape}>×</button>}
                 </div>
               </label>
             </div>
             <div className="field-row">
-              <label>T Type (하부)
+              <label>T Type (하부, 선택)
                 <select value={botType} onChange={(e) => onBotTypeChange(e.target.value)}>
                   {T_TYPES.map((t) => <option key={t} value={t}>{displayType(t)}</option>)}
                 </select>
               </label>
               <label>하부 T-BAR (검색)
                 <div className="combo-with-delete">
-                  <ShapeAutocomplete key={`${botType}-${botGen}`} type={botType} onSelect={setBotShape} initialName={botShape?.name} placeholder={`${botType} 검색…`} />
+                  <ShapeAutocomplete key={`${botType}-${botGen}`} type={botType} onSelect={setBotShape} initialName={botShape?.name} placeholder={`${botType} 검색… (선택 안 해도 됨)`} />
                   {botShape && <button type="button" className="combo-delete" title="하부 T-BAR 삭제" onClick={clearBotShape}>×</button>}
                 </div>
               </label>
             </div>
             <p className="note">
-              상부는 선택하지 않아도 됩니다 — 상부를 선택하지 않으면 중앙부(H)+하부(T)만으로 계산합니다.
-              하부 T-BAR는 H의 하부 플랜지에, 상부 T-BAR는 H의 상부 플랜지에 스템을 맞대어 용접됩니다.
+              상부·중앙부·하부 모두 선택하지 않아도 됩니다 — 선택한 부재만으로 합성 단면을 계산합니다 (하나 이상 필요).
+              하부 T-BAR는 위쪽 부재의 하부 플랜지(또는 바로 위 부재)에, 상부 T-BAR는 아래쪽 부재의 상부 플랜지(또는 바로 아래 부재)에 스템을 맞대어 용접되는 것으로 가정합니다.
             </p>
           </div>
 
@@ -280,7 +297,7 @@ export default function HPlusTPanel({ baseKind }) {
           </figure>
         </div>
       ) : (
-        <div className="rolled-row">
+        <>
           <div className="panel panel-combo">
             <div className="panel-head"><h2>상부 · 중앙부 · 하부 플레이트 입력</h2></div>
 
@@ -291,18 +308,18 @@ export default function HPlusTPanel({ baseKind }) {
               </label>
             </div>
             {topBarEnabled && (
-              <div style={{ padding: '0 14px 10px' }}>
+              <div style={{ padding: '0 14px 10px', overflowX: 'auto' }}>
                 <BHDimTable fields={T_FIELDS} mm={topBar} onChangeMm={setTopBarField} />
               </div>
             )}
 
             <div className="panel-head"><h2 style={{ fontSize: 15 }}>중앙부 H-SHAPE</h2></div>
-            <div style={{ padding: '0 14px 10px' }}>
+            <div style={{ padding: '0 14px 10px', overflowX: 'auto' }}>
               <BHDimTable fields={H_FIELDS} mm={customH} onChangeMm={setCustomField} />
             </div>
 
             <div className="panel-head"><h2 style={{ fontSize: 15 }}>하부 T-BAR</h2></div>
-            <div style={{ padding: '0 14px 10px' }}>
+            <div style={{ padding: '0 14px 10px', overflowX: 'auto' }}>
               <BHDimTable fields={T_FIELDS} mm={botBar} onChangeMm={setBotBarField} />
             </div>
 
@@ -312,35 +329,37 @@ export default function HPlusTPanel({ baseKind }) {
             </p>
           </div>
 
-          <figure className="panel draw">
-            <figcaption className="draw-cap">Imperial<span>inch</span></figcaption>
-            {svgUs ? (
-              <>
-                <div dangerouslySetInnerHTML={{ __html: svgUs }} />
-                {composite && (
-                  <div className="weight">
-                    <span className="wv mono">{composite.W.toFixed(1)}</span><span className="wu">lb/ft</span>
-                    <span className="wv mono" style={{ marginLeft: 14 }}>{composite.A.toFixed(2)}</span><span className="wu">in²</span>
-                  </div>
-                )}
-              </>
-            ) : <p className="note">{emptyNote}</p>}
-          </figure>
-          <figure className="panel draw">
-            <figcaption className="draw-cap">Metric<span>mm</span></figcaption>
-            {svgMm ? (
-              <>
-                <div dangerouslySetInnerHTML={{ __html: svgMm }} />
-                {composite && (
-                  <div className="weight">
-                    <span className="wv mono">{(composite.W * LBFT_TO_KGM).toFixed(1)}</span><span className="wu">kg/m</span>
-                    <span className="wv mono" style={{ marginLeft: 14 }}>{(composite.A * IN2_TO_MM2).toFixed(0)}</span><span className="wu">mm²</span>
-                  </div>
-                )}
-              </>
-            ) : <p className="note">{emptyNote}</p>}
-          </figure>
-        </div>
+          <div className="draw-grid">
+            <figure className="panel draw">
+              <figcaption className="draw-cap">Imperial<span>inch</span></figcaption>
+              {svgUs ? (
+                <>
+                  <div dangerouslySetInnerHTML={{ __html: svgUs }} />
+                  {composite && (
+                    <div className="weight">
+                      <span className="wv mono">{composite.W.toFixed(1)}</span><span className="wu">lb/ft</span>
+                      <span className="wv mono" style={{ marginLeft: 14 }}>{composite.A.toFixed(2)}</span><span className="wu">in²</span>
+                    </div>
+                  )}
+                </>
+              ) : <p className="note">{emptyNote}</p>}
+            </figure>
+            <figure className="panel draw">
+              <figcaption className="draw-cap">Metric<span>mm</span></figcaption>
+              {svgMm ? (
+                <>
+                  <div dangerouslySetInnerHTML={{ __html: svgMm }} />
+                  {composite && (
+                    <div className="weight">
+                      <span className="wv mono">{(composite.W * LBFT_TO_KGM).toFixed(1)}</span><span className="wu">kg/m</span>
+                      <span className="wv mono" style={{ marginLeft: 14 }}>{(composite.A * IN2_TO_MM2).toFixed(0)}</span><span className="wu">mm²</span>
+                    </div>
+                  )}
+                </>
+              ) : <p className="note">{emptyNote}</p>}
+            </figure>
+          </div>
+        </>
       )}
 
       {composite && (

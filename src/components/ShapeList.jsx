@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useStore, TYPE_LABEL } from '../store.js';
 import { loadType } from '../lib/dataLoader.js';
 import { hasMatchPair, matchTargetType, findNearestInRows } from '../lib/nearestMatch.js';
+import ShapeCompareModal from './ShapeCompareModal.jsx';
 
 const seriesKey = (name) => name.split(/[X×]/)[0];
 
@@ -10,6 +11,7 @@ export default function ShapeList() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [matches, setMatches] = useState(new Map()); // name -> { type, shape }
+  const [compare, setCompare] = useState(null); // { row, match } while the compare modal is open
 
   useEffect(() => {
     let cancelled = false;
@@ -89,7 +91,7 @@ export default function ShapeList() {
                     {m ? (
                       <button
                         className="match-link"
-                        onClick={(e) => { e.stopPropagation(); gotoMatch(m); }}
+                        onClick={(e) => { e.stopPropagation(); setCompare({ row: s, match: m }); }}
                       >
                         {m.shape.name}
                       </button>
@@ -106,6 +108,14 @@ export default function ShapeList() {
           })}
         </tbody>
       </table>
+      {compare && (
+        <ShapeCompareModal
+          a={compare.row}
+          b={compare.match.shape}
+          onClose={() => setCompare(null)}
+          onGoto={() => { gotoMatch(compare.match); setCompare(null); }}
+        />
+      )}
     </div>
   );
 }

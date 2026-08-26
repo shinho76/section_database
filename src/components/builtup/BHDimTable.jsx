@@ -53,7 +53,7 @@ function InCell({ f, mm, onChangeMm }) {
       )}
       <input
         type="number" step={f.thickness ? 0.001 : 0.01}
-        value={inVal === '' ? '' : +inVal.toFixed(4)} onChange={onType}
+        value={inVal === '' ? '' : +inVal.toFixed(1)} onChange={onType}
       />
       {f.thickness && inVal !== '' && <span className="grade-badge">{gradeLabel(inVal)}</span>}
     </>
@@ -69,7 +69,7 @@ function MmCell({ f, mm, onChangeMm }) {
     const x = parseFloat(raw);
     if (Number.isFinite(x) && x > 0) onChangeMm(f.key)(x);
   };
-  return <input type="number" step={f.thickness ? 0.1 : 1} value={v == null ? '' : +v.toFixed(3)} onChange={onType} />;
+  return <input type="number" step={f.thickness ? 0.1 : 1} value={v == null ? '' : +v.toFixed(1)} onChange={onType} />;
 }
 
 /** Dimension-entry table: row 1 = field names (height/width/thickness…),
