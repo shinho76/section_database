@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { manualHProps, manualTProps, composeSection, IN_TO_MM, IN2_TO_MM2, IN4_TO_MM4, LBFT_TO_KGM } from './compose.js';
 import { loadType } from '../../lib/dataLoader.js';
+import { displayType } from '../../store.js';
 import { drawHPlusTSVG } from '../../lib/sectionSvg.js';
 import DualUnitInput from './DualUnitInput.jsx';
 import PlateThicknessInput from './PlateThicknessInput.jsx';
@@ -95,7 +96,7 @@ export default function HPlusTPanel({ baseKind }) {
             <div className="field-row">
               <label>Type
                 <select value={dbType} onChange={(e) => setDbType(e.target.value)}>
-                  {H_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+                  {H_TYPES.map((t) => <option key={t} value={t}>{displayType(t)}</option>)}
                 </select>
               </label>
               <label>Shape

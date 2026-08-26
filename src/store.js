@@ -46,10 +46,19 @@ export const TYPE_LABEL = {
   'BH-3': 'Rolled H-Section + T-Bar', 'BH-4': 'Built-up H-Shape + T-Bar',
   'PURLIN-CEE': 'Purlin-CEE', 'PURLIN-ZEE': 'Purlin-ZEE',
   METALDECK: 'Metal Deck', REBAR: 'Rebar',
-  KSH: 'H — H형강 (KS D 3502)', KSL: 'L — 등변앵글 (KS D 3502)',
-  KSP: 'P — 원형강관 (KS D 3502)', KST: 'T — T형강 (KS D 3502)',
-  KSB: 'B — 각형강관 (KS D 3502)', KSC: 'C — ㄷ형강 (KS D 3502)',
+  KSH: 'KS H Section — H형강 (KS D 3502)', KSL: 'KS L Section — 등변앵글 (KS D 3502)',
+  KSP: 'KS P Section — 원형강관 (KS D 3502)', KST: 'KS T Section — T형강 (KS D 3502)',
+  KSB: 'KS B Section — 각형강관 (KS D 3502)', KSC: 'KS C Section — ㄷ형강 (KS D 3502)',
 };
+
+// Short "KS <X> Section" name for raw type codes shown in badges/chips
+// (e.g. the shape-detail "Type" chip, search result rows) — everywhere a
+// bare code like "KSP" would otherwise be printed to the user.
+export const TYPE_DISPLAY = {
+  KSH: 'KS H Section', KSL: 'KS L Section', KSP: 'KS P Section',
+  KST: 'KS T Section', KSB: 'KS B Section', KSC: 'KS C Section',
+};
+export const displayType = (t) => TYPE_DISPLAY[t] || t;
 
 export const useStore = create((set) => ({
   activeKey: 'W',

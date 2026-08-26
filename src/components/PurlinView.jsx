@@ -18,7 +18,19 @@ function CapabilityPanel({ cap }) {
   );
 }
 
+/** Alternating background per depth (D) series, matching the AISC/KS shape
+ * lists — makes each purlin depth series visually distinct at a glance. */
+function useSeriesBand(rows, keyFn) {
+  let lastSeries = null, band = 0;
+  return rows.map((r) => {
+    const sk = keyFn(r);
+    if (sk !== lastSeries) { band = 1 - band; lastSeries = sk; }
+    return band;
+  });
+}
+
 function CeeTable({ rows, onSelect }) {
+  const bands = useSeriesBand(rows, (r) => r.d);
   return (
     <table className="list">
       <thead>
@@ -30,7 +42,7 @@ function CeeTable({ rows, onSelect }) {
       </thead>
       <tbody>
         {rows.map((r, i) => (
-          <tr key={i} onClick={() => onSelect(r, 'cee')}>
+          <tr key={i} onClick={() => onSelect(r, 'cee')} className={`series-band-${bands[i]}`}>
             <td className="mono ks">C-{r.d}X{r.b}X{r.ga}GA</td>
             <td className="r mono">{r.d}</td>
             <td className="r mono">{r.b}</td>
@@ -47,6 +59,7 @@ function CeeTable({ rows, onSelect }) {
 }
 
 function ZeeTable({ rows, onSelect }) {
+  const bands = useSeriesBand(rows, (r) => r.d);
   return (
     <table className="list">
       <thead>
@@ -58,7 +71,7 @@ function ZeeTable({ rows, onSelect }) {
       </thead>
       <tbody>
         {rows.map((r, i) => (
-          <tr key={i} onClick={() => onSelect(r, 'zee')}>
+          <tr key={i} onClick={() => onSelect(r, 'zee')} className={`series-band-${bands[i]}`}>
             <td className="mono ks">Z-{r.d}X{r.b}X{r.ga}GA</td>
             <td className="r mono">{r.d}</td>
             <td className="r mono">{r.b}</td>
@@ -75,6 +88,7 @@ function ZeeTable({ rows, onSelect }) {
 }
 
 function EasyLapTable({ rows, onSelect }) {
+  const bands = useSeriesBand(rows, (r) => r.d);
   return (
     <table className="list">
       <thead>
@@ -85,7 +99,7 @@ function EasyLapTable({ rows, onSelect }) {
       </thead>
       <tbody>
         {rows.map((r, i) => (
-          <tr key={i} onClick={() => onSelect(r, 'easyLap')}>
+          <tr key={i} onClick={() => onSelect(r, 'easyLap')} className={`series-band-${bands[i]}`}>
             <td className="mono ks">ZEL-{r.d}X{r.b1}/{r.b2}X{r.ga}GA</td>
             <td className="r mono">{r.d}</td>
             <td className="r mono">{r.b1}</td>

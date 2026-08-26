@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useStore } from '../store.js';
+import { useStore, displayType } from '../store.js';
 import { loadDefs } from '../lib/dataLoader.js';
 import SectionSVG from './SectionSVG.jsx';
 import PropsTable from './PropsTable.jsx';
@@ -15,13 +15,13 @@ export default function ShapeDetail({ shape }) {
   return (
     <>
       <div className="detail-head">
-        <button className="back" onClick={() => selectShape(null)}>← {activeKey}</button>
+        <button className="back" onClick={() => selectShape(null)}>← {displayType(activeKey)}</button>
         <div>
           <h1 className="mono">{shape.name}</h1>
           <div className="alias">
             <span className="chip chip-ks">KS &nbsp;<b className="mono">{shape.ks}</b></span>
             {shape.edi && <span className="chip">EDI 명칭 &nbsp;<b className="mono">{shape.edi}</b></span>}
-            <span className="chip">Type &nbsp;<b className="mono">{shape.type}</b></span>
+            <span className="chip">Type &nbsp;<b className="mono">{displayType(shape.type)}</b></span>
             {shape.type.startsWith('KS') && <span className="chip">KS D 3502:2022</span>}
           </div>
         </div>

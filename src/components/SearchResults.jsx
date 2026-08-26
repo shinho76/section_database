@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useStore } from '../store.js';
+import { useStore, displayType } from '../store.js';
 import { searchAll, resolveShape } from '../lib/dataLoader.js';
 
 export default function SearchResults() {
@@ -45,7 +45,7 @@ export default function SearchResults() {
             <tr key={`${s.type}-${s.name}-${i}`} onClick={() => onPick(s)}>
               <td className="mono strong">{s.name}</td>
               <td className="mono ks">{s.ks}</td>
-              <td className="r mono">{s.type}</td>
+              <td className="r mono">{displayType(s.type)}</td>
             </tr>
           ))}
         </tbody>

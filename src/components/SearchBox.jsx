@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useStore, TYPE_LABEL } from '../store.js';
+import { useStore, TYPE_LABEL, displayType } from '../store.js';
 import { searchAll, resolveShape } from '../lib/dataLoader.js';
 
 const HISTORY_KEY = 'aisc-search-history';
@@ -118,7 +118,7 @@ export default function SearchBox() {
               {history.map((h, i) => (
                 <button key={`${h.type}-${h.name}-${i}`} className="search-row" onClick={() => goto(h)}>
                   <span className="search-row-name mono">{h.name}</span>
-                  <span className="search-row-type">{h.type}</span>
+                  <span className="search-row-type">{displayType(h.type)}</span>
                 </button>
               ))}
             </div>
@@ -130,7 +130,7 @@ export default function SearchBox() {
                 <button key={`${s.type}-${s.name}-${i}`} className="search-row" onClick={() => goto(s)}>
                   <span className="search-row-name mono">{s.name}</span>
                   <span className="search-row-ks mono">{s.ks}</span>
-                  <span className="search-row-type">{s.type}</span>
+                  <span className="search-row-type">{displayType(s.type)}</span>
                 </button>
               ))}
               {g.total > MAX_GROUP_ITEMS && (

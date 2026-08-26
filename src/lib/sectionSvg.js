@@ -389,16 +389,20 @@ export function drawDeckProfileSVG(p, unit, disp) {
 
   const body = `<path d="${path}" fill="none" stroke="var(--steel-line)" stroke-width="2" stroke-linejoin="round"/>`;
 
+  // Dimension lines stack below the shape in increasing order of span
+  // (valley sub-feature closest, then the full pitch period, then the
+  // overall width outermost) so none of them cross the profile or each
+  // other's extension lines.
   const dim = [];
   vDim(dim, id, yTop, yBot, x0 - 26, yTop, `D=${fmtDim(disp.depthIn, unit)}${unit}`);
-  hDim(dim, id, x0, xEnd, yBot + 30, yBot, `Width=${fmtDim(disp.widthIn, unit)}${unit}`);
   const cx0 = x0 + vPx / 2 + rPx;
   hDim(dim, id, cx0, cx0 + cPx, yTop - 18, yTop, `crest=${fmtDim(disp.crestIn, unit)}${unit}`);
   if (reps > 1) {
     const vLabelX0 = x0 + pPx; // start of a full valley segment (2nd rib onward)
-    hDim(dim, id, vLabelX0, vLabelX0 + vPx, yBot + 12, yBot, `valley=${fmtDim(disp.valleyIn, unit)}${unit}`);
+    hDim(dim, id, vLabelX0, vLabelX0 + vPx, yBot + 18, yBot, `valley=${fmtDim(disp.valleyIn, unit)}${unit}`);
   }
-  microH(dim, id, x0, x0 + pPx, yBot - depthPx / 2, `pitch=${fmtDim(disp.pitchIn, unit)}${unit}`, 1);
+  hDim(dim, id, x0, x0 + pPx, yBot + 40, yBot, `pitch=${fmtDim(disp.pitchIn, unit)}${unit}`);
+  hDim(dim, id, x0, xEnd, yBot + 62, yBot, `Width=${fmtDim(disp.widthIn, unit)}${unit}`);
 
   return `<svg viewBox="0 0 ${W} ${H}" class="section-svg" role="img"
     aria-label="metal deck nominal dimensions in ${unit}">${defsBlock(id)}${body}${dim.join('')}</svg>`;
