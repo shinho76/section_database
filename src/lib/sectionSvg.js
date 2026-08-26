@@ -312,7 +312,7 @@ export function drawPurlinSVG(row, kind, unit) {
 
 /** H-shape with a T-bar welded stem-down onto the top flange (BH modes 2/3).
  * hDims/tDims are plain {d,bf,tw,tf} objects already in the target unit. */
-export function drawHPlusTSVG(hDims, tDims, unit, wLabel, aLabel) {
+export function drawHPlusTSVG(hDims, tDims, unit) {
   const id = nextId('dt');
   const gutter = { l: 58, t: 40, r: 60, b: 40 };
   const bboxW = W - gutter.l - gutter.r;
@@ -353,10 +353,8 @@ export function drawHPlusTSVG(hDims, tDims, unit, wLabel, aLabel) {
   microV(dim, id, topY, topY + tfT, x0T - 20, `tf(T)=${fmtDim(tDims.tf, unit)}${unit}`, -1);
   microH(dim, id, cx - twT / 2, cx + twT / 2, topY + tfT + (bhT - tfT) / 2, `tw(T)=${fmtDim(tDims.tw, unit)}${unit}`, -1);
 
-  const callout = wLabel ? wCallout(cx, (yHtop + yHbot) / 2, wLabel, aLabel) : '';
-
   return `<svg viewBox="0 0 ${W} ${H}" class="section-svg" role="img"
-    aria-label="H+T built-up cross section in ${unit}">${defsBlock(id)}${bodyH}${bodyT}${weld}${dim.join('')}${callout}</svg>`;
+    aria-label="H+T built-up cross section in ${unit}">${defsBlock(id)}${bodyH}${bodyT}${weld}${dim.join('')}</svg>`;
 }
 
 /** Repeating trapezoidal flute profile for a Vulcraft-style composite metal
@@ -406,22 +404,11 @@ export function drawDeckProfileSVG(p, unit, disp) {
     aria-label="metal deck nominal dimensions in ${unit}">${defsBlock(id)}${body}${dim.join('')}</svg>`;
 }
 
-/** Prominent unit-weight / area callout box — the app's most important number
- * for a built-up member, so it must stand out visually inside the SVG. */
-function wCallout(x, y, wLabel, aLabel) {
-  return `<g>
-    <rect x="${x - 58}" y="${y - 20}" width="116" height="40" rx="7" fill="var(--ac-glow)" stroke="var(--ac-main)" stroke-width="1.2"/>
-    <text x="${x}" y="${y - 5}" text-anchor="middle" dominant-baseline="middle"
-      font-size="15" font-weight="700" font-family="ui-monospace,monospace" fill="var(--ac-main)">${wLabel}</text>
-    <text x="${x}" y="${y + 11}" text-anchor="middle" dominant-baseline="middle"
-      font-size="10" font-family="ui-monospace,monospace" fill="var(--tx-muted)">${aLabel}</text>
-  </g>`;
-}
-
 /** Built-up H-section with independent top/bottom flanges (BH mode ②).
- * dims = {d,tw,bfTop,tfTop,bfBot,tfBot} in the target unit; wLabel/aLabel are
- * pre-formatted unit-weight/area strings shown in a highlighted callout. */
-export function drawUnequalHSVG(dims, unit, wLabel, aLabel) {
+ * dims = {d,tw,bfTop,tfTop,bfBot,tfBot} in the target unit. Unit weight and
+ * area are shown below the drawing (like every other shape), not overlaid
+ * on the section itself. */
+export function drawUnequalHSVG(dims, unit) {
   const id = nextId('du');
   const gutter = { l: 58, t: 44, r: 60, b: 44 };
   const bboxW = W - gutter.l - gutter.r;
@@ -439,11 +426,21 @@ export function drawUnequalHSVG(dims, unit, wLabel, aLabel) {
   const botY = topY + dpx;
   const x0Top = cx - bwTop / 2, x0Bot = cx - bwBot / 2;
 
+  // Absolute 12-point outline (top flange, web, bottom flange). The two
+  // flanges generally differ in width, so the step from the web edge out to
+  // each flange's outer edge must use that flange's OWN half-overhang — a
+  // previous version collapsed both steps into a single (shTop - shBot)
+  // relative offset, which mis-placed the bottom flange entirely.
+  const xTopL = cx - bwTop / 2, xTopR = cx + bwTop / 2;
+  const xBotL = cx - bwBot / 2, xBotR = cx + bwBot / 2;
+  const xWebL = cx - tw / 2, xWebR = cx + tw / 2;
+  const yTopFlangeBot = topY + tfTop, yBotFlangeTop = botY - tfBot;
+
   const fill = `url(#hatch-${id})`, stroke = 'var(--steel-line)';
-  const body = `<path d="M${x0Top},${topY} h${bwTop} v${tfTop} h${-(bwTop - tw) / 2}
-    v${dpx - tfTop - tfBot} h${(bwTop - tw) / 2 - (bwBot - tw) / 2}
-    v${tfBot} h${-bwBot} v${-tfBot} h${(bwBot - tw) / 2}
-    v${-(dpx - tfTop - tfBot)} h${(bwTop - tw) / 2 - (bwBot - tw) / 2} Z"
+  const body = `<path d="
+    M${xTopL},${topY} L${xTopR},${topY} L${xTopR},${yTopFlangeBot} L${xWebR},${yTopFlangeBot}
+    L${xWebR},${yBotFlangeTop} L${xBotR},${yBotFlangeTop} L${xBotR},${botY} L${xBotL},${botY}
+    L${xBotL},${yBotFlangeTop} L${xWebL},${yBotFlangeTop} L${xWebL},${yTopFlangeBot} L${xTopL},${yTopFlangeBot} Z"
     fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
 
   const dim = [];
@@ -454,8 +451,6 @@ export function drawUnequalHSVG(dims, unit, wLabel, aLabel) {
   microV(dim, id, botY - tfBot, botY, x0Bot + bwBot + 20, `tf-bot=${fmtDim(dims.tfBot, unit)}${unit}`);
   microH(dim, id, cx - tw / 2, cx + tw / 2, (topY + botY) / 2, `tw=${fmtDim(dims.tw, unit)}${unit}`, -1);
 
-  const callout = wLabel ? wCallout(cx, botY - dpx / 2 - 4, wLabel, aLabel) : '';
-
   return `<svg viewBox="0 0 ${W} ${H}" class="section-svg" role="img"
-    aria-label="Unequal-flange built-up H cross section in ${unit}">${defsBlock(id)}${body}${dim.join('')}${callout}</svg>`;
+    aria-label="Unequal-flange built-up H cross section in ${unit}">${defsBlock(id)}${body}${dim.join('')}</svg>`;
 }

@@ -211,6 +211,16 @@ select,input[type=text],input[type=number]{background:var(--bg-input);
 .combo-list li:hover{background:var(--ac-glow);color:var(--ac-main)}
 .combo-mm{color:var(--tx-muted);font-size:11px}
 
+.plate-th{display:flex;flex-direction:column;gap:6px;width:100%;padding:8px 0}
+.plate-th-label{font-size:10px;color:var(--tx-muted);padding:0 14px}
+.plate-th-cards{display:flex;gap:10px;flex-wrap:wrap;padding:0 14px}
+.plate-th-card{flex:1;min-width:170px;background:var(--bg-inset);border:1px solid var(--bd-subtle);
+  border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:6px}
+.plate-th-card-head{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--tx-secondary)}
+.plate-th-card-head span{color:var(--ac-main);margin-left:4px;text-transform:none;font-weight:600}
+.plate-th-card select,.plate-th-card input{width:100%}
+
 .dual-unit{display:flex;flex-direction:column;gap:2px;flex:1;min-width:140px}
 .dual-unit-label{font-size:10px;color:var(--tx-muted)}
 .dual-unit-pair{display:flex;gap:6px}

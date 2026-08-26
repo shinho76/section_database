@@ -3,7 +3,7 @@ import { manualHProps, manualTProps, composeSection, IN_TO_MM, IN2_TO_MM2, IN4_T
 import { loadType } from '../../lib/dataLoader.js';
 import { drawHPlusTSVG } from '../../lib/sectionSvg.js';
 import DualUnitInput from './DualUnitInput.jsx';
-import ThicknessCombo from './ThicknessCombo.jsx';
+import PlateThicknessInput from './PlateThicknessInput.jsx';
 
 const MM_TO_IN = 1 / 25.4;
 const H_TYPES = ['W', 'M', 'S', 'HP', 'KSH'];
@@ -79,13 +79,8 @@ export default function HPlusTPanel({ baseKind }) {
     return composeSection(layers);
   }, [hPropsIn, tPropsIn, tValid]);
 
-  const wLabelUs = composite ? `${composite.W.toFixed(1)} lb/ft` : null;
-  const aLabelUs = composite ? `${composite.A.toFixed(2)} in²` : null;
-  const wLabelMm = composite ? `${(composite.W * LBFT_TO_KGM).toFixed(1)} kg/m` : null;
-  const aLabelMm = composite ? `${(composite.A * IN2_TO_MM2).toFixed(0)} mm²` : null;
-
-  const svgUs = hDimsIn && tValid ? drawHPlusTSVG(hDimsIn, tDimsIn, '"', wLabelUs, aLabelUs) : null;
-  const svgMm = hDimsMm && tValid ? drawHPlusTSVG(hDimsMm, tBar, 'mm', wLabelMm, aLabelMm) : null;
+  const svgUs = hDimsIn && tValid ? drawHPlusTSVG(hDimsIn, tDimsIn, '"') : null;
+  const svgMm = hDimsMm && tValid ? drawHPlusTSVG(hDimsMm, tBar, 'mm') : null;
 
   const title = baseKind === 'db' ? 'Rolled H-Section + T-Bar' : 'Built-up H-Shape + T-Bar';
 
@@ -116,10 +111,8 @@ export default function HPlusTPanel({ baseKind }) {
                 <DualUnitInput label="d (웹 높이)" mm={customH.d} onChangeMm={setCustomField('d')} />
                 <DualUnitInput label="bf (플랜지 폭)" mm={customH.bf} onChangeMm={setCustomField('bf')} />
               </div>
-              <div className="field-row">
-                <label>tw (웹 두께)<ThicknessCombo value={customH.tw} onChange={setCustomField('tw')} /></label>
-                <label>tf (플랜지 두께)<ThicknessCombo value={customH.tf} onChange={setCustomField('tf')} /></label>
-              </div>
+              <PlateThicknessInput label="tw (웹 두께)" mm={customH.tw} onChangeMm={setCustomField('tw')} />
+              <PlateThicknessInput label="tf (플랜지 두께)" mm={customH.tf} onChangeMm={setCustomField('tf')} />
             </>
           )}
         </div>
@@ -130,24 +123,30 @@ export default function HPlusTPanel({ baseKind }) {
             <DualUnitInput label="T d — 높이" mm={tBar.d} onChangeMm={setTField('d')} />
             <DualUnitInput label="T bf — 폭" mm={tBar.bf} onChangeMm={setTField('bf')} />
           </div>
-          <div className="field-row">
-            <label>T tw — 웹 두께<ThicknessCombo value={tBar.tw} onChange={setTField('tw')} /></label>
-            <label>T tf — 플랜지 두께<ThicknessCombo value={tBar.tf} onChange={setTField('tf')} /></label>
-          </div>
+          <PlateThicknessInput label="T tw — 웹 두께" mm={tBar.tw} onChangeMm={setTField('tw')} />
+          <PlateThicknessInput label="T tf — 플랜지 두께" mm={tBar.tf} onChangeMm={setTField('tf')} />
           {!tValid && <p className="note">T-BAR 치수가 유효하지 않습니다.</p>}
           <p className="note">T-BAR 높이(d)를 바꾸면 tw를 자유롭게 조정해 웹 접합부에 맞출 수 있습니다. H의 상부 플랜지 위에 T의 웨브(스템)를 용접하는 방식입니다.</p>
         </div>
       </div>
 
-      {svgUs && svgMm && (
+      {svgUs && svgMm && composite && (
         <div className="draw-grid">
           <figure className="panel draw">
             <figcaption className="draw-cap">Imperial<span>inch</span></figcaption>
             <div dangerouslySetInnerHTML={{ __html: svgUs }} />
+            <div className="weight">
+              <span className="wv mono">{composite.W.toFixed(1)}</span><span className="wu">lb/ft</span>
+              <span className="wv mono" style={{ marginLeft: 14 }}>{composite.A.toFixed(2)}</span><span className="wu">in²</span>
+            </div>
           </figure>
           <figure className="panel draw">
             <figcaption className="draw-cap">Metric<span>mm</span></figcaption>
             <div dangerouslySetInnerHTML={{ __html: svgMm }} />
+            <div className="weight">
+              <span className="wv mono">{(composite.W * LBFT_TO_KGM).toFixed(1)}</span><span className="wu">kg/m</span>
+              <span className="wv mono" style={{ marginLeft: 14 }}>{(composite.A * IN2_TO_MM2).toFixed(0)}</span><span className="wu">mm²</span>
+            </div>
           </figure>
         </div>
       )}

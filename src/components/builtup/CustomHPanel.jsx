@@ -3,7 +3,7 @@ import { manualHProps, IN2_TO_MM2, IN4_TO_MM4, LBFT_TO_KGM } from './compose.js'
 import { ksLabel, usLabel } from './labels.js';
 import { drawShapeSVG } from '../../lib/sectionSvg.js';
 import DualUnitInput from './DualUnitInput.jsx';
-import ThicknessCombo from './ThicknessCombo.jsx';
+import PlateThicknessInput from './PlateThicknessInput.jsx';
 
 const MM_TO_IN = 1 / 25.4;
 
@@ -44,10 +44,8 @@ export default function CustomHPanel() {
             <DualUnitInput label="d (웹 높이)" mm={mm.d} onChangeMm={set('d')} />
             <DualUnitInput label="bf (플랜지 폭)" mm={mm.bf} onChangeMm={set('bf')} />
           </div>
-          <div className="field-row">
-            <label>tw (웹 두께)<ThicknessCombo value={mm.tw} onChange={set('tw')} /></label>
-            <label>tf (플랜지 두께)<ThicknessCombo value={mm.tf} onChange={set('tf')} /></label>
-          </div>
+          <PlateThicknessInput label="tw (웹 두께)" mm={mm.tw} onChangeMm={set('tw')} />
+          <PlateThicknessInput label="tf (플랜지 두께)" mm={mm.tf} onChangeMm={set('tf')} />
           {!valid && <p className="note">치수가 유효하지 않습니다 (d &gt; 2×tf, bf &gt; tw 필요).</p>}
         </div>
         {shape && (
