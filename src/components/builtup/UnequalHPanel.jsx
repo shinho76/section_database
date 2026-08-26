@@ -37,37 +37,35 @@ export default function UnequalHPanel() {
     <>
       <div className="detail-head"><div><h1 className="mono">Unequal Flange Built-up H-Section</h1></div></div>
 
-      <div className="bh-input-row">
-        <div className="panel">
-          <div className="panel-head"><h2>치수 입력</h2></div>
-          <div style={{ padding: 14 }}>
-            <BHDimTable fields={FIELDS} mm={mm} onChangeMm={set} />
-          </div>
-          {!valid && <p className="note">치수가 유효하지 않습니다 (d &gt; tf-top+tf-bot, bf &gt; tw 필요).</p>}
-          <p className="note">상하부 플랜지의 폭·두께를 독립적으로 입력할 수 있습니다.</p>
+      <div className="panel">
+        <div className="panel-head"><h2>치수 입력</h2></div>
+        <div style={{ padding: 14 }}>
+          <BHDimTable fields={FIELDS} mm={mm} onChangeMm={set} />
         </div>
-
-        {svgUs && svgMm && (
-          <>
-            <figure className="panel draw">
-              <figcaption className="draw-cap">Imperial<span>inch</span></figcaption>
-              <div dangerouslySetInnerHTML={{ __html: svgUs }} />
-              <div className="weight">
-                <span className="wv mono">{propsIn.W.toFixed(1)}</span><span className="wu">lb/ft</span>
-                <span className="wv mono" style={{ marginLeft: 14 }}>{propsIn.A.toFixed(2)}</span><span className="wu">in²</span>
-              </div>
-            </figure>
-            <figure className="panel draw">
-              <figcaption className="draw-cap">Metric<span>mm</span></figcaption>
-              <div dangerouslySetInnerHTML={{ __html: svgMm }} />
-              <div className="weight">
-                <span className="wv mono">{wMm.toFixed(1)}</span><span className="wu">kg/m</span>
-                <span className="wv mono" style={{ marginLeft: 14 }}>{aMm.toFixed(0)}</span><span className="wu">mm²</span>
-              </div>
-            </figure>
-          </>
-        )}
+        {!valid && <p className="note">치수가 유효하지 않습니다 (d &gt; tf-top+tf-bot, bf &gt; tw 필요).</p>}
+        <p className="note">상하부 플랜지의 폭·두께를 독립적으로 입력할 수 있습니다.</p>
       </div>
+
+      {svgUs && svgMm && (
+        <div className="draw-grid">
+          <figure className="panel draw">
+            <figcaption className="draw-cap">Imperial<span>inch</span></figcaption>
+            <div dangerouslySetInnerHTML={{ __html: svgUs }} />
+            <div className="weight">
+              <span className="wv mono">{propsIn.W.toFixed(1)}</span><span className="wu">lb/ft</span>
+              <span className="wv mono" style={{ marginLeft: 14 }}>{propsIn.A.toFixed(2)}</span><span className="wu">in²</span>
+            </div>
+          </figure>
+          <figure className="panel draw">
+            <figcaption className="draw-cap">Metric<span>mm</span></figcaption>
+            <div dangerouslySetInnerHTML={{ __html: svgMm }} />
+            <div className="weight">
+              <span className="wv mono">{wMm.toFixed(1)}</span><span className="wu">kg/m</span>
+              <span className="wv mono" style={{ marginLeft: 14 }}>{aMm.toFixed(0)}</span><span className="wu">mm²</span>
+            </div>
+          </figure>
+        </div>
+      )}
 
       {svgUs && svgMm && (
         <div className="panel">

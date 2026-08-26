@@ -101,62 +101,58 @@ export default function HPlusTPanel({ baseKind }) {
     <>
       <div className="detail-head"><div><h1 className="mono">{title}</h1></div></div>
 
-      <div className="bh-input-row">
-        <div>
-          <div className="panel">
-            <div className="panel-head"><h2>기준 H-SHAPE</h2></div>
-            {baseKind === 'db' ? (
-              <div className="field-row">
-                <label>Type
-                  <select value={dbType} onChange={(e) => setDbType(e.target.value)}>
-                    {H_TYPES.map((t) => <option key={t} value={t}>{displayType(t)}</option>)}
-                  </select>
-                </label>
-                <label>Shape
-                  <select value={dbName} onChange={(e) => setDbName(e.target.value)}>
-                    <option value="">선택…</option>
-                    {dbShapes.map((s) => <option key={s.name} value={s.name}>{s.name}</option>)}
-                  </select>
-                </label>
-              </div>
-            ) : (
-              <div style={{ padding: 14 }}>
-                <BHDimTable fields={H_FIELDS} mm={customH} onChangeMm={setCustomField} />
-              </div>
-            )}
+      <div className="panel">
+        <div className="panel-head"><h2>기준 H-SHAPE</h2></div>
+        {baseKind === 'db' ? (
+          <div className="field-row">
+            <label>Type
+              <select value={dbType} onChange={(e) => setDbType(e.target.value)}>
+                {H_TYPES.map((t) => <option key={t} value={t}>{displayType(t)}</option>)}
+              </select>
+            </label>
+            <label>Shape
+              <select value={dbName} onChange={(e) => setDbName(e.target.value)}>
+                <option value="">선택…</option>
+                {dbShapes.map((s) => <option key={s.name} value={s.name}>{s.name}</option>)}
+              </select>
+            </label>
           </div>
-
-          <div className="panel">
-            <div className="panel-head"><h2>T-BAR (용접 부재, 자유 입력)</h2></div>
-            <div style={{ padding: 14 }}>
-              <BHDimTable fields={T_FIELDS} mm={tBar} onChangeMm={setTField} />
-            </div>
-            {!tValid && <p className="note">T-BAR 치수가 유효하지 않습니다.</p>}
-            <p className="note">T-BAR 높이(d)를 바꾸면 tw를 자유롭게 조정해 웹 접합부에 맞출 수 있습니다. H의 상부 플랜지 위에 T의 웨브(스템)를 용접하는 방식입니다.</p>
+        ) : (
+          <div style={{ padding: 14 }}>
+            <BHDimTable fields={H_FIELDS} mm={customH} onChangeMm={setCustomField} />
           </div>
-        </div>
-
-        {svgUs && svgMm && composite && (
-          <>
-            <figure className="panel draw">
-              <figcaption className="draw-cap">Imperial<span>inch</span></figcaption>
-              <div dangerouslySetInnerHTML={{ __html: svgUs }} />
-              <div className="weight">
-                <span className="wv mono">{composite.W.toFixed(1)}</span><span className="wu">lb/ft</span>
-                <span className="wv mono" style={{ marginLeft: 14 }}>{composite.A.toFixed(2)}</span><span className="wu">in²</span>
-              </div>
-            </figure>
-            <figure className="panel draw">
-              <figcaption className="draw-cap">Metric<span>mm</span></figcaption>
-              <div dangerouslySetInnerHTML={{ __html: svgMm }} />
-              <div className="weight">
-                <span className="wv mono">{(composite.W * LBFT_TO_KGM).toFixed(1)}</span><span className="wu">kg/m</span>
-                <span className="wv mono" style={{ marginLeft: 14 }}>{(composite.A * IN2_TO_MM2).toFixed(0)}</span><span className="wu">mm²</span>
-              </div>
-            </figure>
-          </>
         )}
       </div>
+
+      <div className="panel">
+        <div className="panel-head"><h2>T-BAR (용접 부재, 자유 입력)</h2></div>
+        <div style={{ padding: 14 }}>
+          <BHDimTable fields={T_FIELDS} mm={tBar} onChangeMm={setTField} />
+        </div>
+        {!tValid && <p className="note">T-BAR 치수가 유효하지 않습니다.</p>}
+        <p className="note">T-BAR 높이(d)를 바꾸면 tw를 자유롭게 조정해 웹 접합부에 맞출 수 있습니다. H의 상부 플랜지 위에 T의 웨브(스템)를 용접하는 방식입니다.</p>
+      </div>
+
+      {svgUs && svgMm && composite && (
+        <div className="draw-grid">
+          <figure className="panel draw">
+            <figcaption className="draw-cap">Imperial<span>inch</span></figcaption>
+            <div dangerouslySetInnerHTML={{ __html: svgUs }} />
+            <div className="weight">
+              <span className="wv mono">{composite.W.toFixed(1)}</span><span className="wu">lb/ft</span>
+              <span className="wv mono" style={{ marginLeft: 14 }}>{composite.A.toFixed(2)}</span><span className="wu">in²</span>
+            </div>
+          </figure>
+          <figure className="panel draw">
+            <figcaption className="draw-cap">Metric<span>mm</span></figcaption>
+            <div dangerouslySetInnerHTML={{ __html: svgMm }} />
+            <div className="weight">
+              <span className="wv mono">{(composite.W * LBFT_TO_KGM).toFixed(1)}</span><span className="wu">kg/m</span>
+              <span className="wv mono" style={{ marginLeft: 14 }}>{(composite.A * IN2_TO_MM2).toFixed(0)}</span><span className="wu">mm²</span>
+            </div>
+          </figure>
+        </div>
+      )}
 
       {composite && (
         <div className="panel">

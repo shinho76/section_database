@@ -43,42 +43,40 @@ export default function CustomHPanel() {
     <>
       <div className="detail-head"><div><h1 className="mono">Built-up H-Section</h1></div></div>
 
-      <div className="bh-input-row">
-        <div className="panel">
-          <div className="panel-head"><h2>치수 입력</h2></div>
-          <div style={{ padding: 14 }}>
-            <BHDimTable fields={FIELDS} mm={mm} onChangeMm={set} />
-          </div>
-          {!valid && <p className="note">치수가 유효하지 않습니다 (d &gt; 2×tf, bf &gt; tw 필요).</p>}
-          {shape && (
-            <div className="alias" style={{ padding: '0 14px 14px' }}>
-              <span className="chip chip-ks">KS &nbsp;<b className="mono">{ksLabel(mm)}</b></span>
-              <span className="chip">US &nbsp;<b className="mono">{usLabel(propsIn)}</b></span>
-            </div>
-          )}
+      <div className="panel">
+        <div className="panel-head"><h2>치수 입력</h2></div>
+        <div style={{ padding: 14 }}>
+          <BHDimTable fields={FIELDS} mm={mm} onChangeMm={set} />
         </div>
-
+        {!valid && <p className="note">치수가 유효하지 않습니다 (d &gt; 2×tf, bf &gt; tw 필요).</p>}
         {shape && (
-          <>
-            <figure className="panel draw">
-              <figcaption className="draw-cap">Imperial<span>inch</span></figcaption>
-              <div dangerouslySetInnerHTML={{ __html: drawShapeSVG(shape, 'us') }} />
-              <div className="weight">
-                <span className="wv mono">{shape.us.W}</span><span className="wu">lb/ft</span>
-                <span className="wv mono" style={{ marginLeft: 14 }}>{shape.us.A}</span><span className="wu">in²</span>
-              </div>
-            </figure>
-            <figure className="panel draw">
-              <figcaption className="draw-cap">Metric<span>mm</span></figcaption>
-              <div dangerouslySetInnerHTML={{ __html: drawShapeSVG(shape, 'mt') }} />
-              <div className="weight">
-                <span className="wv mono">{shape.mt.W}</span><span className="wu">kg/m</span>
-                <span className="wv mono" style={{ marginLeft: 14 }}>{shape.mt.A}</span><span className="wu">mm²</span>
-              </div>
-            </figure>
-          </>
+          <div className="alias" style={{ padding: '0 14px 14px' }}>
+            <span className="chip chip-ks">KS &nbsp;<b className="mono">{ksLabel(mm)}</b></span>
+            <span className="chip">US &nbsp;<b className="mono">{usLabel(propsIn)}</b></span>
+          </div>
         )}
       </div>
+
+      {shape && (
+        <div className="draw-grid">
+          <figure className="panel draw">
+            <figcaption className="draw-cap">Imperial<span>inch</span></figcaption>
+            <div dangerouslySetInnerHTML={{ __html: drawShapeSVG(shape, 'us') }} />
+            <div className="weight">
+              <span className="wv mono">{shape.us.W}</span><span className="wu">lb/ft</span>
+              <span className="wv mono" style={{ marginLeft: 14 }}>{shape.us.A}</span><span className="wu">in²</span>
+            </div>
+          </figure>
+          <figure className="panel draw">
+            <figcaption className="draw-cap">Metric<span>mm</span></figcaption>
+            <div dangerouslySetInnerHTML={{ __html: drawShapeSVG(shape, 'mt') }} />
+            <div className="weight">
+              <span className="wv mono">{shape.mt.W}</span><span className="wu">kg/m</span>
+              <span className="wv mono" style={{ marginLeft: 14 }}>{shape.mt.A}</span><span className="wu">mm²</span>
+            </div>
+          </figure>
+        </div>
+      )}
 
       {shape && (
         <div className="panel">
