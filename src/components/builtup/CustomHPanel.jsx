@@ -7,10 +7,10 @@ import { BHDimCards } from './BHDimTable.jsx';
 const MM_TO_IN = 1 / 25.4;
 
 const FIELDS = [
-  { key: 'd', label: 'd (높이)' },
-  { key: 'bf', label: 'bf (폭)' },
-  { key: 'tw', label: 'tw (두께)', thickness: true },
-  { key: 'tf', label: 'tf (두께)', thickness: true },
+  { key: 'd', label: 'D (높이)' },
+  { key: 'bf', label: 'Bf (폭)' },
+  { key: 'tw', label: 'Tw (두께)', thickness: true },
+  { key: 'tf', label: 'Tf (두께)', thickness: true },
 ];
 
 export default function CustomHPanel() {

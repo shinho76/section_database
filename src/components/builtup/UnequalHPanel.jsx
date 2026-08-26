@@ -6,12 +6,12 @@ import { BHDimCards } from './BHDimTable.jsx';
 const MM_TO_IN = 1 / 25.4;
 
 const FIELDS = [
-  { key: 'd', label: 'd (높이)' },
-  { key: 'bfTop', label: 'bf-top (폭)' },
-  { key: 'tfTop', label: 'tf-top (두께)', thickness: true },
-  { key: 'bfBot', label: 'bf-bot (폭)' },
-  { key: 'tfBot', label: 'tf-bot (두께)', thickness: true },
-  { key: 'tw', label: 'tw (두께)', thickness: true },
+  { key: 'd', label: 'D (높이)' },
+  { key: 'bfTop', label: 'Bf-top (폭)' },
+  { key: 'tfTop', label: 'Tf-top (두께)', thickness: true },
+  { key: 'bfBot', label: 'Bf-bot (폭)' },
+  { key: 'tfBot', label: 'Tf-bot (두께)', thickness: true },
+  { key: 'tw', label: 'Tw (두께)', thickness: true },
 ];
 
 export default function UnequalHPanel() {

@@ -3,6 +3,22 @@ import { gradeLabel } from './steelGrade.js';
 
 const IN_TO_MM = 25.4, MM_TO_IN = 1 / 25.4;
 const EPS = 0.01;
+const LABEL_RE = /^(.*?)\s*(\([^)]*\))$/;
+
+/** Header cell: splits "Bf-top (폭)" into a main line and a parenthesized
+ * unit line rendered on a second line, always — even for short labels like
+ * "D (높이)" — so every header cell wraps to the same two-line height instead
+ * of some columns wrapping (longer labels like bf-top) and others not. */
+function HeaderCell({ f }) {
+  const m = f.label.match(LABEL_RE);
+  if (!m) return <th>{f.label}</th>;
+  return (
+    <th>
+      <span className="dim-th-main">{m[1]}</span>
+      <span className="dim-th-unit">{m[2]}</span>
+    </th>
+  );
+}
 
 /** One field's IN-side cell content: thickness dropdown (if flagged) + the
  * inch input + grade badge. Shared by both the merged table and the split
@@ -25,11 +41,15 @@ function InCell({ f, mm, onChangeMm }) {
   };
   return (
     <>
-      {f.thickness && (
+      {f.thickness ? (
         <select value={selId} onChange={onSelect}>
           <option value="">직접입력…</option>
           {thicknesses.map((t) => <option key={t.id} value={t.id}>{t.thickness_in}"</option>)}
         </select>
+      ) : (
+        // Invisible placeholder so this input starts at the same y as a
+        // thickness field's input, which sits below a real select.
+        <select className="dim-select-spacer" disabled tabIndex={-1} aria-hidden="true"><option /></select>
       )}
       <input
         type="number" step={f.thickness ? 0.001 : 0.01}
@@ -63,7 +83,7 @@ export default function BHDimTable({ fields, mm, onChangeMm }) {
       <thead>
         <tr>
           <th />
-          {fields.map((f) => <th key={f.key}>{f.label}</th>)}
+          {fields.map((f) => <HeaderCell key={f.key} f={f} />)}
         </tr>
       </thead>
       <tbody>
@@ -91,7 +111,7 @@ export function BHDimCards({ fields, mm, onChangeMm }) {
         <div className="panel-head"><h2>치수입력<span className="unit-tag">IN</span></h2></div>
         <div style={{ padding: 14, overflowX: 'auto' }}>
           <table className="bh-dim-table bh-dim-table-split">
-            <thead><tr>{fields.map((f) => <th key={f.key}>{f.label}</th>)}</tr></thead>
+            <thead><tr>{fields.map((f) => <HeaderCell key={f.key} f={f} />)}</tr></thead>
             <tbody>
               <tr>{fields.map((f) => <td key={f.key}><InCell f={f} mm={mm} onChangeMm={onChangeMm} /></td>)}</tr>
             </tbody>
@@ -102,7 +122,7 @@ export function BHDimCards({ fields, mm, onChangeMm }) {
         <div className="panel-head"><h2>치수입력<span className="unit-tag">MM</span></h2></div>
         <div style={{ padding: 14, overflowX: 'auto' }}>
           <table className="bh-dim-table bh-dim-table-split">
-            <thead><tr>{fields.map((f) => <th key={f.key}>{f.label}</th>)}</tr></thead>
+            <thead><tr>{fields.map((f) => <HeaderCell key={f.key} f={f} />)}</tr></thead>
             <tbody>
               <tr>{fields.map((f) => <td key={f.key}><MmCell f={f} mm={mm} onChangeMm={onChangeMm} /></td>)}</tr>
             </tbody>

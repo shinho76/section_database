@@ -16,16 +16,16 @@ const DEFAULT_H_NAME = 'W18X50';
 const DEFAULT_T_NAME = 'WT9X25';
 
 const H_FIELDS = [
-  { key: 'd', label: 'd (높이)' },
-  { key: 'bf', label: 'bf (폭)' },
-  { key: 'tw', label: 'tw (두께)', thickness: true },
-  { key: 'tf', label: 'tf (두께)', thickness: true },
+  { key: 'd', label: 'D (높이)' },
+  { key: 'bf', label: 'Bf (폭)' },
+  { key: 'tw', label: 'Tw (두께)', thickness: true },
+  { key: 'tf', label: 'Tf (두께)', thickness: true },
 ];
 const T_FIELDS = [
-  { key: 'd', label: 'T d (높이)' },
-  { key: 'bf', label: 'T bf (폭)' },
-  { key: 'tw', label: 'T tw (두께)', thickness: true },
-  { key: 'tf', label: 'T tf (두께)', thickness: true },
+  { key: 'd', label: 'T D (높이)' },
+  { key: 'bf', label: 'T Bf (폭)' },
+  { key: 'tw', label: 'T Tw (두께)', thickness: true },
+  { key: 'tf', label: 'T Tf (두께)', thickness: true },
 ];
 
 /** Section properties for a T pulled straight from the database. AISC WT/MT/ST

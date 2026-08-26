@@ -8,9 +8,9 @@ const PLF_TO_KGM = 1.48816;
 const LB_TO_KG = 0.453592;
 
 const FIELDS = [
-  { key: 't', label: '두께 (thickness)', thickness: true },
-  { key: 'w', label: '가로 (width)' },
-  { key: 'l', label: '세로 (length)' },
+  { key: 't', label: '두께 (Thickness)', thickness: true },
+  { key: 'w', label: '가로 (Width)' },
+  { key: 'l', label: '세로 (Length)' },
 ];
 
 export default function PlatePanel() {
@@ -55,6 +55,16 @@ export default function PlatePanel() {
           두께만 입력 → 면적당 하중(psf/kg/m²) · 두께+가로 또는 두께+세로 하나만 입력 → 길이당 하중(plf/kg/m) · 셋 다 입력 → 총 무게(lb/kg)
         </p>
       </div>
+
+      {result && (
+        <figure className="panel draw">
+          <figcaption className="draw-cap">단위중량<span>UNIT WEIGHT</span></figcaption>
+          <div className="weight">
+            <span className="wv mono">{result.areaLoadPsf.toFixed(2)}</span><span className="wu">psf</span>
+            <span className="wv mono" style={{ marginLeft: 14 }}>{(result.areaLoadPsf * PSF_TO_KGM2).toFixed(1)}</span><span className="wu">kg/m²</span>
+          </div>
+        </figure>
+      )}
 
       {result && (
         <div className="panel">
