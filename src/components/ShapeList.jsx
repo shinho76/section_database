@@ -1,22 +1,51 @@
 import { useEffect, useState } from 'react';
 import { useStore, TYPE_LABEL } from '../store.js';
 import { loadType } from '../lib/dataLoader.js';
+import { hasMatchPair, matchTargetType, findNearestInRows } from '../lib/nearestMatch.js';
 
 const seriesKey = (name) => name.split(/[X×]/)[0];
 
 export default function ShapeList() {
-  const { activeKey, selectShape } = useStore();
+  const { activeKey, selectShape, setActiveKey } = useStore();
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [matches, setMatches] = useState(new Map()); // name -> { type, shape }
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
+    setMatches(new Map());
     loadType(activeKey).then((r) => {
       if (!cancelled) { setRows(r); setLoading(false); }
     });
     return () => { cancelled = true; };
   }, [activeKey]);
+
+  useEffect(() => {
+    if (!rows.length || !hasMatchPair(activeKey)) return;
+    let cancelled = false;
+    (async () => {
+      // HSS rows split between the round (KSP) and box (KSB) target types.
+      const targetTypes = [...new Set(rows.map((s) => matchTargetType(activeKey, s)))];
+      const targetRowsByType = Object.fromEntries(
+        await Promise.all(targetTypes.map(async (t) => [t, await loadType(t)])),
+      );
+      if (cancelled) return;
+      const next = new Map();
+      for (const s of rows) {
+        const targetType = matchTargetType(activeKey, s);
+        const best = findNearestInRows(s, activeKey, targetRowsByType[targetType] || []);
+        if (best) next.set(s.name, { type: targetType, shape: best });
+      }
+      if (!cancelled) setMatches(next);
+    })();
+    return () => { cancelled = true; };
+  }, [rows, activeKey]);
+
+  const gotoMatch = (m) => {
+    setActiveKey(m.type);
+    selectShape(m.shape);
+  };
 
   if (loading) return <div className="empty">불러오는 중…</div>;
 
@@ -25,6 +54,7 @@ export default function ShapeList() {
   }
 
   const isKs = activeKey.startsWith('KS');
+  const showMatch = hasMatchPair(activeKey);
   let lastSeries = null;
   let band = 0;
 
@@ -38,6 +68,7 @@ export default function ShapeList() {
         <thead>
           <tr>
             <th>{isKs ? 'KS label' : 'AISC label'}</th><th>KS designation</th>
+            {showMatch && <th>{isKs ? '유사 AISC 단면' : '유사 KS 단면'}</th>}
             <th className="r">W (lb/ft)</th><th className="r">W (kg/m)</th>
             <th className="r">A (in²)</th><th className="r">A (cm²)</th>
             <th className="r">d / OD</th>
@@ -48,10 +79,23 @@ export default function ShapeList() {
             const sk = seriesKey(s.name);
             if (sk !== lastSeries) { band = 1 - band; lastSeries = sk; }
             const aMm2 = parseFloat(s.mt.A);
+            const m = matches.get(s.name);
             return (
               <tr key={`${s.name}-${i}`} onClick={() => selectShape(s)} className={`series-band-${band}`}>
                 <td className="mono strong">{s.name}</td>
                 <td className="mono ks">{s.ks}</td>
+                {showMatch && (
+                  <td className="mono ks">
+                    {m ? (
+                      <button
+                        className="match-link"
+                        onClick={(e) => { e.stopPropagation(); gotoMatch(m); }}
+                      >
+                        {m.shape.name}
+                      </button>
+                    ) : '—'}
+                  </td>
+                )}
                 <td className="r mono">{s.us.W}</td>
                 <td className="r mono">{s.mt.W}</td>
                 <td className="r mono">{s.us.A}</td>

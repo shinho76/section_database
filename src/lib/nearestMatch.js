@@ -1,0 +1,64 @@
+// Nearest-match lookup between an AISC type and its KS D 3502 counterpart
+// (and back), used to cross-reference W<->KSH, WT<->KST, HSS<->KSB,
+// PIPE<->KSP, L<->KSL, C<->KSC in the shape list. Distance is a weighted
+// relative difference over depth/OD (highest priority), width, then
+// thickness — matching the user's stated priority order.
+
+const PAIR = {
+  W: 'KSH', KSH: 'W',
+  WT: 'KST', KST: 'WT',
+  L: 'KSL', KSL: 'L',
+  C: 'KSC', KSC: 'C',
+  HSS: 'KSB', KSB: 'HSS',
+  PIPE: 'KSP', KSP: 'PIPE',
+};
+
+const SPEC = {
+  W: [['d', 3], ['bf', 2], ['tf', 1]],
+  KSH: [['d', 3], ['bf', 2], ['tf', 1]],
+  WT: [['d', 3], ['bf', 2], ['tf', 1]],
+  KST: [['d', 3], ['bf', 2], ['tf', 1]],
+  L: [['d', 3], ['b', 2], ['t', 1]],
+  KSL: [['d', 3], ['b', 2], ['t', 1]],
+  C: [['d', 3], ['bf', 2], ['tf', 1]],
+  KSC: [['d', 3], ['bf', 2], ['tf', 1]],
+  HSS_BOX: [['Ht', 3], ['B', 2], ['tdes', 1]],
+  KSB: [['Ht', 3], ['B', 2], ['tdes', 1]],
+  ROUND: [['OD', 3], ['tdes', 1]], // HSS round tube, PIPE, KSP
+};
+
+export function hasMatchPair(type) {
+  return type in PAIR;
+}
+
+/** Target type for a given shape, accounting for HSS's dual box/round rows. */
+export function matchTargetType(sourceType, shape) {
+  if (sourceType === 'HSS') return shape.us.OD ? 'KSP' : 'KSB';
+  return PAIR[sourceType];
+}
+
+function specFor(sourceType, shape) {
+  if (sourceType === 'HSS') return shape.us.OD ? SPEC.ROUND : SPEC.HSS_BOX;
+  if (sourceType === 'PIPE' || sourceType === 'KSP') return SPEC.ROUND;
+  return SPEC[sourceType];
+}
+
+/** Find the single nearest shape in `targetRows` for `shape`. Returns null
+ * if no candidate shares any usable numeric field with `shape`. */
+export function findNearestInRows(shape, sourceType, targetRows) {
+  const spec = specFor(sourceType, shape);
+  let best = null, bestScore = Infinity;
+  for (const cand of targetRows) {
+    let score = 0, n = 0;
+    for (const [f, w] of spec) {
+      const a = parseFloat(shape.us[f]);
+      const b = parseFloat(cand.us[f]);
+      if (!Number.isFinite(a) || !Number.isFinite(b) || a === 0) continue;
+      score += w * Math.abs(a - b) / a;
+      n++;
+    }
+    if (!n) continue;
+    if (score < bestScore) { bestScore = score; best = cand; }
+  }
+  return best;
+}
