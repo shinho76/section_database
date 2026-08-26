@@ -7,9 +7,7 @@ import ShapeAutocomplete from './ShapeAutocomplete.jsx';
 
 const MM_TO_IN = 1 / 25.4;
 const H_TYPES = ['W', 'M', 'S', 'KSH'];
-// AISC/KS tee paired with each H type - WT/MT/ST are literally an H cut in
-// half, KST likewise from KSH, so this pairing is exact (HP has no tee).
-const T_TYPE_FOR_H = { W: 'WT', M: 'MT', S: 'ST', KSH: 'KST' };
+const T_TYPES = ['WT', 'MT', 'ST', 'KST'];
 
 const H_FIELDS = [
   { key: 'd', label: 'd (높이)' },
@@ -47,6 +45,7 @@ function tPropsFromDbShape(t) {
 export default function HPlusTPanel({ baseKind }) {
   const [hType, setHType] = useState('W');
   const [hShape, setHShape] = useState(null);
+  const [tType, setTType] = useState('WT');
   const [tShape, setTShape] = useState(null);
   const [customH, setCustomH] = useState({ d: 400, bf: 200, tw: 7.9375, tf: 12.7 });
   const [tBar, setTBar] = useState({ d: 150, bf: 150, tw: 7.9375, tf: 12.7 });
@@ -54,8 +53,9 @@ export default function HPlusTPanel({ baseKind }) {
   const setCustomField = (field) => (v) => setCustomH((m) => ({ ...m, [field]: v }));
   const setTField = (field) => (v) => setTBar((m) => ({ ...m, [field]: v }));
 
-  const onPickH = (s) => { setHShape(s); setTShape(null); };
-  const onHTypeChange = (t) => { setHType(t); setHShape(null); setTShape(null); };
+  const onPickH = (s) => setHShape(s);
+  const onHTypeChange = (t) => { setHType(t); setHShape(null); };
+  const onTTypeChange = (t) => { setTType(t); setTShape(null); };
 
   const hDimsIn = useMemo(() => {
     if (baseKind === 'db') {
@@ -123,7 +123,6 @@ export default function HPlusTPanel({ baseKind }) {
   const svgMm = hDimsMm && tDimsMm && tValid ? drawHPlusTSVG(hDimsMm, tDimsMm, 'mm') : null;
 
   const title = baseKind === 'db' ? 'Rolled H-Section + T-Bar' : 'Built-up H-Shape + T-Bar';
-  const tType = T_TYPE_FOR_H[hType];
 
   return (
     <>
@@ -134,26 +133,26 @@ export default function HPlusTPanel({ baseKind }) {
           <div className="panel panel-combo">
             <div className="panel-head"><h2>H-SHAPE + T-BAR 선택</h2></div>
             <div className="field-row">
-              <label>Type
+              <label>T Type (상부)
+                <select value={tType} onChange={(e) => onTTypeChange(e.target.value)}>
+                  {T_TYPES.map((t) => <option key={t} value={t}>{displayType(t)}</option>)}
+                </select>
+              </label>
+              <label>T-BAR (검색)
+                <ShapeAutocomplete key={tType} type={tType} onSelect={setTShape} placeholder={`${tType} 검색…`} />
+              </label>
+            </div>
+            <div className="field-row">
+              <label>H Type (하부)
                 <select value={hType} onChange={(e) => onHTypeChange(e.target.value)}>
                   {H_TYPES.map((t) => <option key={t} value={t}>{displayType(t)}</option>)}
                 </select>
               </label>
               <label>H-SHAPE (검색)
-                <ShapeAutocomplete type={hType} onSelect={onPickH} placeholder={`${hType} 형강 검색…`} />
+                <ShapeAutocomplete key={hType} type={hType} onSelect={onPickH} placeholder={`${hType} 형강 검색…`} />
               </label>
             </div>
-            <div className="field-row">
-              <label>T-BAR — {displayType(tType)} (검색)
-                <ShapeAutocomplete
-                  key={tType}
-                  type={tType}
-                  onSelect={setTShape}
-                  placeholder={hShape ? `${tType} 검색…` : '먼저 H-SHAPE를 선택하세요'}
-                />
-              </label>
-            </div>
-            {!hShape && <p className="note">H-SHAPE를 먼저 선택하면 짝이 되는 {displayType(tType)}에서 검색할 수 있습니다.</p>}
+            <p className="note">T-BAR(상부)와 H-SHAPE(하부)를 각각 독립적으로 선택할 수 있습니다. T-BAR는 H의 상부 플랜지 위에 스템을 맞대어 용접됩니다.</p>
           </div>
 
           <figure className="panel draw">
