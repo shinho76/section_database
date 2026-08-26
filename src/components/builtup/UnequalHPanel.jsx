@@ -48,7 +48,7 @@ export default function UnequalHPanel() {
         </div>
 
         {svgUs && svgMm && (
-          <div className="bh-svg-stack">
+          <>
             <figure className="panel draw">
               <figcaption className="draw-cap">Imperial<span>inch</span></figcaption>
               <div dangerouslySetInnerHTML={{ __html: svgUs }} />
@@ -65,7 +65,7 @@ export default function UnequalHPanel() {
                 <span className="wv mono" style={{ marginLeft: 14 }}>{aMm.toFixed(0)}</span><span className="wu">mm²</span>
               </div>
             </figure>
-          </div>
+          </>
         )}
       </div>
 
