@@ -83,6 +83,15 @@ export function microH(dim, id, x1, x2, y, label, side = 1) {
   dim.push(text(mid, ly, label));
 }
 
+/** Engineering-drawing centerline: a dash-dot cross through (cx,cy), extending
+ * slightly past the shape's half-extents on each axis (standard centerline
+ * overrun convention). Sample use: the I-shape branch of drawShapeSVG. */
+function centerlines(dim, cx, cy, halfW, halfH) {
+  const over = 10;
+  dim.push(`<line x1="${cx - halfW - over}" y1="${cy}" x2="${cx + halfW + over}" y2="${cy}" class="cl"/>`);
+  dim.push(`<line x1="${cx}" y1="${cy - halfH - over}" x2="${cx}" y2="${cy + halfH + over}" class="cl"/>`);
+}
+
 /** Leader from a point on the shape to an offset label (used for round/OD walls). */
 function leader(dim, id, x, y, tx, ty, label, anchor = 'start') {
   dim.push(`<line x1="${x}" y1="${y}" x2="${tx}" y2="${ty}" stroke="currentColor" stroke-width="1" marker-start="url(#arrs-${id})"/>`);
@@ -129,6 +138,7 @@ export function drawShapeSVG(s, u) {
               fill="${fill}" fill-rule="evenodd" stroke="${stroke}" stroke-width="1.5"/>`;
     hDim(dim, id, cx - R, cx + R, cy - R - 22, cy - R, `OD=${p.OD}${unit}`);
     leader(dim, id, cx + R * 0.72, cy - R * 0.72, cx + R + 34, cy - R - 4, `t=${p.tdes || p.tnom}${unit}`);
+    centerlines(dim, cx, cy, R, R);
   } else if (isBox) {
     const bw = sx(g('B')), bh = sx(g('Ht')), th = sx(g('tdes') || g('tnom'));
     const x0 = cx - bw / 2, y0 = cy - bh / 2;
@@ -138,6 +148,7 @@ export function drawShapeSVG(s, u) {
     hDim(dim, id, x0, x0 + bw, y0 - 22, y0, `B=${p.B}${unit}`);
     vDim(dim, id, y0, y0 + bh, x0 - 24, x0, `Ht=${p.Ht}${unit}`);
     microV(dim, id, y0, y0 + th, x0 + bw + 26, `t=${p.tdes || p.tnom}${unit}`);
+    centerlines(dim, cx, cy, bw / 2, bh / 2);
   } else if (isAng) {
     const lw = sx(g('b')), lh = sx(g('d')), th = sx(g('t'));
     const totalW = t === '2L' ? lw * 2 + Math.max(6, sx(0.375)) : lw;
@@ -158,6 +169,7 @@ export function drawShapeSVG(s, u) {
     hDim(dim, id, x0, x0 + lw, y0 - 22, y0, `b=${p.b}${unit}`);
     vDim(dim, id, y0, y0 + lh, x0 - 24, x0, `d=${p.d}${unit}`);
     microH(dim, id, x0, x0 + th, y0 + lh + 40, `t=${p.t}${unit}`, 1);
+    centerlines(dim, x0 + totalW / 2, y0 + lh / 2, totalW / 2, lh / 2);
   } else if (isTee) {
     const bw = sx(g('bf')), bh = sx(g('d')), twpx = sx(g('tw')), tfpx = sx(g('tf'));
     const x0 = cx - bw / 2, y0 = cy - bh / 2;
@@ -168,6 +180,7 @@ export function drawShapeSVG(s, u) {
     vDim(dim, id, y0, y0 + bh, x0 - 24, x0, `d=${p.d}${unit}`);
     microV(dim, id, y0, y0 + tfpx, x0 + bw + 26, `tf=${p.tf}${unit}`);
     microH(dim, id, cx - twpx / 2, cx + twpx / 2, y0 + bh + 22, `tw=${p.tw}${unit}`, 1);
+    centerlines(dim, cx, cy, bw / 2, bh / 2);
   } else if (isChan) {
     const bw = sx(g('bf')), bh = sx(g('d')), twpx = sx(g('tw')), tfpx = sx(g('tf'));
     const x0 = cx - bw / 2, y0 = cy - bh / 2;
@@ -177,6 +190,7 @@ export function drawShapeSVG(s, u) {
     vDim(dim, id, y0, y0 + bh, x0 - 24, x0, `d=${p.d}${unit}`);
     microV(dim, id, y0, y0 + tfpx, x0 + bw + 26, `tf=${p.tf}${unit}`);
     microH(dim, id, x0, x0 + twpx, y0 + bh + 22, `tw=${p.tw}${unit}`, 1);
+    centerlines(dim, cx, cy, bw / 2, bh / 2);
   } else {
     // I-shapes: W, M, S, HP
     const bw = sx(g('bf')), bh = sx(g('d')), twpx = sx(g('tw')), tfpx = sx(g('tf'));
@@ -217,6 +231,7 @@ export function drawShapeSVG(s, u) {
     // reference drawing), k1 below the shape — different zones from tf/k.
     microH(dim, id, cx - twpx / 2, cx + twpx / 2, cy, `tw=${p.tw}${unit}`, 1);
     if (p.k1) microH(dim, id, cx, cx + sx(g('k1')), y0 + bh + 24, `k1=${p.k1}${unit}`, 1);
+    centerlines(dim, cx, cy, bw / 2, bh / 2);
   }
 
   return `<svg viewBox="0 0 ${W} ${H}" class="section-svg" role="img"
