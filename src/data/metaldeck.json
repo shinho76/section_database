@@ -138,7 +138,24 @@
     }
   },
   "otherProfiles": [
-    { "name": "2VLI-36", "depthIn": 2, "widthIn": 36, "note": "제품 페이지에만 확인, 이 카탈로그에 데이터 없음" },
-    { "name": "3VLI-36", "depthIn": 3, "widthIn": 36, "note": "제품 페이지에만 확인, 이 카탈로그에 데이터 없음" }
-  ]
+    { "name": "2VLI-36", "depthIn": 2, "widthIn": 36, "note": "단면성능·하중표는 별도 카탈로그(2VLI-36/2VLJ-36/2PLVLI-36 LRFD) 미반영, Nominal Dimensions만 확인" },
+    { "name": "3VLI-36", "depthIn": 3, "widthIn": 36, "note": "단면성능·하중표는 별도 카탈로그(3VLI-36/3VLJ-36/3PLVLI-36 ASD) 미반영, Nominal Dimensions만 확인" }
+  ],
+  "nominalDimensions": {
+    "note": "각 카탈로그 PDF 1페이지 'Nominal Dimensions' 도면에서 확인한 치수(in). pitch = 반복 주기, crest = 상부 평탄부 폭, valley = 하부 평탄부 폭, r = (pitch - crest - valley)/2 = 좌우 경사부 수평 투영폭.",
+    "profiles": [
+      {
+        "name": "1.5VLI-36", "sourceUrl": "https://vulcraft.com/catalogs/Deck/CompositeDeck/LRFD-1.5VLR-36_Composite_Deck-Slab.pdf",
+        "depthIn": 1.5, "pitchIn": 6, "crestIn": 1.625, "valleyIn": 3.375, "widthIn": 36
+      },
+      {
+        "name": "2VLI-36", "sourceUrl": "https://vulcraft.com/catalogs/Deck/CompositeDeck/LRFD-2VLI-36-2VLJ-36-2PLVLI-36_Composite_Deck-Slab.pdf",
+        "depthIn": 2, "pitchIn": 12, "crestIn": 5, "valleyIn": 5, "widthIn": 36
+      },
+      {
+        "name": "3VLI-36", "sourceUrl": "https://vulcraft.com/catalogs/Deck/CompositeDeck/ASD-3VLI-36-3VLJ-36-3PLVLI-36_Composite_Deck-Slab.pdf",
+        "depthIn": 3, "pitchIn": 12, "crestIn": 4.75, "valleyIn": 4.75, "widthIn": 36
+      }
+    ]
+  }
 }

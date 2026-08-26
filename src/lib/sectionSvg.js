@@ -344,6 +344,53 @@ export function drawHPlusTSVG(hDims, tDims, unit, wLabel, aLabel) {
     aria-label="H+T built-up cross section in ${unit}">${defsBlock(id)}${bodyH}${bodyT}${weld}${dim.join('')}${callout}</svg>`;
 }
 
+/** Repeating trapezoidal flute profile for a Vulcraft-style composite metal
+ * deck "Nominal Dimensions" drawing. `p` = {depthIn,pitchIn,crestIn,valleyIn,
+ * widthIn} always in inches (used for proportions); `unit` picks the label
+ * unit ('"' or 'mm') and `disp` is the same shape already converted to that
+ * unit for the printed labels. */
+export function drawDeckProfileSVG(p, unit, disp) {
+  const id = nextId('dk');
+  const gutter = { l: 56, t: 56, r: 40, b: 70 };
+  const bboxW = W - gutter.l - gutter.r;
+  const kx = bboxW / p.widthIn;
+  const depthPx = 46; // visually exaggerated, as in the source catalog drawings
+
+  const reps = Math.max(1, Math.round(p.widthIn / p.pitchIn));
+  const r = (p.pitchIn - p.valleyIn - p.crestIn) / 2; // slope horizontal run
+  const pPx = p.pitchIn * kx, vPx = p.valleyIn * kx, cPx = p.crestIn * kx, rPx = r * kx;
+
+  const x0 = gutter.l;
+  const yBot = gutter.t + depthPx + 20;
+  const yTop = yBot - depthPx;
+
+  let x = x0, path = `M${x},${yBot} `;
+  path += `l${vPx / 2},0 `;
+  x += vPx / 2;
+  for (let i = 0; i < reps; i++) {
+    path += `l${rPx},${-depthPx} l${cPx},0 l${rPx},${depthPx} `;
+    if (i < reps - 1) path += `l${vPx},0 `;
+  }
+  path += `l${vPx / 2},0`;
+  const xEnd = x0 + reps * pPx + vPx / 2;
+
+  const body = `<path d="${path}" fill="none" stroke="var(--steel-line)" stroke-width="2" stroke-linejoin="round"/>`;
+
+  const dim = [];
+  vDim(dim, id, yTop, yBot, x0 - 26, yTop, `D=${fmtDim(disp.depthIn, unit)}${unit}`);
+  hDim(dim, id, x0, xEnd, yBot + 30, yBot, `Width=${fmtDim(disp.widthIn, unit)}${unit}`);
+  const cx0 = x0 + vPx / 2 + rPx;
+  hDim(dim, id, cx0, cx0 + cPx, yTop - 18, yTop, `crest=${fmtDim(disp.crestIn, unit)}${unit}`);
+  if (reps > 1) {
+    const vLabelX0 = x0 + pPx; // start of a full valley segment (2nd rib onward)
+    hDim(dim, id, vLabelX0, vLabelX0 + vPx, yBot + 12, yBot, `valley=${fmtDim(disp.valleyIn, unit)}${unit}`);
+  }
+  microH(dim, id, x0, x0 + pPx, yBot - depthPx / 2, `pitch=${fmtDim(disp.pitchIn, unit)}${unit}`, 1);
+
+  return `<svg viewBox="0 0 ${W} ${H}" class="section-svg" role="img"
+    aria-label="metal deck nominal dimensions in ${unit}">${defsBlock(id)}${body}${dim.join('')}</svg>`;
+}
+
 /** Prominent unit-weight / area callout box — the app's most important number
  * for a built-up member, so it must stand out visually inside the SVG. */
 function wCallout(x, y, wLabel, aLabel) {

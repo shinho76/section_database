@@ -1,4 +1,13 @@
 import { useEffect, useState } from 'react';
+import { drawDeckProfileSVG } from '../lib/sectionSvg.js';
+
+const IN_TO_MM = 25.4;
+function toMmProfile(p) {
+  return {
+    depthIn: p.depthIn * IN_TO_MM, pitchIn: p.pitchIn * IN_TO_MM,
+    crestIn: p.crestIn * IN_TO_MM, valleyIn: p.valleyIn * IN_TO_MM, widthIn: p.widthIn * IN_TO_MM,
+  };
+}
 
 const SECTIONS = [
   { key: 'section', label: '단면성능' },
@@ -93,6 +102,7 @@ function ReinforcingTable({ rows }) {
 export default function MetalDeckView() {
   const [data, setData] = useState(null);
   const [section, setSection] = useState('section');
+  const [profileName, setProfileName] = useState('1.5VLI-36');
 
   useEffect(() => {
     import('../data/metaldeck.json').then((m) => setData(m.default));
@@ -102,57 +112,80 @@ export default function MetalDeckView() {
 
   const f = data.family;
   const profile = f.profiles.find((p) => p.name === '1.5VLI-36') || f.profiles[0];
+  const profileNames = data.nominalDimensions.profiles.map((p) => p.name);
+  const dims = data.nominalDimensions.profiles.find((p) => p.name === profileName);
+  const dimsMm = toMmProfile(dims);
+  const hasSectionData = profileName === '1.5VLI-36';
 
   return (
     <>
       <div className="detail-head">
         <div>
-          <h1 className="mono">METAL DECK — {profile.name}</h1>
+          <h1 className="mono">METAL DECK — {profileName}</h1>
           <div className="alias">
-            <span className="chip chip-ks">{f.depthIn}in × {f.widthIn}in</span>
-            <span className="chip">{f.grade}</span>
-            <span className="chip">{profile.fastening}</span>
+            <span className="chip chip-ks">{dims.depthIn}in × {dims.widthIn}in</span>
+            {hasSectionData && <span className="chip">{f.grade}</span>}
+            {hasSectionData && <span className="chip">{profile.fastening}</span>}
           </div>
         </div>
       </div>
 
       <div className="deck-tabs">
-        {SECTIONS.map((s) => (
+        {profileNames.map((n) => (
           <span
-            key={s.key}
-            className={`deck-tab${section === s.key ? ' is-active' : ''}`}
-            onClick={() => setSection(s.key)}
+            key={n}
+            className={`deck-tab${profileName === n ? ' is-active' : ''}`}
+            onClick={() => setProfileName(n)}
           >
-            {s.label}
+            {n}
           </span>
         ))}
       </div>
 
-      {section === 'section' && (
+      <div className="draw-grid">
+        <figure className="panel draw">
+          <figcaption className="draw-cap">Imperial<span>inch</span></figcaption>
+          <div dangerouslySetInnerHTML={{ __html: drawDeckProfileSVG(dims, '"', dims) }} />
+        </figure>
+        <figure className="panel draw">
+          <figcaption className="draw-cap">Metric<span>mm</span></figcaption>
+          <div dangerouslySetInnerHTML={{ __html: drawDeckProfileSVG(dims, 'mm', dimsMm) }} />
+        </figure>
+      </div>
+
+      {hasSectionData ? (
+        <>
+          <div className="deck-tabs">
+            {SECTIONS.map((s) => (
+              <span
+                key={s.key}
+                className={`deck-tab${section === s.key ? ' is-active' : ''}`}
+                onClick={() => setSection(s.key)}
+              >
+                {s.label}
+              </span>
+            ))}
+          </div>
+
+          {section === 'section' && (
+            <div className="panel">
+              <div className="panel-head"><h2>Section Properties (GR50)</h2></div>
+              <SectionPropsTable rows={f.sectionProperties} />
+            </div>
+          )}
+          {section === 'reinforcing' && <ReinforcingTable rows={f.reinforcing.nwc} />}
+        </>
+      ) : (
         <div className="panel">
-          <div className="panel-head"><h2>Section Properties (GR50)</h2></div>
-          <SectionPropsTable rows={f.sectionProperties} />
+          <div className="panel-head"><h2>단면성능 · 하중표</h2></div>
+          <p className="note">{data.otherProfiles.find((p) => p.name === profileName)?.note}</p>
         </div>
       )}
-      {section === 'reinforcing' && <ReinforcingTable rows={f.reinforcing.nwc} />}
 
       <div className="panel">
-        <div className="panel-head"><h2>다른 프로파일 (자료 없음)</h2></div>
-        <table className="list">
-          <thead><tr><th>Profile</th><th className="r">Depth (in)</th><th className="r">Width (in)</th><th>Note</th></tr></thead>
-          <tbody>
-            {data.otherProfiles.map((p) => (
-              <tr key={p.name}>
-                <td className="mono strong">{p.name}</td>
-                <td className="r mono">{p.depthIn}</td>
-                <td className="r mono">{p.widthIn}</td>
-                <td className="desc">{p.note}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="panel-head"><h2>자료 출처</h2></div>
         <p className="note">{data.note}</p>
-        <p className="note">{data.source} ({data.catalogUrl})</p>
+        <p className="note">{dims.sourceUrl}</p>
       </div>
     </>
   );
