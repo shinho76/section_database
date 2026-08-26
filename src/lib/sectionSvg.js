@@ -310,57 +310,73 @@ export function drawPurlinSVG(row, kind, unit) {
     aria-label="${kind} purlin cross section in ${unit}">${defsBlock(id)}${body}${dim.join('')}</svg>`;
 }
 
-/** H-shape with a T-bar welded stem-down onto the top flange (BH modes 2/3).
- * hDims/tDims are plain {d,bf,tw,tf} objects already in the target unit. */
-export function drawHPlusTSVG(hDims, tDims, unit) {
-  const id = nextId('dt');
-  const gutter = { l: 58, t: 40, r: 60, b: 40 };
-  const bboxW = W - gutter.l - gutter.r;
-  const bboxH = H - gutter.t - gutter.b;
-  const ow = Math.max(hDims.bf, tDims.bf);
-  const oh = hDims.d + tDims.d;
-  const k = Math.min(bboxW / ow, bboxH / oh);
-  const sx = (v) => v * k;
-  const cx = gutter.l + bboxW / 2;
-  const topY = gutter.t + (bboxH - oh * k) / 2;
+/** Symmetric I-shape outline (both flanges equal), with rounded flange/web
+ * fillets when `r` is large enough to render (same corner convention as the
+ * validated fillet code in drawShapeSVG's I-shape branch: clockwise outline,
+ * all four concave corners use sweep-flag 0). Falls back to sharp corners
+ * when r is ~0 (built-up welded plates have no rolled fillet). */
+function iBodyPath(x0, yTop, bw, bh, tw, tf, r, fill, stroke) {
+  const sh = (bw - tw) / 2;
+  const rc = Math.max(0, Math.min(r, sh - 1, (bh - 2 * tf) / 2 - 1));
+  if (rc > 0.75) {
+    const webSpan = bh - 2 * tf - 2 * rc;
+    return `<path d="M${x0},${yTop} h${bw} v${tf} h${-(sh - rc)}
+      a${rc},${rc} 0 0,0 ${-rc},${rc}
+      v${webSpan}
+      a${rc},${rc} 0 0,0 ${rc},${rc}
+      h${sh - rc} v${tf} h${-bw}
+      v${-tf} h${sh - rc}
+      a${rc},${rc} 0 0,0 ${rc},${-rc}
+      v${-webSpan}
+      a${rc},${rc} 0 0,0 ${-rc},${-rc}
+      h${-(sh - rc)} Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+  }
+  return `<path d="M${x0},${yTop} h${bw} v${tf} h${-sh} v${bh - 2 * tf} h${sh} v${tf} h${-bw}
+    v${-tf} h${sh} v${-(bh - 2 * tf)} h${-sh} Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+}
 
-  const bwH = sx(hDims.bf), bhH = sx(hDims.d), twH = sx(hDims.tw), tfH = sx(hDims.tf);
-  const bwT = sx(tDims.bf), bhT = sx(tDims.d), twT = sx(tDims.tw), tfT = sx(tDims.tf);
-  const shH = (bwH - twH) / 2;
+/** T outline, flange on top and stem hanging down (used for the optional
+ * 상부 T welded stem-down onto the H's top flange). Fillets at the two
+ * shoulder/stem corners; sharp free end at the stem tip. */
+function tBodyStemDownPath(x0, yTop, bw, bh, tw, tf, r, fill, stroke) {
+  const sh = (bw - tw) / 2;
+  const rc = Math.max(0, Math.min(r, sh - 1, bh - tf - 1));
+  if (rc > 0.75) {
+    const stemRun = bh - tf - rc;
+    return `<path d="M${x0},${yTop} h${bw} v${tf} h${-(sh - rc)}
+      a${rc},${rc} 0 0,0 ${-rc},${rc}
+      v${stemRun} h${-tw} v${-stemRun}
+      a${rc},${rc} 0 0,0 ${-rc},${-rc}
+      h${-(sh - rc)} Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+  }
+  return `<path d="M${x0},${yTop} h${bw} v${tf} h${-sh} v${bh - tf} h${-tw}
+    v${-(bh - tf)} h${-sh} Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+}
 
-  const yHtop = topY + bhT;
-  const yHbot = yHtop + bhH;
-  const x0H = cx - bwH / 2;
-  const x0T = cx - bwT / 2;
-
-  const fill = `url(#hatch-${id})`, stroke = 'var(--steel-line)';
-  const bodyH = `<path d="M${x0H},${yHtop} h${bwH} v${tfH} h${-shH} v${bhH - 2 * tfH} h${shH} v${tfH} h${-bwH}
-    v${-tfH} h${shH} v${-(bhH - 2 * tfH)} h${-shH} Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
-  const bodyT = `<path d="M${x0T},${topY} h${bwT} v${tfT} h${-(bwT - twT) / 2} v${bhT - tfT} h${-twT}
-    v${-(bhT - tfT)} h${-(bwT - twT) / 2} Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
-  // weld fillet marks at the T-stem / H-flange junction
-  const wf = Math.min(8, twH / 2);
-  const weld = `<path d="M${cx - twT / 2 - wf},${yHtop} L${cx - twT / 2},${yHtop - wf} L${cx - twT / 2},${yHtop} Z
-    M${cx + twT / 2 + wf},${yHtop} L${cx + twT / 2},${yHtop - wf} L${cx + twT / 2},${yHtop} Z"
-    fill="var(--val-warn)" opacity=".85"/>`;
-
-  const dim = [];
-  vDim(dim, id, topY, yHbot, x0H - 26, Math.min(x0H, x0T), `D=${fmtDim(hDims.d + tDims.d, unit)}${unit}`);
-  hDim(dim, id, x0H, x0H + bwH, yHbot + 24, yHbot, `bf(H)=${fmtDim(hDims.bf, unit)}${unit}`);
-  hDim(dim, id, x0T, x0T + bwT, topY - 22, topY, `bf(T)=${fmtDim(tDims.bf, unit)}${unit}`);
-  microV(dim, id, yHtop, yHtop + tfH, x0H + bwH + 20, `tf(H)=${fmtDim(hDims.tf, unit)}${unit}`);
-  microH(dim, id, cx - twH / 2, cx + twH / 2, (yHtop + yHbot) / 2, `tw(H)=${fmtDim(hDims.tw, unit)}${unit}`, 1);
-  microV(dim, id, topY, topY + tfT, x0T - 20, `tf(T)=${fmtDim(tDims.tf, unit)}${unit}`, -1);
-  microH(dim, id, cx - twT / 2, cx + twT / 2, topY + tfT + (bhT - tfT) / 2, `tw(T)=${fmtDim(tDims.tw, unit)}${unit}`, -1);
-
-  return `<svg viewBox="0 0 ${W} ${H}" class="section-svg" role="img"
-    aria-label="H+T built-up cross section in ${unit}">${defsBlock(id)}${bodyH}${bodyT}${weld}${dim.join('')}</svg>`;
+/** T outline, flange on bottom and stem rising up (used for the required
+ * 하부 T welded stem-up onto the H's bottom flange), anchored at the stem's
+ * top-left corner. Mirrors tBodyStemDownPath's fillet corners. */
+function tBodyStemUpPath(xStem0, yTop, bw, bh, tw, tf, r, fill, stroke) {
+  const sh = (bw - tw) / 2;
+  const rc = Math.max(0, Math.min(r, sh - 1, bh - tf - 1));
+  if (rc > 0.75) {
+    const stemRun = bh - tf - rc;
+    return `<path d="M${xStem0},${yTop} h${tw} v${stemRun}
+      a${rc},${rc} 0 0,0 ${rc},${rc}
+      h${sh - rc} v${tf} h${-bw} v${-tf} h${sh - rc}
+      a${rc},${rc} 0 0,0 ${rc},${-rc}
+      v${-stemRun} Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+  }
+  return `<path d="M${xStem0},${yTop} h${tw} v${bh - tf} h${sh}
+    v${tf} h${-bw} v${-tf} h${sh} v${-(bh - tf)} Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
 }
 
 /** H-shape with a required T-bar welded stem-up onto its BOTTOM flange, and
- * an optional second T-bar welded stem-down onto its TOP flange (BH mode 3's
- * 상부/중앙부/하부 layout). hDims/botDims are required; topDims is null when
- * no top T is selected. All dims are plain {d,bf,tw,tf} in the target unit. */
+ * an optional second T-bar welded stem-down onto its TOP flange (BH modes
+ * 3/4's 상부/중앙부/하부 layout). hDims/botDims are required; topDims is null
+ * when no top T is selected. All dims are plain {d,bf,tw,tf,r?} in the target
+ * unit — `r` is the flange/web fillet radius (0/undefined draws sharp corners,
+ * as for built-up welded plates which have no rolled fillet). */
 export function drawHBotTopTSVG(hDims, botDims, topDims, unit) {
   const id = nextId('dtt');
   const gutter = { l: 58, t: 40, r: 60, b: 40 };
@@ -373,13 +389,13 @@ export function drawHBotTopTSVG(hDims, botDims, topDims, unit) {
   const cx = gutter.l + bboxW / 2;
   const topY = gutter.t + (bboxH - oh * k) / 2;
 
-  const bwH = sx(hDims.bf), bhH = sx(hDims.d), twH = sx(hDims.tw), tfH = sx(hDims.tf);
-  const bwBot = sx(botDims.bf), bhBot = sx(botDims.d), twBot = sx(botDims.tw), tfBot = sx(botDims.tf);
-  const shH = (bwH - twH) / 2;
+  const bwH = sx(hDims.bf), bhH = sx(hDims.d), twH = sx(hDims.tw), tfH = sx(hDims.tf), rH = sx(hDims.r || 0);
+  const bwBot = sx(botDims.bf), bhBot = sx(botDims.d), twBot = sx(botDims.tw), tfBot = sx(botDims.tf), rBot = sx(botDims.r || 0);
 
   const hasTop = !!topDims;
   const bwTop = hasTop ? sx(topDims.bf) : 0, bhTop = hasTop ? sx(topDims.d) : 0;
   const twTop = hasTop ? sx(topDims.tw) : 0, tfTop = hasTop ? sx(topDims.tf) : 0;
+  const rTop = hasTop ? sx(topDims.r || 0) : 0;
 
   const yHtop = topY + bhTop;
   const yHbot = yHtop + bhH;
@@ -389,14 +405,10 @@ export function drawHBotTopTSVG(hDims, botDims, topDims, unit) {
   const x0Top = cx - bwTop / 2;
 
   const fill = `url(#hatch-${id})`, stroke = 'var(--steel-line)';
-  const bodyH = `<path d="M${x0H},${yHtop} h${bwH} v${tfH} h${-shH} v${bhH - 2 * tfH} h${shH} v${tfH} h${-bwH}
-    v${-tfH} h${shH} v${-(bhH - 2 * tfH)} h${-shH} Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+  const bodyH = iBodyPath(x0H, yHtop, bwH, bhH, twH, tfH, rH, fill, stroke);
   // bottom T, stem-up (anchored at its stem's top-left corner, touching H's bottom flange)
-  const bodyBot = `<path d="M${cx - twBot / 2},${yHbot} h${twBot} v${bhBot - tfBot} h${(bwBot - twBot) / 2}
-    v${tfBot} h${-bwBot} v${-tfBot} h${(bwBot - twBot) / 2} v${-(bhBot - tfBot)} Z"
-    fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
-  const bodyTop = hasTop ? `<path d="M${x0Top},${topY} h${bwTop} v${tfTop} h${-(bwTop - twTop) / 2} v${bhTop - tfTop} h${-twTop}
-    v${-(bhTop - tfTop)} h${-(bwTop - twTop) / 2} Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>` : '';
+  const bodyBot = tBodyStemUpPath(cx - twBot / 2, yHbot, bwBot, bhBot, twBot, tfBot, rBot, fill, stroke);
+  const bodyTop = hasTop ? tBodyStemDownPath(x0Top, topY, bwTop, bhTop, twTop, tfTop, rTop, fill, stroke) : '';
 
   const wfBot = Math.min(8, twH / 2);
   let weld = `<path d="M${cx - twBot / 2 - wfBot},${yHbot} L${cx - twBot / 2},${yHbot + wfBot} L${cx - twBot / 2},${yHbot} Z
@@ -418,10 +430,13 @@ export function drawHBotTopTSVG(hDims, botDims, topDims, unit) {
   microH(dim, id, cx - twH / 2, cx + twH / 2, (yHtop + yHbot) / 2, `tw(H)=${fmtDim(hDims.tw, unit)}${unit}`, 1);
   microV(dim, id, yBotEnd - tfBot, yBotEnd, x0Bot + bwBot + 20, `tf(bot)=${fmtDim(botDims.tf, unit)}${unit}`, 1);
   microH(dim, id, cx - twBot / 2, cx + twBot / 2, yHbot + (bhBot - tfBot) / 2, `tw(bot)=${fmtDim(botDims.tw, unit)}${unit}`, 1);
+  if (hDims.r) dim.push(text(x0H + (bwH - twH) / 4, yHtop + tfH + Math.max(rH, 10) * 0.6, `r(H)=${fmtDim(hDims.r, unit)}${unit}`));
+  if (botDims.r) dim.push(text(x0Bot + (bwBot - twBot) / 4, yHbot + bhBot - tfBot - Math.max(rBot, 10) * 0.6, `r(bot)=${fmtDim(botDims.r, unit)}${unit}`));
   if (hasTop) {
     hDim(dim, id, x0Top, x0Top + bwTop, topY - 22, topY, `bf(top)=${fmtDim(topDims.bf, unit)}${unit}`);
     microV(dim, id, topY, topY + tfTop, x0Top - 20, `tf(top)=${fmtDim(topDims.tf, unit)}${unit}`, -1);
     microH(dim, id, cx - twTop / 2, cx + twTop / 2, topY + tfTop + (bhTop - tfTop) / 2, `tw(top)=${fmtDim(topDims.tw, unit)}${unit}`, -1);
+    if (topDims.r) dim.push(text(x0Top + (bwTop - twTop) / 4, topY + tfTop + Math.max(rTop, 10) * 0.6, `r(top)=${fmtDim(topDims.r, unit)}${unit}`));
   }
 
   return `<svg viewBox="0 0 ${W} ${H}" class="section-svg" role="img"

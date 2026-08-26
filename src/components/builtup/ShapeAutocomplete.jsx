@@ -5,7 +5,7 @@ import { loadType } from '../../lib/dataLoader.js';
  * search box, but narrowed to a single AISC/KS type). Typing filters a
  * dropdown of matching shapes; clicking one calls onSelect with the full
  * shape record. */
-export default function ShapeAutocomplete({ type, onSelect, placeholder }) {
+export default function ShapeAutocomplete({ type, onSelect, placeholder, initialName }) {
   const [rows, setRows] = useState([]);
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
@@ -17,6 +17,13 @@ export default function ShapeAutocomplete({ type, onSelect, placeholder }) {
     setQuery('');
     return () => { cancelled = true; };
   }, [type]);
+
+  // Reflects a default shape the parent auto-selected on mount (async, so it
+  // lands after this component's own load effect above) — only touches the
+  // display text, never re-fires onSelect (the parent already set the shape).
+  useEffect(() => {
+    if (initialName) setQuery(initialName);
+  }, [initialName]);
 
   useEffect(() => {
     const onDoc = (e) => { if (boxRef.current && !boxRef.current.contains(e.target)) setOpen(false); };
