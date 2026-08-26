@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { manualHProps, manualTProps, composeSection, IN_TO_MM, IN2_TO_MM2, IN4_TO_MM4, LBFT_TO_KGM } from './compose.js';
 import { loadType } from '../../lib/dataLoader.js';
 import { drawHPlusTSVG } from '../../lib/sectionSvg.js';
+import DualUnitInput from './DualUnitInput.jsx';
+import ThicknessCombo from './ThicknessCombo.jsx';
 
 const MM_TO_IN = 1 / 25.4;
 const H_TYPES = ['W', 'M', 'S', 'HP', 'KSH'];
@@ -14,8 +16,8 @@ export default function HPlusTPanel({ baseKind }) {
   const [dbType, setDbType] = useState('W');
   const [dbShapes, setDbShapes] = useState([]);
   const [dbName, setDbName] = useState('');
-  const [customH, setCustomH] = useState({ d: 400, bf: 200, tw: 8, tf: 12 });
-  const [tBar, setTBar] = useState({ d: 150, bf: 150, tw: 8, tf: 12 });
+  const [customH, setCustomH] = useState({ d: 400, bf: 200, tw: 7.9375, tf: 12.7 });
+  const [tBar, setTBar] = useState({ d: 150, bf: 150, tw: 7.9375, tf: 12.7 });
 
   useEffect(() => {
     if (baseKind !== 'db') return;
@@ -23,14 +25,8 @@ export default function HPlusTPanel({ baseKind }) {
     setDbName('');
   }, [baseKind, dbType]);
 
-  const setCustomField = (field) => (e) => {
-    const v = parseFloat(e.target.value) || 0;
-    setCustomH((m) => ({ ...m, [field]: v }));
-  };
-  const setTField = (field) => (e) => {
-    const v = parseFloat(e.target.value) || 0;
-    setTBar((m) => ({ ...m, [field]: v }));
-  };
+  const setCustomField = (field) => (v) => setCustomH((m) => ({ ...m, [field]: v }));
+  const setTField = (field) => (v) => setTBar((m) => ({ ...m, [field]: v }));
 
   const dbShape = baseKind === 'db' ? dbShapes.find((s) => s.name === dbName) : null;
 
@@ -83,11 +79,20 @@ export default function HPlusTPanel({ baseKind }) {
     return composeSection(layers);
   }, [hPropsIn, tPropsIn, tValid]);
 
-  const svgUs = hDimsIn && tValid ? drawHPlusTSVG(hDimsIn, tDimsIn, '"') : null;
-  const svgMm = hDimsMm && tValid ? drawHPlusTSVG(hDimsMm, tBar, 'mm') : null;
+  const wLabelUs = composite ? `${composite.W.toFixed(1)} lb/ft` : null;
+  const aLabelUs = composite ? `${composite.A.toFixed(2)} in²` : null;
+  const wLabelMm = composite ? `${(composite.W * LBFT_TO_KGM).toFixed(1)} kg/m` : null;
+  const aLabelMm = composite ? `${(composite.A * IN2_TO_MM2).toFixed(0)} mm²` : null;
+
+  const svgUs = hDimsIn && tValid ? drawHPlusTSVG(hDimsIn, tDimsIn, '"', wLabelUs, aLabelUs) : null;
+  const svgMm = hDimsMm && tValid ? drawHPlusTSVG(hDimsMm, tBar, 'mm', wLabelMm, aLabelMm) : null;
+
+  const title = baseKind === 'db' ? 'Rolled H-Section + T-Bar' : 'Built-up H-Shape + T-Bar';
 
   return (
     <>
+      <div className="detail-head"><div><h1 className="mono">{title}</h1></div></div>
+
       <div className="bh-grid">
         <div className="panel">
           <div className="panel-head"><h2>기준 H-SHAPE</h2></div>
@@ -106,22 +111,28 @@ export default function HPlusTPanel({ baseKind }) {
               </label>
             </div>
           ) : (
-            <div className="field-row">
-              <label>d (mm)<input type="number" value={customH.d} onChange={setCustomField('d')} /></label>
-              <label>bf (mm)<input type="number" value={customH.bf} onChange={setCustomField('bf')} /></label>
-              <label>tw (mm)<input type="number" value={customH.tw} onChange={setCustomField('tw')} /></label>
-              <label>tf (mm)<input type="number" value={customH.tf} onChange={setCustomField('tf')} /></label>
-            </div>
+            <>
+              <div className="field-row">
+                <DualUnitInput label="d (웹 높이)" mm={customH.d} onChangeMm={setCustomField('d')} />
+                <DualUnitInput label="bf (플랜지 폭)" mm={customH.bf} onChangeMm={setCustomField('bf')} />
+              </div>
+              <div className="field-row">
+                <label>tw (웹 두께)<ThicknessCombo value={customH.tw} onChange={setCustomField('tw')} /></label>
+                <label>tf (플랜지 두께)<ThicknessCombo value={customH.tf} onChange={setCustomField('tf')} /></label>
+              </div>
+            </>
           )}
         </div>
 
         <div className="panel">
           <div className="panel-head"><h2>T-BAR (용접 부재, 자유 입력)</h2></div>
           <div className="field-row">
-            <label>T d — 높이 (mm)<input type="number" value={tBar.d} onChange={setTField('d')} /></label>
-            <label>T bf — 폭 (mm)<input type="number" value={tBar.bf} onChange={setTField('bf')} /></label>
-            <label>T tw — 웹 두께 (mm)<input type="number" value={tBar.tw} onChange={setTField('tw')} /></label>
-            <label>T tf — 플랜지 두께 (mm)<input type="number" value={tBar.tf} onChange={setTField('tf')} /></label>
+            <DualUnitInput label="T d — 높이" mm={tBar.d} onChangeMm={setTField('d')} />
+            <DualUnitInput label="T bf — 폭" mm={tBar.bf} onChangeMm={setTField('bf')} />
+          </div>
+          <div className="field-row">
+            <label>T tw — 웹 두께<ThicknessCombo value={tBar.tw} onChange={setTField('tw')} /></label>
+            <label>T tf — 플랜지 두께<ThicknessCombo value={tBar.tf} onChange={setTField('tf')} /></label>
           </div>
           {!tValid && <p className="note">T-BAR 치수가 유효하지 않습니다.</p>}
           <p className="note">T-BAR 높이(d)를 바꾸면 tw를 자유롭게 조정해 웹 접합부에 맞출 수 있습니다. H의 상부 플랜지 위에 T의 웨브(스템)를 용접하는 방식입니다.</p>

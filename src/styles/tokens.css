@@ -174,6 +174,22 @@ select,input[type=text],input[type=number]{background:var(--bg-input);
   cursor:pointer;background:var(--bg-inset);color:var(--tx-muted);border:1px solid var(--bd-subtle)}
 .deck-tab.is-active{background:var(--ac-glow);color:var(--ac-main);border-color:var(--bd-accent)}
 
+.combo{position:relative}
+.combo input{width:100%}
+.combo-list{position:absolute;top:calc(100% + 2px);left:0;right:0;z-index:20;
+  max-height:220px;overflow-y:auto;background:var(--bg-card);border:1px solid var(--bd-accent);
+  border-radius:6px;box-shadow:0 8px 20px rgba(0,0,0,.35);list-style:none;margin:0;padding:4px}
+.combo-list li{display:flex;justify-content:space-between;gap:10px;padding:6px 8px;
+  border-radius:4px;cursor:pointer;font-size:12px;color:var(--tx-primary)}
+.combo-list li:hover{background:var(--ac-glow);color:var(--ac-main)}
+.combo-mm{color:var(--tx-muted);font-size:11px}
+
+.dual-unit{display:flex;flex-direction:column;gap:2px;flex:1;min-width:140px}
+.dual-unit-label{font-size:10px;color:var(--tx-muted)}
+.dual-unit-pair{display:flex;gap:6px}
+.dual-unit-side{display:flex;align-items:center;gap:4px;flex:1;font-size:10px;color:var(--tx-muted)}
+.dual-unit-side input{width:100%}
+
 @media (max-width:900px){
   .draw-grid{grid-template-columns:1fr}
   .bh-grid{grid-template-columns:1fr}

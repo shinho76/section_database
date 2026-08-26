@@ -2,16 +2,14 @@ import { useMemo, useState } from 'react';
 import { manualHProps, IN2_TO_MM2, IN4_TO_MM4, LBFT_TO_KGM } from './compose.js';
 import { ksLabel, usLabel } from './labels.js';
 import { drawShapeSVG } from '../../lib/sectionSvg.js';
+import DualUnitInput from './DualUnitInput.jsx';
+import ThicknessCombo from './ThicknessCombo.jsx';
 
 const MM_TO_IN = 1 / 25.4;
 
 export default function CustomHPanel() {
-  const [mm, setMm] = useState({ d: 400, bf: 200, tw: 8, tf: 12 });
-
-  const set = (field) => (e) => {
-    const v = parseFloat(e.target.value) || 0;
-    setMm((m) => ({ ...m, [field]: v }));
-  };
+  const [mm, setMm] = useState({ d: 400, bf: 200, tw: 7.9375, tf: 12.7 });
+  const set = (field) => (v) => setMm((m) => ({ ...m, [field]: v }));
 
   const propsIn = useMemo(() => manualHProps({
     d: mm.d * MM_TO_IN, bf: mm.bf * MM_TO_IN, tw: mm.tw * MM_TO_IN, tf: mm.tf * MM_TO_IN,
@@ -21,31 +19,34 @@ export default function CustomHPanel() {
 
   const shape = useMemo(() => {
     if (!valid) return null;
-    const s = {
+    return {
       name: 'Custom H',
       type: 'W',
       us: {
-        d: propsIn.d.toFixed(2), bf: propsIn.bf.toFixed(2), tw: propsIn.tw.toFixed(3), tf: propsIn.tf.toFixed(3),
+        d: propsIn.d.toFixed(1), bf: propsIn.bf.toFixed(1), tw: propsIn.tw.toFixed(1), tf: propsIn.tf.toFixed(1),
         A: propsIn.A.toFixed(2), W: propsIn.W.toFixed(1),
       },
       mt: {
-        d: mm.d.toFixed(0), bf: mm.bf.toFixed(0), tw: mm.tw.toFixed(1), tf: mm.tf.toFixed(1),
+        d: mm.d.toFixed(0), bf: mm.bf.toFixed(0), tw: mm.tw.toFixed(0), tf: mm.tf.toFixed(0),
         A: (propsIn.A * IN2_TO_MM2).toFixed(0), W: (propsIn.W * LBFT_TO_KGM).toFixed(1),
       },
     };
-    return s;
   }, [propsIn, mm, valid]);
 
   return (
     <>
+      <div className="detail-head"><div><h1 className="mono">Built-up H-Section</h1></div></div>
+
       <div className="bh-grid">
         <div className="panel">
-          <div className="panel-head"><h2>4수치 입력 (mm)</h2></div>
+          <div className="panel-head"><h2>치수 입력 (in ↔ mm 동시 입력)</h2></div>
           <div className="field-row">
-            <label>d (웹 높이)<input type="number" value={mm.d} onChange={set('d')} /></label>
-            <label>bf (플랜지 폭)<input type="number" value={mm.bf} onChange={set('bf')} /></label>
-            <label>tw (웹 두께)<input type="number" value={mm.tw} onChange={set('tw')} /></label>
-            <label>tf (플랜지 두께)<input type="number" value={mm.tf} onChange={set('tf')} /></label>
+            <DualUnitInput label="d (웹 높이)" mm={mm.d} onChangeMm={set('d')} />
+            <DualUnitInput label="bf (플랜지 폭)" mm={mm.bf} onChangeMm={set('bf')} />
+          </div>
+          <div className="field-row">
+            <label>tw (웹 두께)<ThicknessCombo value={mm.tw} onChange={set('tw')} /></label>
+            <label>tf (플랜지 두께)<ThicknessCombo value={mm.tf} onChange={set('tf')} /></label>
           </div>
           {!valid && <p className="note">치수가 유효하지 않습니다 (d &gt; 2×tf, bf &gt; tw 필요).</p>}
         </div>
@@ -68,6 +69,7 @@ export default function CustomHPanel() {
               <div dangerouslySetInnerHTML={{ __html: drawShapeSVG(shape, 'us') }} />
               <div className="weight">
                 <span className="wv mono">{shape.us.W}</span><span className="wu">lb/ft</span>
+                <span className="wv mono" style={{ marginLeft: 14 }}>{shape.us.A}</span><span className="wu">in²</span>
               </div>
             </figure>
             <figure className="panel draw">
@@ -75,6 +77,7 @@ export default function CustomHPanel() {
               <div dangerouslySetInnerHTML={{ __html: drawShapeSVG(shape, 'mt') }} />
               <div className="weight">
                 <span className="wv mono">{shape.mt.W}</span><span className="wu">kg/m</span>
+                <span className="wv mono" style={{ marginLeft: 14 }}>{shape.mt.A}</span><span className="wu">mm²</span>
               </div>
             </figure>
           </div>

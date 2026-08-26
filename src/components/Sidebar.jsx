@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useStore, GRID_GROUPS, BELOW_GROUPS, DB_TYPES } from '../store.js';
+import { useStore, GRID_GROUPS, BELOW_GROUPS, DB_TYPES, NAV_ITEM_LABEL } from '../store.js';
 import { loadType } from '../lib/dataLoader.js';
 
 function GridCell({ typeKey, activeKey, setActiveKey, counts, rowSpan }) {
@@ -91,7 +91,7 @@ export default function Sidebar() {
               className={`nav-item${key === activeKey ? ' is-active' : ''}`}
               onClick={() => setActiveKey(key)}
             >
-              <span className="nav-name">{key}</span>
+              <span className="nav-name">{NAV_ITEM_LABEL[key] ?? key}</span>
               {DB_TYPES.has(key) && (
                 <span className="nav-count">{counts[key] ?? ''}</span>
               )}

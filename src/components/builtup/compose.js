@@ -11,6 +11,39 @@ export function manualHProps({ d, bf, tw, tf }) {
   return { A, Ix, Iy, W, d, bf, tw, tf };
 }
 
+/** H-section with independently-sized top/bottom flanges (built-up, welded).
+ * d = overall depth, tw = web thickness (constant), bfTop/tfTop = top flange,
+ * bfBot/tfBot = bottom flange. Centroid is not at mid-depth in general, so
+ * yTopExtent/yBotExtent are reported for use by composeSection/SVG layout. */
+export function manualHUnequalProps({ d, tw, bfTop, tfTop, bfBot, tfBot }) {
+  const hWeb = d - tfTop - tfBot;
+  const Atop = bfTop * tfTop;
+  const Abot = bfBot * tfBot;
+  const Aweb = hWeb * tw;
+  const A = Atop + Abot + Aweb;
+
+  // y measured from the bottom face upward
+  const yTop = d - tfTop / 2;
+  const yBot = tfBot / 2;
+  const yWeb = tfBot + hWeb / 2;
+  const ybar = (Atop * yTop + Abot * yBot + Aweb * yWeb) / A;
+
+  const ITop = (bfTop * tfTop ** 3) / 12 + Atop * (yTop - ybar) ** 2;
+  const IBot = (bfBot * tfBot ** 3) / 12 + Abot * (yBot - ybar) ** 2;
+  const IWeb = (tw * hWeb ** 3) / 12 + Aweb * (yWeb - ybar) ** 2;
+  const Ix = ITop + IBot + IWeb;
+  const Iy = (tfTop * bfTop ** 3) / 12 + (tfBot * bfBot ** 3) / 12 + (hWeb * tw ** 3) / 12;
+
+  const W = A * (STEEL_DENSITY_LB_FT3 / 144);
+  const yTopExtent = d - ybar;
+  const yBotExtent = ybar;
+  return {
+    A, Ix, Iy, W, d, tw, bfTop, tfTop, bfBot, tfBot,
+    bf: Math.max(bfTop, bfBot), tf: (tfTop + tfBot) / 2,
+    yTopExtent, yBotExtent, ybar,
+  };
+}
+
 /** T-bar (flange bf×tf on top, stem tw hanging down by d-tf), own centroid. */
 export function manualTProps({ d, bf, tw, tf }) {
   const A1 = bf * tf;

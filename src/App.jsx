@@ -4,7 +4,9 @@ import Sidebar from './components/Sidebar.jsx';
 import ShapeList from './components/ShapeList.jsx';
 import ShapeDetail from './components/ShapeDetail.jsx';
 import SearchResults from './components/SearchResults.jsx';
-import BuiltUpBuilder from './components/builtup/BuiltUpBuilder.jsx';
+import CustomHPanel from './components/builtup/CustomHPanel.jsx';
+import UnequalHPanel from './components/builtup/UnequalHPanel.jsx';
+import HPlusTPanel from './components/builtup/HPlusTPanel.jsx';
 import PurlinView from './components/PurlinView.jsx';
 import MetalDeckView from './components/MetalDeckView.jsx';
 import RebarView from './components/RebarView.jsx';
@@ -19,8 +21,14 @@ export default function App() {
     main = <SearchResults />;
   } else if (DB_TYPES.has(activeKey)) {
     main = shape ? <ShapeDetail shape={shape} /> : <ShapeList />;
-  } else if (activeKey === 'BH') {
-    main = <BuiltUpBuilder />;
+  } else if (activeKey === 'BH-1') {
+    main = <CustomHPanel />;
+  } else if (activeKey === 'BH-2') {
+    main = <UnequalHPanel />;
+  } else if (activeKey === 'BH-3') {
+    main = <HPlusTPanel baseKind="db" />;
+  } else if (activeKey === 'BH-4') {
+    main = <HPlusTPanel baseKind="custom" />;
   } else if (activeKey === 'PURLIN-CEE' || activeKey === 'PURLIN-ZEE') {
     main = <PurlinView variant={activeKey} />;
   } else if (activeKey === 'METALDECK') {

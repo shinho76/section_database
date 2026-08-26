@@ -30,6 +30,12 @@ export function defsBlock(id) {
   </defs>`;
 }
 
+/** Dimension-line label rounding for the BH builder: inch to 1 decimal,
+ * mm to the nearest whole number. */
+export function fmtDim(v, unit) {
+  return unit === '"' ? v.toFixed(1) : String(Math.round(v));
+}
+
 export function text(x, y, label, anchor = 'middle') {
   return `<text x="${x}" y="${y}" text-anchor="${anchor}" dominant-baseline="middle"
     font-size="11.5" font-family="ui-monospace,monospace" stroke="var(--bg-card)" stroke-width="3.2"
@@ -291,7 +297,7 @@ export function drawPurlinSVG(row, kind, unit) {
 
 /** H-shape with a T-bar welded stem-down onto the top flange (BH modes 2/3).
  * hDims/tDims are plain {d,bf,tw,tf} objects already in the target unit. */
-export function drawHPlusTSVG(hDims, tDims, unit) {
+export function drawHPlusTSVG(hDims, tDims, unit, wLabel, aLabel) {
   const id = nextId('dt');
   const gutter = { l: 58, t: 40, r: 60, b: 40 };
   const bboxW = W - gutter.l - gutter.r;
@@ -324,14 +330,70 @@ export function drawHPlusTSVG(hDims, tDims, unit) {
     fill="var(--val-warn)" opacity=".85"/>`;
 
   const dim = [];
-  vDim(dim, id, topY, yHbot, x0H - 26, Math.min(x0H, x0T), `D=${hDims.d + tDims.d}${unit}`);
-  hDim(dim, id, x0H, x0H + bwH, yHbot + 24, yHbot, `bf(H)=${hDims.bf}${unit}`);
-  hDim(dim, id, x0T, x0T + bwT, topY - 22, topY, `bf(T)=${tDims.bf}${unit}`);
-  microV(dim, id, yHtop, yHtop + tfH, x0H + bwH + 20, `tf(H)=${hDims.tf}${unit}`);
-  microH(dim, id, cx - twH / 2, cx + twH / 2, (yHtop + yHbot) / 2, `tw(H)=${hDims.tw}${unit}`, 1);
-  microV(dim, id, topY, topY + tfT, x0T - 20, `tf(T)=${tDims.tf}${unit}`, -1);
-  microH(dim, id, cx - twT / 2, cx + twT / 2, topY + tfT + (bhT - tfT) / 2, `tw(T)=${tDims.tw}${unit}`, -1);
+  vDim(dim, id, topY, yHbot, x0H - 26, Math.min(x0H, x0T), `D=${fmtDim(hDims.d + tDims.d, unit)}${unit}`);
+  hDim(dim, id, x0H, x0H + bwH, yHbot + 24, yHbot, `bf(H)=${fmtDim(hDims.bf, unit)}${unit}`);
+  hDim(dim, id, x0T, x0T + bwT, topY - 22, topY, `bf(T)=${fmtDim(tDims.bf, unit)}${unit}`);
+  microV(dim, id, yHtop, yHtop + tfH, x0H + bwH + 20, `tf(H)=${fmtDim(hDims.tf, unit)}${unit}`);
+  microH(dim, id, cx - twH / 2, cx + twH / 2, (yHtop + yHbot) / 2, `tw(H)=${fmtDim(hDims.tw, unit)}${unit}`, 1);
+  microV(dim, id, topY, topY + tfT, x0T - 20, `tf(T)=${fmtDim(tDims.tf, unit)}${unit}`, -1);
+  microH(dim, id, cx - twT / 2, cx + twT / 2, topY + tfT + (bhT - tfT) / 2, `tw(T)=${fmtDim(tDims.tw, unit)}${unit}`, -1);
+
+  const callout = wLabel ? wCallout(cx, (yHtop + yHbot) / 2, wLabel, aLabel) : '';
 
   return `<svg viewBox="0 0 ${W} ${H}" class="section-svg" role="img"
-    aria-label="H+T built-up cross section in ${unit}">${defsBlock(id)}${bodyH}${bodyT}${weld}${dim.join('')}</svg>`;
+    aria-label="H+T built-up cross section in ${unit}">${defsBlock(id)}${bodyH}${bodyT}${weld}${dim.join('')}${callout}</svg>`;
+}
+
+/** Prominent unit-weight / area callout box — the app's most important number
+ * for a built-up member, so it must stand out visually inside the SVG. */
+function wCallout(x, y, wLabel, aLabel) {
+  return `<g>
+    <rect x="${x - 58}" y="${y - 20}" width="116" height="40" rx="7" fill="var(--ac-glow)" stroke="var(--ac-main)" stroke-width="1.2"/>
+    <text x="${x}" y="${y - 5}" text-anchor="middle" dominant-baseline="middle"
+      font-size="15" font-weight="700" font-family="ui-monospace,monospace" fill="var(--ac-main)">${wLabel}</text>
+    <text x="${x}" y="${y + 11}" text-anchor="middle" dominant-baseline="middle"
+      font-size="10" font-family="ui-monospace,monospace" fill="var(--tx-muted)">${aLabel}</text>
+  </g>`;
+}
+
+/** Built-up H-section with independent top/bottom flanges (BH mode ②).
+ * dims = {d,tw,bfTop,tfTop,bfBot,tfBot} in the target unit; wLabel/aLabel are
+ * pre-formatted unit-weight/area strings shown in a highlighted callout. */
+export function drawUnequalHSVG(dims, unit, wLabel, aLabel) {
+  const id = nextId('du');
+  const gutter = { l: 58, t: 44, r: 60, b: 44 };
+  const bboxW = W - gutter.l - gutter.r;
+  const bboxH = H - gutter.t - gutter.b;
+  const ow = Math.max(dims.bfTop, dims.bfBot);
+  const oh = dims.d;
+  const k = Math.min(bboxW / ow, bboxH / oh);
+  const sx = (v) => v * k;
+  const cx = gutter.l + bboxW / 2;
+  const topY = gutter.t + (bboxH - oh * k) / 2;
+
+  const bwTop = sx(dims.bfTop), tfTop = sx(dims.tfTop);
+  const bwBot = sx(dims.bfBot), tfBot = sx(dims.tfBot);
+  const dpx = sx(dims.d), tw = sx(dims.tw);
+  const botY = topY + dpx;
+  const x0Top = cx - bwTop / 2, x0Bot = cx - bwBot / 2;
+
+  const fill = `url(#hatch-${id})`, stroke = 'var(--steel-line)';
+  const body = `<path d="M${x0Top},${topY} h${bwTop} v${tfTop} h${-(bwTop - tw) / 2}
+    v${dpx - tfTop - tfBot} h${(bwTop - tw) / 2 - (bwBot - tw) / 2}
+    v${tfBot} h${-bwBot} v${-tfBot} h${(bwBot - tw) / 2}
+    v${-(dpx - tfTop - tfBot)} h${(bwTop - tw) / 2 - (bwBot - tw) / 2} Z"
+    fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+
+  const dim = [];
+  vDim(dim, id, topY, botY, x0Top - 26, Math.min(x0Top, x0Bot), `D=${fmtDim(dims.d, unit)}${unit}`);
+  hDim(dim, id, x0Top, x0Top + bwTop, topY - 22, topY, `bf-top=${fmtDim(dims.bfTop, unit)}${unit}`);
+  hDim(dim, id, x0Bot, x0Bot + bwBot, botY + 24, botY, `bf-bot=${fmtDim(dims.bfBot, unit)}${unit}`);
+  microV(dim, id, topY, topY + tfTop, x0Top + bwTop + 20, `tf-top=${fmtDim(dims.tfTop, unit)}${unit}`);
+  microV(dim, id, botY - tfBot, botY, x0Bot + bwBot + 20, `tf-bot=${fmtDim(dims.tfBot, unit)}${unit}`);
+  microH(dim, id, cx - tw / 2, cx + tw / 2, (topY + botY) / 2, `tw=${fmtDim(dims.tw, unit)}${unit}`, -1);
+
+  const callout = wLabel ? wCallout(cx, botY - dpx / 2 - 4, wLabel, aLabel) : '';
+
+  return `<svg viewBox="0 0 ${W} ${H}" class="section-svg" role="img"
+    aria-label="Unequal-flange built-up H cross section in ${unit}">${defsBlock(id)}${body}${dim.join('')}${callout}</svg>`;
 }

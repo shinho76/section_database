@@ -12,11 +12,21 @@ export const GRID_GROUPS = [
 
 // Below the grid: single-column groups with no AISC/KS split.
 export const BELOW_GROUPS = [
-  { label: 'BUILT-UP', items: ['BH'] },
+  { label: 'BUILT-UP H-SECTION', items: ['BH-1', 'BH-2', 'BH-3', 'BH-4'] },
   { label: 'PURLIN', items: ['PURLIN-CEE', 'PURLIN-ZEE'] },
   { label: 'METAL DECK', items: ['METALDECK'] },
   { label: 'REBAR', items: ['REBAR'] },
 ];
+
+// Short sidebar labels for BELOW_GROUPS items whose key isn't already readable.
+export const NAV_ITEM_LABEL = {
+  'BH-1': '① Built-up H-Section',
+  'BH-2': '② Unequal Flange H',
+  'BH-3': '③ Rolled H + T-Bar',
+  'BH-4': '④ Built-up H + T-Bar',
+  'PURLIN-CEE': 'Purlin-CEE', 'PURLIN-ZEE': 'Purlin-ZEE',
+  METALDECK: 'Metal Deck', REBAR: 'Rebar',
+};
 
 export const DB_TYPES = new Set([
   'W', 'M', 'S', 'HP', 'WT', 'MT', 'ST', 'HSS', 'PIPE', 'L', '2L', 'C', 'MC',
@@ -28,7 +38,8 @@ export const TYPE_LABEL = {
   HP: 'HP — Bearing Pile', WT: 'WT — Tee (from W)', MT: 'MT — Tee (from M)',
   ST: 'ST — Tee (from S)', HSS: 'HSS — Hollow Section', PIPE: 'PIPE — Steel Pipe',
   L: 'L — Angle', '2L': '2L — Double Angle', C: 'C — Channel', MC: 'MC — Misc. Channel',
-  BH: 'BH — Built-up H (조립단면)',
+  'BH-1': 'Built-up H-Section', 'BH-2': 'Unequal Flange Built-up H-Section',
+  'BH-3': 'Rolled H-Section + T-Bar', 'BH-4': 'Built-up H-Shape + T-Bar',
   'PURLIN-CEE': 'Purlin-CEE', 'PURLIN-ZEE': 'Purlin-ZEE',
   METALDECK: 'Metal Deck', REBAR: 'Rebar',
   KSH: 'H — H형강 (KS D 3502)', KSL: 'L — 등변앵글 (KS D 3502)',

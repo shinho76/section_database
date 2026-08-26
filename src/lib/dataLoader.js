@@ -53,9 +53,16 @@ export async function searchAll(query) {
   );
 }
 
-/** Resolve a lightweight index entry (from searchAll) to its full shape record. */
+/** Resolve a lightweight index entry (from searchAll) to its full shape record.
+ * `name` alone is not unique for KS types (multiple thickness classes can
+ * share one nominal name, e.g. "H400×200" -> H-396X199X7X11 and
+ * H-400X200X8X13), so match on `ks` too when the entry carries one. */
 export async function resolveShape(entry) {
   const rows = await loadType(entry.type);
+  if (entry.ks) {
+    const byKs = rows.find((s) => s.name === entry.name && s.ks === entry.ks);
+    if (byKs) return byKs;
+  }
   return rows.find((s) => s.name === entry.name) || null;
 }
 
