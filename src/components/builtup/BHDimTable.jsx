@@ -86,6 +86,21 @@ function MmCell({ f, mm, onChangeMm }) {
   return <input type="number" step={f.thickness ? 0.1 : 1} value={v == null ? '' : +v.toFixed(1)} onChange={onType} />;
 }
 
+/** MM-side cell for the field-per-row layout only: mirrors InCell's exact
+ * vertical stack (spacer-select, then input, then a same-height but
+ * invisible badge slot for thickness fields) so the IN and MM inputs in the
+ * same row land at the same y — otherwise the IN input (pushed down by its
+ * select/badge) and the plain MM input (top-aligned) drift out of line. */
+function MmRowCell({ f, mm, onChangeMm }) {
+  return (
+    <>
+      <select className="dim-select-spacer" disabled tabIndex={-1} aria-hidden="true"><option /></select>
+      <MmCell f={f} mm={mm} onChangeMm={onChangeMm} />
+      {f.thickness && <span className="grade-badge" aria-hidden="true" style={{ visibility: 'hidden' }}>&nbsp;</span>}
+    </>
+  );
+}
+
 /** Dimension-entry table, one row per field (D/Bf/Tw/Tf…) with the IN and MM
  * values side by side in that row — editing either updates the other live.
  * Narrower than a field-per-column layout (fixed value-column widths, no
@@ -108,7 +123,7 @@ export default function BHDimTable({ fields, mm, onChangeMm }) {
           <tr key={f.key}>
             <RowLabelCell f={f} />
             <td><InCell f={f} mm={mm} onChangeMm={onChangeMm} /></td>
-            <td><MmCell f={f} mm={mm} onChangeMm={onChangeMm} /></td>
+            <td><MmRowCell f={f} mm={mm} onChangeMm={onChangeMm} /></td>
           </tr>
         ))}
       </tbody>

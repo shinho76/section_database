@@ -80,6 +80,7 @@ export default function HPlusTPanel({ baseKind }) {
   const [botBar, setBotBar] = useState({ d: 150, bf: 150, tw: 7.9375, tf: 12.7 });
   const [topBar, setTopBar] = useState({ d: 150, bf: 150, tw: 7.9375, tf: 12.7 });
   const [topBarEnabled, setTopBarEnabled] = useState(false);
+  const [botBarEnabled, setBotBarEnabled] = useState(true);
 
   const setCustomField = (field) => (v) => setCustomH((m) => ({ ...m, [field]: v }));
   const setBotBarField = (field) => (v) => setBotBar((m) => ({ ...m, [field]: v }));
@@ -144,13 +145,14 @@ export default function HPlusTPanel({ baseKind }) {
     return manualHProps(hDimsIn);
   }, [hDimsIn, baseKind, hShape]);
 
-  // --- 하부 (required) ----------------------------------------------------
+  // --- 하부 (db: optional via search selection, custom: optional via checkbox) --
   const botPropsIn = useMemo(() => {
     if (baseKind === 'db') return botShape ? tPropsFromDbShape(botShape) : null;
+    if (!botBarEnabled) return null;
     const dims = { d: botBar.d * MM_TO_IN, bf: botBar.bf * MM_TO_IN, tw: botBar.tw * MM_TO_IN, tf: botBar.tf * MM_TO_IN };
     const valid = dims.d > dims.tf && dims.bf > dims.tw && dims.d > 0 && dims.bf > 0 && dims.tw > 0 && dims.tf > 0;
     return valid ? manualTProps(dims) : null;
-  }, [baseKind, botShape, botBar]);
+  }, [baseKind, botShape, botBar, botBarEnabled]);
 
   const botDimsIn = botPropsIn
     ? { d: botPropsIn.d, bf: botPropsIn.bf, tw: botPropsIn.tw, tf: botPropsIn.tf, r: baseKind === 'db' ? filletR(botShape.us) : 0 }
@@ -307,6 +309,10 @@ export default function HPlusTPanel({ baseKind }) {
                 <input type="checkbox" checked={topBarEnabled} onChange={(e) => setTopBarEnabled(e.target.checked)} style={{ marginRight: 8 }} />
                 상부 플레이트 포함 (선택)
               </label>
+              <label style={{ flex: 'none' }}>
+                <input type="checkbox" checked={botBarEnabled} onChange={(e) => setBotBarEnabled(e.target.checked)} style={{ marginRight: 8 }} />
+                하부 플레이트 포함 (선택)
+              </label>
             </div>
 
             <div className="bh-dim-group">
@@ -320,14 +326,16 @@ export default function HPlusTPanel({ baseKind }) {
                 <div className="bh-dim-piece-title">중앙부 H-SHAPE</div>
                 <BHDimTable fields={H_FIELDS} mm={customH} onChangeMm={setCustomField} />
               </div>
-              <div className="bh-dim-piece">
-                <div className="bh-dim-piece-title">하부 T-BAR</div>
-                <BHDimTable fields={T_FIELDS} mm={botBar} onChangeMm={setBotBarField} />
-              </div>
+              {botBarEnabled && (
+                <div className="bh-dim-piece">
+                  <div className="bh-dim-piece-title">하부 T-BAR</div>
+                  <BHDimTable fields={T_FIELDS} mm={botBar} onChangeMm={setBotBarField} />
+                </div>
+              )}
             </div>
 
             <p className="note">
-              상부는 선택하지 않아도 됩니다 — 상부를 포함하지 않으면 중앙부(H)+하부(T)만으로 계산합니다.
+              상부·하부는 선택하지 않아도 됩니다 — 선택한 조합(중앙부 H는 항상 포함)만으로 합성 단면을 계산합니다.
               하부 플레이트는 H의 하부 플랜지에, 상부 플레이트는 H의 상부 플랜지에 스템을 맞대어 용접하는 것으로 가정합니다 (자유 입력이므로 필렛 없음).
             </p>
           </div>
