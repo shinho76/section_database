@@ -13,6 +13,7 @@ import RebarView from './components/RebarView.jsx';
 import WWRView from './components/WWRView.jsx';
 import PlatePanel from './components/PlatePanel.jsx';
 import AvailablePlateView from './components/AvailablePlateView.jsx';
+import CheckedPlateView from './components/CheckedPlateView.jsx';
 
 export default function App() {
   const { activeKey, shape, query } = useStore();
@@ -44,6 +45,10 @@ export default function App() {
     main = <PlatePanel />;
   } else if (activeKey === 'PLATE-AVAILABLE') {
     main = <AvailablePlateView />;
+  } else if (activeKey === 'PLATE-CHECKED-ASTM') {
+    main = <CheckedPlateView standard="astm" />;
+  } else if (activeKey === 'PLATE-CHECKED-KS') {
+    main = <CheckedPlateView standard="ks" />;
   }
 
   return (

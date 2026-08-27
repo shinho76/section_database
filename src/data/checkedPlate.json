@@ -1,0 +1,26 @@
+{
+  "astm": {
+    "source": "ASTM A786 (Standard Specification for Rolled Steel Floor Plates) — 무늬강판(Floor Plate / Diamond Plate) 단위중량표",
+    "note": "미국 표준 원판 크기는 보통 4' × 8' (1219 × 2438mm) 또는 5' × 10' (1524 × 3048mm) 규격으로 공급됩니다. 두께(in/mm)는 규격 원본 값, 4'×8' 판중량은 단위중량(psf) × 32ft² 로 산출됩니다.",
+    "rows": [
+      { "gaugeLabel": "14 Gauge", "thicknessIn": 0.075, "thicknessMm": 1.9, "psf": 3.75, "kgm2": 18.31, "panel4x8Lb": 120.0 },
+      { "gaugeLabel": "12 Gauge", "thicknessIn": 0.105, "thicknessMm": 2.7, "psf": 5.25, "kgm2": 25.63, "panel4x8Lb": 168.0 },
+      { "gaugeLabel": "1/8\"", "thicknessIn": 0.125, "thicknessMm": 3.2, "psf": 6.16, "kgm2": 30.08, "panel4x8Lb": 197.1 },
+      { "gaugeLabel": "3/16\"", "thicknessIn": 0.188, "thicknessMm": 4.8, "psf": 8.71, "kgm2": 42.53, "panel4x8Lb": 278.7 },
+      { "gaugeLabel": "1/4\"", "thicknessIn": 0.250, "thicknessMm": 6.4, "psf": 11.26, "kgm2": 54.98, "panel4x8Lb": 360.3 },
+      { "gaugeLabel": "5/16\"", "thicknessIn": 0.313, "thicknessMm": 7.9, "psf": 13.80, "kgm2": 67.38, "panel4x8Lb": 441.6 },
+      { "gaugeLabel": "3/8\"", "thicknessIn": 0.375, "thicknessMm": 9.5, "psf": 16.37, "kgm2": 79.93, "panel4x8Lb": 523.8 },
+      { "gaugeLabel": "1/2\"", "thicknessIn": 0.500, "thicknessMm": 12.7, "psf": 21.47, "kgm2": 104.83, "panel4x8Lb": 687.0 }
+    ]
+  },
+  "ks": {
+    "source": "KS D 3568 (입체 무늬 강판) — 무늬강판(Checked Plate) 주요 규격 및 단위중량표 (제조사 카탈로그: POSCO, 현대제철 등 참조)",
+    "note": "무늬 산의 높이에 따라 제조사별로 단중 차이가 약 1~2% 발생할 수 있습니다. psf 및 lb 판중량은 이 앱이 계산한 환산값입니다.",
+    "rows": [
+      { "thicknessMm": 3.2, "kgm2": 26.79, "panel3x6Kg": 44.8, "panel4x8Kg": 79.8 },
+      { "thicknessMm": 4.5, "kgm2": 37.00, "panel3x6Kg": 61.9, "panel4x8Kg": 110.0 },
+      { "thicknessMm": 6.0, "kgm2": 48.77, "panel3x6Kg": 81.6, "panel4x8Kg": 145.0 },
+      { "thicknessMm": 8.0, "kgm2": 64.47, "panel3x6Kg": 108.0, "panel4x8Kg": 192.0 }
+    ]
+  }
+}
