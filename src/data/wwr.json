@@ -1,4 +1,60 @@
 {
+ "meshChart": {
+  "title": "Standard Reinforcing Mesh Chart",
+  "note": "스타일 표기의 (D/W)는 이형(D, Deformed) 또는 원형(W, Plain) 와이어 모두 해당 사이즈로 통용됨을 의미합니다. 무게는 100ft²(≈9.29m²) 당 근사값이며, kg/m²는 이 앱이 계산한 환산값입니다.",
+  "sheets": [
+   {
+    "newDesignation": "6 x 6 - (D/W)1.4 x (D/W)1.4",
+    "oldDesignation": "6 x 6 - 10 x 10",
+    "weightLbPer100ft2": 21,
+    "weightKgM2": 1.025
+   },
+   {
+    "newDesignation": "6 x 6 - (D/W)2.1 x (D/W)2.1",
+    "oldDesignation": "6 x 6 - 8 x 8",
+    "weightLbPer100ft2": 30,
+    "weightKgM2": 1.465
+   },
+   {
+    "newDesignation": "6 x 6 - (D/W)2.9 x (D/W)2.9",
+    "oldDesignation": "6 x 6 - 6 x 6",
+    "weightLbPer100ft2": 42,
+    "weightKgM2": 2.051
+   },
+   {
+    "newDesignation": "6 x 6 - (D/W)4.0 x (D/W)4.0",
+    "oldDesignation": "6 x 6 - 4 x 4",
+    "weightLbPer100ft2": 58,
+    "weightKgM2": 2.832
+   },
+   {
+    "newDesignation": "4 x 4 - (D/W)2.9 x (D/W)2.9",
+    "oldDesignation": "4 x 4 - 6 x 6",
+    "weightLbPer100ft2": 62,
+    "weightKgM2": 3.027
+   },
+   {
+    "newDesignation": "4 x 4 - (D/W)4.0 x (D/W)4.0",
+    "oldDesignation": "4 x 4 - 4 x 4",
+    "weightLbPer100ft2": 85,
+    "weightKgM2": 4.15
+   }
+  ],
+  "rolls": [
+   {
+    "newDesignation": "6 x 6 - (D/W)1.4 x (D/W)1.4",
+    "oldDesignation": "6 x 6 - 10 x 10",
+    "weightLbPer100ft2": 21,
+    "weightKgM2": 1.025
+   },
+   {
+    "newDesignation": "6 x 6 - (D/W)2.9 x (D/W)2.9",
+    "oldDesignation": "6 x 6 - 6 x 6",
+    "weightLbPer100ft2": 42,
+    "weightKgM2": 2.051
+   }
+  ]
+ },
  "source": "ASTM A1064/A1064M-22, Standard Specification for Steel Wire and Welded Wire Reinforcement, Plain and Deformed, for Concrete — Table 1–4",
  "standardUrl": "https://wirereinforcementinstitute.org/",
  "productPdfUrl": "https://wirereinforcementinstitute.org/application/files/7217/8472/2671/WWR-500-R-26_MSP.pdf",

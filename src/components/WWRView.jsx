@@ -1,5 +1,33 @@
 import { useEffect, useState } from 'react';
 
+/** Standard Reinforcing Mesh Chart: common WWR styles by both the current
+ * (D/W-size) and legacy (steel-wire-gauge) designations, with approximate
+ * weight per 100 ft². lb/100ft² is the source value; kg/m² is this app's
+ * conversion. */
+function MeshChartTable({ rows }) {
+  return (
+    <table className="list">
+      <thead>
+        <tr>
+          <th>New Designation</th>
+          <th>Old Designation (by steel wire gauge)</th>
+          <th className="r">Weight (lb/100ft²)</th><th className="r">Weight (kg/m²)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r, i) => (
+          <tr key={i}>
+            <td className="mono strong">{r.newDesignation}</td>
+            <td className="mono ks">{r.oldDesignation}</td>
+            <td className="r mono">{r.weightLbPer100ft2}</td>
+            <td className="r mono val-conv">{r.weightKgM2}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
 /** ASTM A1064/A1064M Table 1: Plain Wire, Inch-Pound units (diaIn/areaIn2 are
  * the standard's native values; mm columns are this app's conversion; the
  * standard doesn't publish a weight for plain wire at all, so both weight
@@ -123,6 +151,23 @@ export default function WWRView() {
   return (
     <>
       <div className="detail-head"><div><h1 className="mono">WWR — Welded Wire Reinforcement</h1></div></div>
+
+      <div className="panel">
+        <div className="panel-head">
+          <h2>{data.meshChart.title} — Sheets</h2>
+          <span className="tag">{data.meshChart.sheets.length} styles</span>
+        </div>
+        <MeshChartTable rows={data.meshChart.sheets} />
+      </div>
+
+      <div className="panel">
+        <div className="panel-head">
+          <h2>{data.meshChart.title} — Rolls</h2>
+          <span className="tag">{data.meshChart.rolls.length} styles</span>
+        </div>
+        <MeshChartTable rows={data.meshChart.rolls} />
+        <p className="note">{data.meshChart.note}</p>
+      </div>
 
       <div className="panel">
         <div className="panel-head">
