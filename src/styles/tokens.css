@@ -153,6 +153,7 @@ td em{font-style:normal;font-size:10px;color:var(--tx-muted);margin-left:2px}
 .match-link{background:none;border:1px solid var(--bd-accent);border-radius:5px;
   color:var(--ac-main);font:600 12px/1 ui-monospace,monospace;padding:4px 8px;cursor:pointer}
 .match-link:hover{background:var(--ac-glow)}
+.match-sim{margin-left:6px;font-size:11px;font-weight:700;color:var(--tx-secondary)}
 .sym{color:var(--tx-primary);font-weight:600;width:88px}
 .props td{white-space:nowrap}
 .props td.desc{white-space:normal}

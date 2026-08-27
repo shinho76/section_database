@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useStore, TYPE_LABEL } from '../store.js';
 import { loadType } from '../lib/dataLoader.js';
-import { hasMatchPair, matchTargetType, findNearestInRows } from '../lib/nearestMatch.js';
+import { hasMatchPair, matchTargetType, findNearestInRows, widthHeightSimilarity } from '../lib/nearestMatch.js';
 import ShapeCompareModal from './ShapeCompareModal.jsx';
 
 const seriesKey = (name) => name.split(/[X×]/)[0];
@@ -89,12 +89,18 @@ export default function ShapeList() {
                 {showMatch && (
                   <td className="mono ks">
                     {m ? (
-                      <button
-                        className="match-link"
-                        onClick={(e) => { e.stopPropagation(); setCompare({ row: s, match: m }); }}
-                      >
-                        {m.shape.name}
-                      </button>
+                      <>
+                        <button
+                          className="match-link"
+                          onClick={(e) => { e.stopPropagation(); setCompare({ row: s, match: m }); }}
+                        >
+                          {m.shape.name}
+                        </button>
+                        {(() => {
+                          const sim = widthHeightSimilarity(s, activeKey, m.shape);
+                          return sim == null ? null : <span className="match-sim">{sim.toFixed(0)}%</span>;
+                        })()}
+                      </>
                     ) : '—'}
                   </td>
                 )}

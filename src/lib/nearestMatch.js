@@ -62,3 +62,27 @@ export function findNearestInRows(shape, sourceType, targetRows) {
   }
   return best;
 }
+
+/** Width/height-only fields for similarity display (drops the thickness
+ * field that `SPEC` also weighs in for the match search itself). Round
+ * tube/pipe only has one size field (OD), so it's compared alone. */
+function widthHeightFields(sourceType, shape) {
+  return specFor(sourceType, shape).filter(([f]) => f !== 'tf' && f !== 't' && f !== 'tdes');
+}
+
+/** Similarity between `shape` and `match`, 0-100%, based only on the
+ * horizontal/vertical size dimensions (depth/OD and width/leg — no
+ * thickness), equally weighted. */
+export function widthHeightSimilarity(shape, sourceType, match) {
+  const fields = widthHeightFields(sourceType, shape);
+  let sumRel = 0, n = 0;
+  for (const [f] of fields) {
+    const a = parseFloat(shape.us[f]);
+    const b = parseFloat(match.us[f]);
+    if (!Number.isFinite(a) || !Number.isFinite(b) || a === 0) continue;
+    sumRel += Math.abs(a - b) / a;
+    n++;
+  }
+  if (!n) return null;
+  return Math.max(0, 100 * (1 - sumRel / n));
+}
