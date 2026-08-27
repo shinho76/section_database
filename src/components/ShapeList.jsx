@@ -27,16 +27,12 @@ export default function ShapeList() {
     if (!rows.length || !hasMatchPair(activeKey)) return;
     let cancelled = false;
     (async () => {
-      // HSS rows split between the round (KSP) and box (KSB) target types.
-      const targetTypes = [...new Set(rows.map((s) => matchTargetType(activeKey, s)))];
-      const targetRowsByType = Object.fromEntries(
-        await Promise.all(targetTypes.map(async (t) => [t, await loadType(t)])),
-      );
+      const targetType = matchTargetType(activeKey);
+      const targetRows = await loadType(targetType);
       if (cancelled) return;
       const next = new Map();
       for (const s of rows) {
-        const targetType = matchTargetType(activeKey, s);
-        const best = findNearestInRows(s, activeKey, targetRowsByType[targetType] || []);
+        const best = findNearestInRows(s, activeKey, targetRows);
         if (best) next.set(s.name, { type: targetType, shape: best });
       }
       if (!cancelled) setMatches(next);

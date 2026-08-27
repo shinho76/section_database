@@ -61,8 +61,9 @@ function AstmTable({ rows }) {
 }
 
 /** Round bar (rod) unit-weight reference, per standard: `standard` is 'ks'
- * (KS D 3503 SS400, SI-native) or 'astm' (ASTM A36, imperial-native) — same
- * split pattern as the H-Shape / Checked Plate sidebar entries. */
+ * (KS D 3503 SS275 — the 2016-revised name for the former SS400, SI-native)
+ * or 'astm' (ASTM A36, imperial-native) — same split pattern as the H-Shape
+ * / Checked Plate sidebar entries. */
 export default function RodBarView({ standard }) {
   const isKs = standard === 'ks';
   const d = isKs ? data.ks : data.astm;
@@ -70,7 +71,7 @@ export default function RodBarView({ standard }) {
   return (
     <>
       <div className="detail-head">
-        <div><h1 className="mono">Rod Bar — {isKs ? 'KS D 3503 (SS400)' : 'ASTM A36'}</h1></div>
+        <div><h1 className="mono">Rod Bar — {isKs ? 'KS D 3503 (SS275, 구 SS400)' : 'ASTM A36'}</h1></div>
       </div>
 
       <div className="panel">

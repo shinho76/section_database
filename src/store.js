@@ -5,10 +5,13 @@ import { create } from 'zustand';
 export const GRID_GROUPS = [
   { label: 'H-SHAPE', aisc: ['W', 'M', 'S', 'HP'], ks: ['KSH'] },
   { label: 'TEES', aisc: ['WT', 'MT', 'ST'], ks: ['KST'] },
-  { label: 'HOLLOW', aisc: ['HSS', 'PIPE'], ks: ['KSB', 'KSP'] },
+  { label: 'HOLLOW', aisc: ['HSS-BOX', 'HSS-ROUND', 'PIPE'], ks: ['KSB', 'KSP', 'KSP'] },
   { label: 'ANGLES', aisc: ['L', '2L'], ks: ['KSL'] },
   { label: 'CHANNELS', aisc: ['C', 'MC'], ks: ['KSC'] },
 ];
+
+// Short labels for grid cells whose typeKey is too long to fit as-is.
+export const GRID_CELL_LABEL = { 'HSS-BOX': 'HSS-B', 'HSS-ROUND': 'HSS-R' };
 
 // Below the grid: single-column groups with no AISC/KS split.
 // PLATE is listed first so it sits directly under the CHANNELS row of the grid above.
@@ -33,7 +36,7 @@ export const NAV_ITEM_LABEL = {
   'BH-4': 'Built-up : H+T-Bar',
   'PURLIN-CEE': 'Purlin-CEE', 'PURLIN-ZEE': 'Purlin-ZEE',
   METALDECK: 'Metal Deck', REBAR: 'Rebar', WWR: 'WWR (Welded Wire Reinforcement)',
-  'RODBAR-KS': 'Rod Bar (KS SS400)',
+  'RODBAR-KS': 'Rod Bar (KS SS275)',
   'RODBAR-ASTM': 'Rod Bar (ASTM A36)',
   'BOLT-ASTM': 'High-Strength Bolt (ASTM F3125)',
   'BOLT-KS': 'High-Strength Bolt (KS B 1010/2819)',
@@ -42,14 +45,17 @@ export const NAV_ITEM_LABEL = {
 };
 
 export const DB_TYPES = new Set([
-  'W', 'M', 'S', 'HP', 'WT', 'MT', 'ST', 'HSS', 'PIPE', 'L', '2L', 'C', 'MC',
+  'W', 'M', 'S', 'HP', 'WT', 'MT', 'ST', 'HSS-BOX', 'HSS-ROUND', 'PIPE', 'L', '2L', 'C', 'MC',
   'KSH', 'KSL', 'KSP', 'KST', 'KSB', 'KSC',
 ]);
 
 export const TYPE_LABEL = {
   W: 'W — Wide Flange', M: 'M — Miscellaneous', S: 'S — American Standard',
   HP: 'HP — Bearing Pile', WT: 'WT — Tee (from W)', MT: 'MT — Tee (from M)',
-  ST: 'ST — Tee (from S)', HSS: 'HSS — Hollow Section', PIPE: 'PIPE — Steel Pipe',
+  ST: 'ST — Tee (from S)',
+  'HSS-BOX': 'HSS — Rectangular/Square Hollow Section',
+  'HSS-ROUND': 'HSS — Round Hollow Section',
+  PIPE: 'PIPE — Steel Pipe',
   L: 'L — Angle', '2L': '2L — Double Angle', C: 'C — Channel', MC: 'MC — Misc. Channel',
   PLATE: 'Plate (강판)',
   'BH-1': 'Built-up H-Section', 'BH-2': 'Unequal Flange Built-up H-Section',
@@ -67,6 +73,7 @@ export const TYPE_LABEL = {
 export const TYPE_DISPLAY = {
   KSH: 'KS H Section', KSL: 'KS L Section', KSP: 'KS P Section',
   KST: 'KS T Section', KSB: 'KS B Section', KSC: 'KS C Section',
+  'HSS-BOX': 'HSS Box', 'HSS-ROUND': 'HSS Round', HSS: 'HSS',
 };
 export const displayType = (t) => TYPE_DISPLAY[t] || t;
 
@@ -76,11 +83,11 @@ export const useStore = create((set) => ({
   theme: 'dark',
   query: '',
   setActiveKey: (key) => {
-    window.scrollTo(0, 0);
+    document.getElementById('main')?.scrollTo(0, 0);
     set({ activeKey: key, shape: null });
   },
   selectShape: (shape) => {
-    window.scrollTo(0, 0);
+    document.getElementById('main')?.scrollTo(0, 0);
     set({ shape });
   },
   setQuery: (query) => set({ query }),

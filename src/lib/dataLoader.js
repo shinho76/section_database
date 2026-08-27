@@ -10,9 +10,18 @@ let ksSearchIndex = null;
 
 export async function loadType(type) {
   if (typeCache.has(type)) return typeCache.get(type);
-  const file = TYPE_FILE[type];
-  const mod = await import(`../data/${file}.json`);
-  const rows = mod.default;
+  let rows;
+  if (type === 'HSS-BOX' || type === 'HSS-ROUND') {
+    // HSS is one file (round tube has `OD`, box/square tube doesn't) split
+    // into two sidebar entries so each side can be matched against its own
+    // KS counterpart (KSB for box, KSP for round).
+    const all = await loadType('HSS');
+    rows = type === 'HSS-ROUND' ? all.filter((s) => s.us.OD) : all.filter((s) => !s.us.OD);
+  } else {
+    const file = TYPE_FILE[type];
+    const mod = await import(`../data/${file}.json`);
+    rows = mod.default;
+  }
   typeCache.set(type, rows);
   return rows;
 }

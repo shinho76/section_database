@@ -19,7 +19,10 @@ export default function SearchResults() {
   const onPick = async (entry) => {
     const shape = await resolveShape(entry);
     if (!shape) return;
-    setActiveKey(entry.type);
+    // The search index still carries the combined "HSS" type; route to
+    // whichever sidebar entry (box or round) actually matches the shape.
+    const activeKey = entry.type === 'HSS' ? (shape.us.OD ? 'HSS-ROUND' : 'HSS-BOX') : entry.type;
+    setActiveKey(activeKey);
     selectShape(shape);
     setQuery('');
   };

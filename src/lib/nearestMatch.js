@@ -1,15 +1,20 @@
 // Nearest-match lookup between an AISC type and its KS D 3502 counterpart
-// (and back), used to cross-reference W<->KSH, WT<->KST, HSS<->KSB,
-// PIPE<->KSP, L<->KSL, C<->KSC in the shape list. Distance is a weighted
-// relative difference over depth/OD (highest priority), width, then
-// thickness — matching the user's stated priority order.
+// (and back), used to cross-reference W<->KSH, WT<->KST, HSS-BOX<->KSB,
+// HSS-ROUND/PIPE<->KSP, L<->KSL, C<->KSC in the shape list. Distance is a
+// weighted relative difference over depth/OD (highest priority), width,
+// then thickness — matching the user's stated priority order.
+//
+// HSS is split into two sidebar entries (HSS-BOX / HSS-ROUND) since a
+// single "HSS" list otherwise mixes rectangular/square tube (which should
+// compare against KSB) with round tube (which should compare against KSP).
 
 const PAIR = {
   W: 'KSH', KSH: 'W',
   WT: 'KST', KST: 'WT',
   L: 'KSL', KSL: 'L',
   C: 'KSC', KSC: 'C',
-  HSS: 'KSB', KSB: 'HSS',
+  'HSS-BOX': 'KSB', KSB: 'HSS-BOX',
+  'HSS-ROUND': 'KSP',
   PIPE: 'KSP', KSP: 'PIPE',
 };
 
@@ -22,31 +27,28 @@ const SPEC = {
   KSL: [['d', 3], ['b', 2], ['t', 1]],
   C: [['d', 3], ['bf', 2], ['tf', 1]],
   KSC: [['d', 3], ['bf', 2], ['tf', 1]],
-  HSS_BOX: [['Ht', 3], ['B', 2], ['tdes', 1]],
+  'HSS-BOX': [['Ht', 3], ['B', 2], ['tdes', 1]],
   KSB: [['Ht', 3], ['B', 2], ['tdes', 1]],
-  ROUND: [['OD', 3], ['tdes', 1]], // HSS round tube, PIPE, KSP
+  ROUND: [['OD', 3], ['tdes', 1]], // HSS-ROUND, PIPE, KSP
 };
 
 export function hasMatchPair(type) {
   return type in PAIR;
 }
 
-/** Target type for a given shape, accounting for HSS's dual box/round rows. */
-export function matchTargetType(sourceType, shape) {
-  if (sourceType === 'HSS') return shape.us.OD ? 'KSP' : 'KSB';
+export function matchTargetType(sourceType) {
   return PAIR[sourceType];
 }
 
-function specFor(sourceType, shape) {
-  if (sourceType === 'HSS') return shape.us.OD ? SPEC.ROUND : SPEC.HSS_BOX;
-  if (sourceType === 'PIPE' || sourceType === 'KSP') return SPEC.ROUND;
+function specFor(sourceType) {
+  if (sourceType === 'HSS-ROUND' || sourceType === 'PIPE' || sourceType === 'KSP') return SPEC.ROUND;
   return SPEC[sourceType];
 }
 
 /** Find the single nearest shape in `targetRows` for `shape`. Returns null
  * if no candidate shares any usable numeric field with `shape`. */
 export function findNearestInRows(shape, sourceType, targetRows) {
-  const spec = specFor(sourceType, shape);
+  const spec = specFor(sourceType);
   let best = null, bestScore = Infinity;
   for (const cand of targetRows) {
     let score = 0, n = 0;
@@ -66,15 +68,15 @@ export function findNearestInRows(shape, sourceType, targetRows) {
 /** Width/height-only fields for similarity display (drops the thickness
  * field that `SPEC` also weighs in for the match search itself). Round
  * tube/pipe only has one size field (OD), so it's compared alone. */
-function widthHeightFields(sourceType, shape) {
-  return specFor(sourceType, shape).filter(([f]) => f !== 'tf' && f !== 't' && f !== 'tdes');
+function widthHeightFields(sourceType) {
+  return specFor(sourceType).filter(([f]) => f !== 'tf' && f !== 't' && f !== 'tdes');
 }
 
 /** Similarity between `shape` and `match`, 0-100%, based only on the
  * horizontal/vertical size dimensions (depth/OD and width/leg — no
  * thickness), equally weighted. */
 export function widthHeightSimilarity(shape, sourceType, match) {
-  const fields = widthHeightFields(sourceType, shape);
+  const fields = widthHeightFields(sourceType);
   let sumRel = 0, n = 0;
   for (const [f] of fields) {
     const a = parseFloat(shape.us[f]);

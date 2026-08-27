@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useStore, GRID_GROUPS, BELOW_GROUPS, DB_TYPES, NAV_ITEM_LABEL } from '../store.js';
+import { useStore, GRID_GROUPS, BELOW_GROUPS, DB_TYPES, NAV_ITEM_LABEL, GRID_CELL_LABEL } from '../store.js';
 import { loadType } from '../lib/dataLoader.js';
+import PipeVsHssModal from './PipeVsHssModal.jsx';
 
-function GridCell({ typeKey, activeKey, setActiveKey, counts, rowSpan }) {
+function GridCell({ typeKey, activeKey, setActiveKey, counts, rowSpan, onInfo }) {
   if (!typeKey) return <td className="nav-grid-cell" />;
-  const label = typeKey.startsWith('KS') ? typeKey.slice(2) : typeKey;
+  const label = GRID_CELL_LABEL[typeKey] ?? (typeKey.startsWith('KS') ? typeKey.slice(2) : typeKey);
   return (
     <td className="nav-grid-cell" rowSpan={rowSpan}>
       <button
@@ -14,6 +15,14 @@ function GridCell({ typeKey, activeKey, setActiveKey, counts, rowSpan }) {
         <span>{label}</span>
         <em>{counts[typeKey] ?? ''}</em>
       </button>
+      {onInfo && (
+        <button
+          type="button" className="nav-cell-info" title="Pipe vs HSS(Round) 차이 보기"
+          onClick={(e) => { e.stopPropagation(); onInfo(); }}
+        >
+          ℹ️
+        </button>
+      )}
     </td>
   );
 }
@@ -21,6 +30,7 @@ function GridCell({ typeKey, activeKey, setActiveKey, counts, rowSpan }) {
 export default function Sidebar() {
   const { activeKey, setActiveKey } = useStore();
   const [counts, setCounts] = useState({});
+  const [showPipeInfo, setShowPipeInfo] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -57,6 +67,7 @@ export default function Sidebar() {
                   activeKey={activeKey}
                   setActiveKey={setActiveKey}
                   counts={counts}
+                  onInfo={g.aisc[i] === 'PIPE' ? () => setShowPipeInfo(true) : null}
                 />
                 {oneToOne
                   ? (
@@ -99,6 +110,8 @@ export default function Sidebar() {
           ))}
         </div>
       ))}
+
+      {showPipeInfo && <PipeVsHssModal onClose={() => setShowPipeInfo(false)} />}
     </nav>
   );
 }
