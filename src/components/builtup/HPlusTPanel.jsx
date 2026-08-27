@@ -5,6 +5,7 @@ import { loadType } from '../../lib/dataLoader.js';
 import { drawHBotTopTSVG } from '../../lib/sectionSvg.js';
 import BHDimTable from './BHDimTable.jsx';
 import ShapeAutocomplete from './ShapeAutocomplete.jsx';
+import NumUnit from '../NumUnit.jsx';
 
 const MM_TO_IN = 1 / 25.4;
 const H_TYPES = ['W', 'M', 'S', 'KSH'];
@@ -287,7 +288,7 @@ export default function HPlusTPanel({ baseKind }) {
               <>
                 <div dangerouslySetInnerHTML={{ __html: svgMm }} />
                 {composite && (
-                  <div className="weight">
+                  <div className="weight val-conv">
                     <span className="wv mono">{(composite.W * LBFT_TO_KGM).toFixed(1)}</span><span className="wu">kg/m</span>
                     <span className="wv mono" style={{ marginLeft: 14 }}>{(composite.A * IN2_TO_MM2).toFixed(0)}</span><span className="wu">mm²</span>
                   </div>
@@ -366,18 +367,19 @@ export default function HPlusTPanel({ baseKind }) {
         <div className="panel">
           <div className="panel-head"><h2>합성 단면성능 (계산값)</h2></div>
           <table className="props">
-            <thead><tr><th>Symbol</th><th className="r">Imperial</th><th className="r">Metric</th><th>Description</th></tr></thead>
+            <thead><tr><th>Symbol</th><th className="r">Imperial</th><th className="r">Metric<span className="conv-flag">conv.</span></th><th>Description</th></tr></thead>
             <tbody>
-              <tr><td className="sym mono">A</td><td className="r mono">{composite.A.toFixed(2)} <em>in²</em></td><td className="r mono">{(composite.A * IN2_TO_MM2).toFixed(0)} <em>mm²</em></td><td className="desc">단면적</td></tr>
-              <tr><td className="sym mono">Ix</td><td className="r mono">{composite.Ix.toFixed(1)} <em>in⁴</em></td><td className="r mono">{(composite.Ix * IN4_TO_MM4 / 1e6).toFixed(1)} <em>×10⁶ mm⁴</em></td><td className="desc">x축 관성모멘트 (합성 도심 기준)</td></tr>
-              <tr><td className="sym mono">Iy</td><td className="r mono">{composite.Iy.toFixed(1)} <em>in⁴</em></td><td className="r mono">{(composite.Iy * IN4_TO_MM4 / 1e6).toFixed(1)} <em>×10⁶ mm⁴</em></td><td className="desc">y축 관성모멘트</td></tr>
-              <tr><td className="sym mono">rx</td><td className="r mono">{composite.rx.toFixed(2)} <em>in</em></td><td className="r mono">{(composite.rx * IN_TO_MM).toFixed(0)} <em>mm</em></td><td className="desc">x축 회전반경</td></tr>
-              <tr><td className="sym mono">ry</td><td className="r mono">{composite.ry.toFixed(2)} <em>in</em></td><td className="r mono">{(composite.ry * IN_TO_MM).toFixed(0)} <em>mm</em></td><td className="desc">y축 회전반경</td></tr>
-              {composite.Sx_top && <tr><td className="sym mono">Sx(top)</td><td className="r mono">{composite.Sx_top.toFixed(1)} <em>in³</em></td><td className="r mono">{(composite.Sx_top * IN4_TO_MM4 / IN_TO_MM / 1e3).toFixed(1)} <em>×10³ mm³</em></td><td className="desc">상연 단면계수</td></tr>}
-              {composite.Sx_bot && <tr><td className="sym mono">Sx(bot)</td><td className="r mono">{composite.Sx_bot.toFixed(1)} <em>in³</em></td><td className="r mono">{(composite.Sx_bot * IN4_TO_MM4 / IN_TO_MM / 1e3).toFixed(1)} <em>×10³ mm³</em></td><td className="desc">하연 단면계수</td></tr>}
-              <tr><td className="sym mono">W</td><td className="r mono">{composite.W.toFixed(1)} <em>lb/ft</em></td><td className="r mono">{(composite.W * LBFT_TO_KGM).toFixed(1)} <em>kg/m</em></td><td className="desc">단위중량</td></tr>
+              <tr><td className="sym mono">A</td><td className="r mono"><NumUnit value={composite.A.toFixed(2)} unit="in²" /></td><td className="r mono val-conv">{(composite.A * IN2_TO_MM2).toFixed(0)} <em>mm²</em></td><td className="desc">단면적</td></tr>
+              <tr><td className="sym mono">Ix</td><td className="r mono"><NumUnit value={composite.Ix.toFixed(1)} unit="in⁴" /></td><td className="r mono val-conv">{(composite.Ix * IN4_TO_MM4 / 1e6).toFixed(1)} <em>×10⁶ mm⁴</em></td><td className="desc">x축 관성모멘트 (합성 도심 기준)</td></tr>
+              <tr><td className="sym mono">Iy</td><td className="r mono"><NumUnit value={composite.Iy.toFixed(1)} unit="in⁴" /></td><td className="r mono val-conv">{(composite.Iy * IN4_TO_MM4 / 1e6).toFixed(1)} <em>×10⁶ mm⁴</em></td><td className="desc">y축 관성모멘트</td></tr>
+              <tr><td className="sym mono">rx</td><td className="r mono"><NumUnit value={composite.rx.toFixed(2)} unit="in" /></td><td className="r mono val-conv">{(composite.rx * IN_TO_MM).toFixed(0)} <em>mm</em></td><td className="desc">x축 회전반경</td></tr>
+              <tr><td className="sym mono">ry</td><td className="r mono"><NumUnit value={composite.ry.toFixed(2)} unit="in" /></td><td className="r mono val-conv">{(composite.ry * IN_TO_MM).toFixed(0)} <em>mm</em></td><td className="desc">y축 회전반경</td></tr>
+              {composite.Sx_top && <tr><td className="sym mono">Sx(top)</td><td className="r mono"><NumUnit value={composite.Sx_top.toFixed(1)} unit="in³" /></td><td className="r mono val-conv">{(composite.Sx_top * IN4_TO_MM4 / IN_TO_MM / 1e3).toFixed(1)} <em>×10³ mm³</em></td><td className="desc">상연 단면계수</td></tr>}
+              {composite.Sx_bot && <tr><td className="sym mono">Sx(bot)</td><td className="r mono"><NumUnit value={composite.Sx_bot.toFixed(1)} unit="in³" /></td><td className="r mono val-conv">{(composite.Sx_bot * IN4_TO_MM4 / IN_TO_MM / 1e3).toFixed(1)} <em>×10³ mm³</em></td><td className="desc">하연 단면계수</td></tr>}
+              <tr><td className="sym mono">W</td><td className="r mono"><NumUnit value={composite.W.toFixed(1)} unit="lb/ft" /></td><td className="r mono val-conv">{(composite.W * LBFT_TO_KGM).toFixed(1)} <em>kg/m</em></td><td className="desc">단위중량</td></tr>
             </tbody>
           </table>
+          <p className="note">단위: Imperial은 실측/계산 기준값, <span className="val-conv" style={{ display: 'inline' }}>Metric(흐리게 표시)</span>은 이 앱이 단위 환산한 값입니다.</p>
           {baseKind === 'db' ? (
             <p className="note">✓ H·T-BAR 모두 AISC/KS 카탈로그의 실측 단면성능(A·Ix·Iy·W)을 그대로 사용하므로 필렛(R)이 계산에 포함되어 있습니다 (KST만 예외 — 도표에 Ix/Iy가 없어 사각형 근사; A·W는 실측값 유지). 단면도의 필렛도 각 형강의 실제 R(=r 또는 kdes−tf)로 그려집니다. T-BAR는 H의 플랜지 외측면에 스템을 맞대어 용접하는 것으로 가정합니다.</p>
           ) : (

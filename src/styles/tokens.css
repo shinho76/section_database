@@ -113,6 +113,26 @@ header{position:sticky;top:0;z-index:50;height:64px;display:flex;align-items:cen
 .tag{margin-left:auto;font-size:11px;padding:2px 8px;border-radius:999px;
   background:var(--bg-inset);color:var(--tx-muted);font-family:ui-monospace,monospace}
 .unit-tag{margin-left:8px;font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--ac-main)}
+
+/* DB-native vs converted values: converted numbers are visually de-emphasized
+ * (dimmer + slightly smaller) so the reader can tell at a glance which side
+ * came straight from the source table/catalog and which was unit-converted
+ * or derived by this app. Applied per-column/value, never to row labels. */
+.val-conv{opacity:.62;font-weight:500}
+.val-conv em{opacity:.85}
+.conv-flag{margin-left:6px;font-size:9px;font-weight:700;letter-spacing:.04em;
+  color:var(--tx-muted);text-transform:uppercase;vertical-align:middle}
+.not-available{color:var(--val-warn);opacity:.75;font-style:italic}
+
+/* SAMPLE — decimal/unit-aligned number cell (NumUnit.jsx), pending approval.
+ * grid-template-columns are fixed widths so the decimal point and the unit
+ * both land at the same x across every row of a column, regardless of how
+ * many integer/fraction digits each value has. */
+.num-cell{display:inline-grid;grid-template-columns:3.2em 2.6em auto;
+  align-items:baseline;width:100%}
+.num-int{text-align:right}
+.num-frac{text-align:left}
+.num-unit{text-align:left;margin-left:10px;color:var(--tx-muted);font-size:.85em}
 .empty{padding:40px;text-align:center;color:var(--tx-muted)}
 
 /* tables ------------------------------------------------------------- */

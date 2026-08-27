@@ -2,160 +2,1556 @@
   "source": "Vulcraft 1.5VL-36/1.5VLI-36/1.5PLVLI-36 Composite Deck-Slab, GR50 LRFD (August 2021)",
   "sourceUrl": "https://vulcraft.com/products/compositedeck",
   "catalogUrl": "https://vulcraft.com/catalogs/Deck/CompositeDeck/LRFD-1.5VL-36-1.5VLI-36-1.5PLVLI-36_Composite_Deck-Slab.pdf",
-  "note": "1.5VL-36/1.5VLI-36/1.5PLVLI-36 세 프로파일은 동일한 단면(1.5in, GR50)을 공유하며 사이드랩 체결 방식만 다릅니다 (VL=Side-lap Screws, VLI=TSWs/BPs, PLVLI=PunchLok II). 카탈로그 PDF의 단면성능·하중표를 그대로 반영. 2VLI-36/3VLI-36은 제품 페이지에 프로파일명만 확인되고 이 카탈로그에는 데이터가 없어 별도 목록으로만 표시.",
-  "family": {
-    "profiles": [
-      { "name": "1.5VL-36", "fastening": "Side-lap Screws" },
-      { "name": "1.5VLI-36", "fastening": "TSWs or BPs (Top Seam Welds / Button Punches)" },
-      { "name": "1.5PLVLI-36", "fastening": "PunchLok® II System" }
-    ],
-    "depthIn": 1.5,
-    "widthIn": 36,
-    "grade": "ASTM A653 SS GR50 (or A1008 SS GR50)",
-    "standard": "ANSI/SDI C-2017, IAPMO UES ER-0652, UL Listed",
-    "sectionProperties": [
-      { "gauge": 22, "weightPsf": 1.6, "thicknessIn": 0.0295, "fyKsi": 50, "iePlus": 0.155, "ieMinus": 0.178, "sePlus": 0.169, "seMinus": 0.179, "phiMnPlusLbFtFt": 634, "phiMnMinusLbFtFt": 671, "phiVnLbFt": 4035 },
-      { "gauge": 20, "weightPsf": 2.0, "thicknessIn": 0.0358, "fyKsi": 50, "iePlus": 0.197, "ieMinus": 0.217, "sePlus": 0.224, "seMinus": 0.229, "phiMnPlusLbFtFt": 840, "phiMnMinusLbFtFt": 859, "phiVnLbFt": 4874 },
-      { "gauge": 19, "weightPsf": 2.3, "thicknessIn": 0.0418, "fyKsi": 50, "iePlus": 0.239, "ieMinus": 0.257, "sePlus": 0.266, "seMinus": 0.278, "phiMnPlusLbFtFt": 997, "phiMnMinusLbFtFt": 1042, "phiVnLbFt": 5666 },
-      { "gauge": 18, "weightPsf": 2.6, "thicknessIn": 0.0474, "fyKsi": 50, "iePlus": 0.277, "ieMinus": 0.290, "sePlus": 0.306, "seMinus": 0.318, "phiMnPlusLbFtFt": 1148, "phiMnMinusLbFtFt": 1193, "phiVnLbFt": 6398 },
-      { "gauge": 16, "weightPsf": 3.3, "thicknessIn": 0.0598, "fyKsi": 50, "iePlus": 0.364, "ieMinus": 0.367, "sePlus": 0.393, "seMinus": 0.402, "phiMnPlusLbFtFt": 1474, "phiMnMinusLbFtFt": 1508, "phiVnLbFt": 7996 }
-    ],
-    "webCrippling": {
-      "unit": "lb/ft (phiRn)",
-      "rows": [
-        { "gauge": 22, "oneFlangeEnd": { "1.5": 1235, "2": 1357, "3": 1563, "4": 1706 }, "oneFlangeInterior": { "3": 2204, "4": 2383 }, "twoFlangeEnd": { "1.5": 1289, "2": 1389, "3": 1556, "4": 1672 }, "twoFlangeInterior": { "3": 2728, "4": 2966 } },
-        { "gauge": 20, "oneFlangeEnd": { "1.5": 1763, "2": 1932, "3": 2215, "4": 2408 }, "oneFlangeInterior": { "3": 3164, "4": 3406 }, "twoFlangeEnd": { "1.5": 1949, "2": 2093, "3": 2333, "4": 2497 }, "twoFlangeInterior": { "3": 3960, "4": 4286 } },
-        { "gauge": 19, "oneFlangeEnd": { "1.5": 2344, "2": 2562, "3": 2927, "4": 3169 }, "oneFlangeInterior": { "3": 4222, "4": 4527 }, "twoFlangeEnd": { "1.5": 2702, "2": 2893, "3": 3213, "4": 3426 }, "twoFlangeInterior": { "3": 5324, "4": 5740 } },
-        { "gauge": 18, "oneFlangeEnd": { "1.5": 2954, "2": 3221, "3": 3669, "4": 3959 }, "oneFlangeInterior": { "3": 5334, "4": 5699 }, "twoFlangeEnd": { "1.5": 3515, "2": 3754, "3": 4156, "4": 4417 }, "twoFlangeInterior": { "3": 6762, "4": 7265 } },
-        { "gauge": 16, "oneFlangeEnd": { "1.5": 4525, "2": 4915, "3": 5568, "4": 5967 }, "oneFlangeInterior": { "3": 8206, "4": 8709 }, "twoFlangeEnd": { "1.5": 5681, "2": 6043, "3": 6651, "4": 7023 }, "twoFlangeInterior": { "3": 10487, "4": 11191 } }
-      ]
-    },
-    "deckSlab": {
-      "nwc": {
-        "concreteLabel": "Normal Weight Concrete (145 pcf)",
-        "fcPsi": 3000,
-        "unshoredSpans": [
-          { "slabTotalIn": "3½", "slabToppingIn": "2", "gauge": 22, "span1": "6'-6\"", "span2": "7'-7\"", "span3": "7'-8\"", "wcPsf": 32.2, "icr": 2.64, "phiMnKipFtFt": 2.73, "phiVnKipFt": 3.02 },
-          { "slabTotalIn": "3½", "slabToppingIn": "2", "gauge": 20, "span1": "7'-10\"", "span2": "9'-0\"", "span3": "9'-3\"", "wcPsf": 32.6, "icr": 2.85, "phiMnKipFtFt": 3.22, "phiVnKipFt": 3.02 },
-          { "slabTotalIn": "3½", "slabToppingIn": "2", "gauge": 19, "span1": "8'-4\"", "span2": "9'-11\"", "span3": "10'-3\"", "wcPsf": 32.9, "icr": 3.03, "phiMnKipFtFt": 3.67, "phiVnKipFt": 3.02 },
-          { "slabTotalIn": "3½", "slabToppingIn": "2", "gauge": 18, "span1": "8'-9\"", "span2": "10'-7\"", "span3": "10'-11\"", "wcPsf": 33.2, "icr": 3.19, "phiMnKipFtFt": 4.07, "phiVnKipFt": 3.02 },
-          { "slabTotalIn": "3½", "slabToppingIn": "2", "gauge": 16, "span1": "9'-6\"", "span2": "11'-10\"", "span3": "11'-8\"", "wcPsf": 33.9, "icr": 3.52, "phiMnKipFtFt": 4.91, "phiVnKipFt": 3.02 },
-          { "slabTotalIn": "5", "slabToppingIn": "3½", "gauge": 22, "span1": "5'-8\"", "span2": "6'-7\"", "span3": "6'-8\"", "wcPsf": 50.3, "icr": 7.62, "phiMnKipFtFt": 4.79, "phiVnKipFt": 4.93 },
-          { "slabTotalIn": "5", "slabToppingIn": "3½", "gauge": 20, "span1": "6'-9\"", "span2": "7'-9\"", "span3": "7'-11\"", "wcPsf": 50.7, "icr": 8.18, "phiMnKipFtFt": 5.69, "phiVnKipFt": 4.93 },
-          { "slabTotalIn": "5", "slabToppingIn": "3½", "gauge": 19, "span1": "7'-3\"", "span2": "8'-7\"", "span3": "8'-10\"", "wcPsf": 51.0, "icr": 8.68, "phiMnKipFtFt": 6.54, "phiVnKipFt": 4.93 },
-          { "slabTotalIn": "5", "slabToppingIn": "3½", "gauge": 18, "span1": "7'-8\"", "span2": "9'-2\"", "span3": "9'-5\"", "wcPsf": 51.3, "icr": 9.12, "phiMnKipFtFt": 7.30, "phiVnKipFt": 4.93 },
-          { "slabTotalIn": "5", "slabToppingIn": "3½", "gauge": 16, "span1": "8'-4\"", "span2": "10'-3\"", "span3": "10'-4\"", "wcPsf": 52.0, "icr": 10.02, "phiMnKipFtFt": 8.92, "phiVnKipFt": 4.93 },
-          { "slabTotalIn": "6", "slabToppingIn": "4½", "gauge": 22, "span1": "5'-3\"", "span2": "6'-1\"", "span3": "6'-2\"", "wcPsf": 62.4, "icr": 13.11, "phiMnKipFtFt": 6.30, "phiVnKipFt": 6.41 },
-          { "slabTotalIn": "6", "slabToppingIn": "4½", "gauge": 20, "span1": "6'-3\"", "span2": "7'-2\"", "span3": "7'-4\"", "wcPsf": 62.8, "icr": 14.02, "phiMnKipFtFt": 7.51, "phiVnKipFt": 6.41 },
-          { "slabTotalIn": "6", "slabToppingIn": "4½", "gauge": 19, "span1": "6'-10\"", "span2": "7'-11\"", "span3": "8'-2\"", "wcPsf": 63.1, "icr": 14.85, "phiMnKipFtFt": 8.64, "phiVnKipFt": 6.41 },
-          { "slabTotalIn": "6", "slabToppingIn": "4½", "gauge": 18, "span1": "7'-2\"", "span2": "8'-5\"", "span3": "8'-9\"", "wcPsf": 63.4, "icr": 15.57, "phiMnKipFtFt": 9.67, "phiVnKipFt": 6.41 },
-          { "slabTotalIn": "6", "slabToppingIn": "4½", "gauge": 16, "span1": "7'-10\"", "span2": "9'-6\"", "span3": "9'-8\"", "wcPsf": 64.1, "icr": 17.06, "phiMnKipFtFt": 11.87, "phiVnKipFt": 6.41 }
-        ],
-        "superimposedLoad": {
-          "unit": "psf, 하중/처짐(L/360) 쌍",
-          "spanColumns": ["4'-0\"", "5'-0\"", "6'-0\"", "7'-0\"", "8'-0\"", "9'-0\"", "10'-0\"", "12'-0\""],
-          "rows": [
-            { "slabDepthIn": "3½", "gauge": 22, "values": ["1327/1804", "835/923", "568/534", "407/336", "302/225", "231/158", "179/115", "113/66"] },
-            { "slabDepthIn": "3½", "gauge": 20, "values": ["1471/1944", "990/995", "676/576", "486/362", "363/243", "278/170", "218/124", "139/72"] },
-            { "slabDepthIn": "3½", "gauge": 19, "values": ["1471/2071", "1135/1060", "776/613", "560/386", "419/258", "323/181", "254/132", "164/76"] },
-            { "slabDepthIn": "3½", "gauge": 18, "values": ["1471/2179", "1168/1115", "864/645", "624/406", "469/272", "362/191", "285/139", "186/80"] },
-            { "slabDepthIn": "3½", "gauge": 16, "values": ["1470/2401", "1168/1229", "966/711", "761/448", "573/300", "444/210", "352/153", "232/88"] },
-            { "slabDepthIn": "5", "gauge": 22, "values": ["2336/5206", "1473/2665", "1004/1542", "722/971", "538/650", "412/457", "323/333", "205/192"] },
-            { "slabDepthIn": "5", "gauge": 20, "values": ["2405/5585", "1761/2859", "1204/1654", "868/1042", "650/698", "501/490", "394/357", "255/206"] },
-            { "slabDepthIn": "5", "gauge": 19, "values": ["2404/5929", "1911/3035", "1391/1756", "1006/1106", "756/741", "584/520", "461/379", "302/219"] },
-            { "slabDepthIn": "5", "gauge": 18, "values": ["2404/6228", "1911/3188", "1559/1845", "1129/1162", "850/778", "659/546", "522/398", "343/230"] },
-            { "slabDepthIn": "5", "gauge": 16, "values": ["2403/6842", "1910/3503", "1581/2027", "1346/1276", "1052/855", "818/600", "651/437", "433/253"] },
-            { "slabDepthIn": "6", "gauge": 22, "values": ["3075/8955", "1941/4585", "1325/2653", "953/1670", "712/1119", "547/786", "429/573", "275/331"] },
-            { "slabDepthIn": "6", "gauge": 20, "values": ["3130/9574", "2327/4902", "1593/2836", "1150/1786", "863/1196", "666/840", "525/612", "341/354"] },
-            { "slabDepthIn": "6", "gauge": 19, "values": ["3129/10137", "2488/5190", "1845/3003", "1335/1891", "1004/1267", "777/889", "615/648", "404/375"] },
-            { "slabDepthIn": "6", "gauge": 18, "values": ["3129/10630", "2488/5443", "2060/3149", "1502/1983", "1132/1328", "878/933", "697/680", "461/393"] },
-            { "slabDepthIn": "6", "gauge": 16, "values": ["3128/11651", "2487/5965", "2060/3452", "1754/2174", "1407/1456", "1095/1022", "873/745", "582/431"] }
-          ]
-        }
-      },
-      "lwc": {
-        "concreteLabel": "Light Weight Concrete (110 pcf)",
-        "fcPsi": 3000,
-        "unshoredSpans": [
-          { "slabTotalIn": "3½", "slabToppingIn": "2", "gauge": 22, "span1": "7'-1\"", "span2": "8'-4\"", "span3": "8'-5\"", "wcPsf": 24.8, "icr": 2.07, "phiMnKipFtFt": 2.58, "phiVnKipFt": 3.02 },
-          { "slabTotalIn": "3½", "slabToppingIn": "2", "gauge": 20, "span1": "8'-7\"", "span2": "9'-10\"", "span3": "10'-2\"", "wcPsf": 25.2, "icr": 2.24, "phiMnKipFtFt": 3.03, "phiVnKipFt": 3.02 },
-          { "slabTotalIn": "3½", "slabToppingIn": "2", "gauge": 19, "span1": "9'-2\"", "span2": "10'-10\"", "span3": "11'-2\"", "wcPsf": 25.5, "icr": 2.39, "phiMnKipFtFt": 3.44, "phiVnKipFt": 3.02 },
-          { "slabTotalIn": "3½", "slabToppingIn": "2", "gauge": 18, "span1": "9'-7\"", "span2": "11'-6\"", "span3": "11'-10\"", "wcPsf": 25.8, "icr": 2.52, "phiMnKipFtFt": 3.80, "phiVnKipFt": 3.02 },
-          { "slabTotalIn": "3½", "slabToppingIn": "2", "gauge": 16, "span1": "10'-5\"", "span2": "12'-11\"", "span3": "12'-5\"", "wcPsf": 26.5, "icr": 2.79, "phiMnKipFtFt": 4.56, "phiVnKipFt": 3.02 },
-          { "slabTotalIn": "4", "slabToppingIn": "2½", "gauge": 22, "span1": "6'-9\"", "span2": "7'-11\"", "span3": "8'-0\"", "wcPsf": 29.4, "icr": 3.06, "phiMnKipFtFt": 3.18, "phiVnKipFt": 3.62 },
-          { "slabTotalIn": "4", "slabToppingIn": "2½", "gauge": 20, "span1": "8'-1\"", "span2": "9'-4\"", "span3": "9'-7\"", "wcPsf": 29.8, "icr": 3.31, "phiMnKipFtFt": 3.75, "phiVnKipFt": 3.62 },
-          { "slabTotalIn": "4", "slabToppingIn": "2½", "gauge": 19, "span1": "8'-8\"", "span2": "10'-3\"", "span3": "10'-8\"", "wcPsf": 30.1, "icr": 3.54, "phiMnKipFtFt": 4.27, "phiVnKipFt": 3.62 },
-          { "slabTotalIn": "4", "slabToppingIn": "2½", "gauge": 18, "span1": "9'-1\"", "span2": "11'-0\"", "span3": "11'-4\"", "wcPsf": 30.4, "icr": 3.73, "phiMnKipFtFt": 4.73, "phiVnKipFt": 3.62 },
-          { "slabTotalIn": "4", "slabToppingIn": "2½", "gauge": 16, "span1": "9'-10\"", "span2": "12'-3\"", "span3": "12'-0\"", "wcPsf": 31.1, "icr": 4.12, "phiMnKipFtFt": 5.71, "phiVnKipFt": 3.62 },
-          { "slabTotalIn": "4¾", "slabToppingIn": "3¼", "gauge": 22, "span1": "6'-4\"", "span2": "7'-5\"", "span3": "7'-6\"", "wcPsf": 36.3, "icr": 5.07, "phiMnKipFtFt": 4.23, "phiVnKipFt": 4.59 },
-          { "slabTotalIn": "4¾", "slabToppingIn": "3¼", "gauge": 20, "span1": "7'-7\"", "span2": "8'-9\"", "span3": "9'-0\"", "wcPsf": 36.7, "icr": 5.48, "phiMnKipFtFt": 5.00, "phiVnKipFt": 4.59 },
-          { "slabTotalIn": "4¾", "slabToppingIn": "3¼", "gauge": 19, "span1": "8'-2\"", "span2": "9'-8\"", "span3": "9'-11\"", "wcPsf": 37.0, "icr": 5.85, "phiMnKipFtFt": 5.72, "phiVnKipFt": 4.59 },
-          { "slabTotalIn": "4¾", "slabToppingIn": "3¼", "gauge": 18, "span1": "8'-6\"", "span2": "10'-3\"", "span3": "10'-8\"", "wcPsf": 37.3, "icr": 6.17, "phiMnKipFtFt": 6.36, "phiVnKipFt": 4.59 },
-          { "slabTotalIn": "4¾", "slabToppingIn": "3¼", "gauge": 16, "span1": "9'-3\"", "span2": "11'-6\"", "span3": "11'-5\"", "wcPsf": 38.0, "icr": 6.81, "phiMnKipFtFt": 7.71, "phiVnKipFt": 4.59 }
-        ],
-        "superimposedLoad": {
-          "unit": "psf, 하중/처짐(L/360) 쌍",
-          "spanColumns": ["4'-0\"", "5'-0\"", "6'-0\"", "7'-0\"", "8'-0\"", "9'-0\"", "10'-0\"", "12'-0\""],
-          "rows": [
-            { "slabDepthIn": "3½", "gauge": 22, "values": ["1262/1410", "797/722", "544/417", "392/263", "293/176", "225/123", "176/90", "113/52"] },
-            { "slabDepthIn": "3½", "gauge": 20, "values": ["1480/1528", "939/782", "643/452", "464/285", "348/191", "268/134", "212/97", "138/56"] },
-            { "slabDepthIn": "3½", "gauge": 19, "values": ["1480/1634", "1071/837", "734/484", "531/305", "399/204", "309/143", "244/104", "160/60"] },
-            { "slabDepthIn": "3½", "gauge": 18, "values": ["1479/1723", "1177/882", "814/510", "589/321", "444/215", "344/151", "273/110", "180/63"] },
-            { "slabDepthIn": "3½", "gauge": 16, "values": ["1479/1904", "1176/975", "975/564", "712/355", "538/238", "418/167", "332/121", "221/70"] },
-            { "slabDepthIn": "4", "gauge": 22, "values": ["1556/2088", "983/1069", "671/618", "484/389", "362/261", "279/183", "219/133", "141/77"] },
-            { "slabDepthIn": "4", "gauge": 20, "values": ["1772/2260", "1163/1157", "796/669", "576/421", "432/282", "334/198", "264/144", "172/83"] },
-            { "slabDepthIn": "4", "gauge": 19, "values": ["1772/2415", "1330/1236", "913/715", "661/450", "497/301", "385/212", "305/154", "201/89"] },
-            { "slabDepthIn": "4", "gauge": 18, "values": ["1772/2546", "1410/1303", "1015/754", "736/475", "555/318", "431/223", "342/162", "226/94"] },
-            { "slabDepthIn": "4", "gauge": 16, "values": ["1771/2811", "1409/1439", "1168/833", "894/524", "676/351", "526/246", "419/179", "279/104"] },
-            { "slabDepthIn": "4¾", "gauge": 22, "values": ["2072/3463", "1310/1773", "896/1026", "647/646", "485/432", "374/304", "294/221", "191/128"] },
-            { "slabDepthIn": "4¾", "gauge": 20, "values": ["2249/3745", "1556/1917", "1067/1109", "772/698", "581/468", "450/328", "356/239", "233/138"] },
-            { "slabDepthIn": "4¾", "gauge": 19, "values": ["2249/3997", "1785/2046", "1226/1184", "889/745", "670/499", "520/350", "413/255", "273/148"] },
-            { "slabDepthIn": "4¾", "gauge": 18, "values": ["2249/4213", "1790/2157", "1367/1248", "993/786", "749/526", "583/369", "463/269", "308/156"] },
-            { "slabDepthIn": "4¾", "gauge": 16, "values": ["2248/4649", "1789/2380", "1483/1377", "1213/867", "918/581", "715/408", "571/297", "382/172"] }
-          ]
-        }
-      }
-    },
-    "reinforcing": {
-      "fcPsi": 3000,
-      "note": "온도·수축 철근 (Temperature and Shrinkage). Bekaert Dramix 강섬유는 WWR 대안.",
-      "nwc": [
-        { "slabDepthIn": "3½", "coverDepthIn": "2", "concreteVolumeYd3per100ft2": 0.78, "minAsIn2": 0.028, "wwr": "6x6-W1.4xW1.4", "fiber4DLbYd3": 23 },
-        { "slabDepthIn": "4", "coverDepthIn": "2½", "concreteVolumeYd3per100ft2": 0.94, "minAsIn2": 0.028, "wwr": "6x6-W1.4xW1.4", "fiber4DLbYd3": 18 },
-        { "slabDepthIn": "4½", "coverDepthIn": "3", "concreteVolumeYd3per100ft2": 1.09, "minAsIn2": 0.028, "wwr": "6x6-W1.4xW1.4", "fiber4DLbYd3": 15 },
-        { "slabDepthIn": "5", "coverDepthIn": "3½", "concreteVolumeYd3per100ft2": 1.24, "minAsIn2": 0.032, "wwr": "6x6-W2.1xW2.1", "fiber4DLbYd3": 15 },
-        { "slabDepthIn": "5½", "coverDepthIn": "4", "concreteVolumeYd3per100ft2": 1.40, "minAsIn2": 0.036, "wwr": "6x6-W2.1xW2.1", "fiber4DLbYd3": 15 },
-        { "slabDepthIn": "6", "coverDepthIn": "4½", "concreteVolumeYd3per100ft2": 1.55, "minAsIn2": 0.041, "wwr": "6x6-W2.1xW2.1", "fiber4DLbYd3": 15 }
-      ],
-      "lwc": [
-        { "slabDepthIn": "3½", "coverDepthIn": "2", "concreteVolumeYd3per100ft2": 0.78, "minAsIn2": 0.028, "wwr": "6x6-W1.4xW1.4", "fiber4DLbYd3": 33 },
-        { "slabDepthIn": "4", "coverDepthIn": "2½", "concreteVolumeYd3per100ft2": 0.94, "minAsIn2": 0.028, "wwr": "6x6-W1.4xW1.4", "fiber4DLbYd3": 25 },
-        { "slabDepthIn": "4½", "coverDepthIn": "3", "concreteVolumeYd3per100ft2": 1.09, "minAsIn2": 0.028, "wwr": "6x6-W1.4xW1.4", "fiber4DLbYd3": 20 },
-        { "slabDepthIn": "4¾", "coverDepthIn": "3¼", "concreteVolumeYd3per100ft2": 1.17, "minAsIn2": 0.029, "wwr": "6x6-W2.1xW2.1", "fiber4DLbYd3": 20 },
-        { "slabDepthIn": "5", "coverDepthIn": "3½", "concreteVolumeYd3per100ft2": 1.24, "minAsIn2": 0.032, "wwr": "6x6-W2.1xW2.1", "fiber4DLbYd3": 20 },
-        { "slabDepthIn": "5¾", "coverDepthIn": "4¼", "concreteVolumeYd3per100ft2": 1.48, "minAsIn2": 0.038, "wwr": "6x6-W2.1xW2.1", "fiber4DLbYd3": 20 }
-      ]
-    }
-  },
-  "otherProfiles": [
-    { "name": "2VLI-36", "depthIn": 2, "widthIn": 36, "note": "단면성능·하중표는 별도 카탈로그(2VLI-36/2VLJ-36/2PLVLI-36 LRFD) 미반영, Nominal Dimensions만 확인" },
-    { "name": "3VLI-36", "depthIn": 3, "widthIn": 36, "note": "단면성능·하중표는 별도 카탈로그(3VLI-36/3VLJ-36/3PLVLI-36 ASD) 미반영, Nominal Dimensions만 확인" }
-  ],
+  "note": "1.5VL-36/1.5VLI-36/1.5PLVLI-36, 2VLJ-36/2VLI-36/2PLVLI-36, 3VLJ-36/3VLI-36/3PLVLI-36 아홉 프로파일은 3개 깊이(1.5/2/3in) x 3가지 사이드랩 체결 방식(VL·VLJ=Side-lap Screws, VLI=TSWs/BPs, PLVLI=PunchLok II)의 조합이며, 동일 깊이 그룹은 단면성능·철근표를 공유합니다 (체결 방식은 사이드랩 이음에만 영향). 각 깊이별 Vulcraft GR50 LRFD 카탈로그(2021년 8월판)의 Section Properties·Recommended Reinforcing 표를 그대로 반영했습니다.",
   "nominalDimensions": {
     "note": "각 카탈로그 PDF 1페이지 'Nominal Dimensions' 도면에서 확인한 치수(in). pitch = 반복 주기, crest = 상부 평탄부 폭, valley = 하부 평탄부 폭, r = (pitch - crest - valley)/2 = 좌우 경사부 수평 투영폭.",
     "profiles": [
       {
-        "name": "1.5VLI-36", "sourceUrl": "https://vulcraft.com/catalogs/Deck/CompositeDeck/LRFD-1.5VLR-36_Composite_Deck-Slab.pdf",
-        "depthIn": 1.5, "pitchIn": 6, "crestIn": 1.625, "valleyIn": 3.375, "widthIn": 36
+        "name": "1.5VLI-36",
+        "sourceUrl": "https://vulcraft.com/catalogs/Deck/CompositeDeck/LRFD-1.5VLR-36_Composite_Deck-Slab.pdf",
+        "depthIn": 1.5,
+        "pitchIn": 6,
+        "crestIn": 1.625,
+        "valleyIn": 3.375,
+        "widthIn": 36
       },
       {
-        "name": "2VLI-36", "sourceUrl": "https://vulcraft.com/catalogs/Deck/CompositeDeck/LRFD-2VLI-36-2VLJ-36-2PLVLI-36_Composite_Deck-Slab.pdf",
-        "depthIn": 2, "pitchIn": 12, "crestIn": 5, "valleyIn": 5, "widthIn": 36
+        "name": "2VLI-36",
+        "sourceUrl": "https://vulcraft.com/catalogs/Deck/CompositeDeck/LRFD-2VLI-36-2VLJ-36-2PLVLI-36_Composite_Deck-Slab.pdf",
+        "depthIn": 2,
+        "pitchIn": 12,
+        "crestIn": 5,
+        "valleyIn": 5,
+        "widthIn": 36
       },
       {
-        "name": "3VLI-36", "sourceUrl": "https://vulcraft.com/catalogs/Deck/CompositeDeck/ASD-3VLI-36-3VLJ-36-3PLVLI-36_Composite_Deck-Slab.pdf",
-        "depthIn": 3, "pitchIn": 12, "crestIn": 4.75, "valleyIn": 4.75, "widthIn": 36
+        "name": "3VLI-36",
+        "sourceUrl": "https://vulcraft.com/catalogs/Deck/CompositeDeck/ASD-3VLI-36-3VLJ-36-3PLVLI-36_Composite_Deck-Slab.pdf",
+        "depthIn": 3,
+        "pitchIn": 12,
+        "crestIn": 4.75,
+        "valleyIn": 4.75,
+        "widthIn": 36
       }
     ]
-  }
+  },
+  "families": [
+    {
+      "depthIn": 1.5,
+      "profiles": [
+        {
+          "name": "1.5VL-36",
+          "fastening": "Side-lap Screws"
+        },
+        {
+          "name": "1.5VLI-36",
+          "fastening": "TSWs or BPs (Top Seam Welds / Button Punches)"
+        },
+        {
+          "name": "1.5PLVLI-36",
+          "fastening": "PunchLok® II System"
+        }
+      ],
+      "widthIn": 36,
+      "grade": "ASTM A653 SS GR50 (or A1008 SS GR50)",
+      "standard": "ANSI/SDI C-2017, IAPMO UES ER-0652, UL Listed",
+      "sectionProperties": [
+        {
+          "gauge": 22,
+          "weightPsf": 1.6,
+          "thicknessIn": 0.0295,
+          "fyKsi": 50,
+          "iePlus": 0.155,
+          "ieMinus": 0.178,
+          "sePlus": 0.169,
+          "seMinus": 0.179,
+          "phiMnPlusLbFtFt": 634,
+          "phiMnMinusLbFtFt": 671,
+          "phiVnLbFt": 4035
+        },
+        {
+          "gauge": 20,
+          "weightPsf": 2.0,
+          "thicknessIn": 0.0358,
+          "fyKsi": 50,
+          "iePlus": 0.197,
+          "ieMinus": 0.217,
+          "sePlus": 0.224,
+          "seMinus": 0.229,
+          "phiMnPlusLbFtFt": 840,
+          "phiMnMinusLbFtFt": 859,
+          "phiVnLbFt": 4874
+        },
+        {
+          "gauge": 19,
+          "weightPsf": 2.3,
+          "thicknessIn": 0.0418,
+          "fyKsi": 50,
+          "iePlus": 0.239,
+          "ieMinus": 0.257,
+          "sePlus": 0.266,
+          "seMinus": 0.278,
+          "phiMnPlusLbFtFt": 997,
+          "phiMnMinusLbFtFt": 1042,
+          "phiVnLbFt": 5666
+        },
+        {
+          "gauge": 18,
+          "weightPsf": 2.6,
+          "thicknessIn": 0.0474,
+          "fyKsi": 50,
+          "iePlus": 0.277,
+          "ieMinus": 0.29,
+          "sePlus": 0.306,
+          "seMinus": 0.318,
+          "phiMnPlusLbFtFt": 1148,
+          "phiMnMinusLbFtFt": 1193,
+          "phiVnLbFt": 6398
+        },
+        {
+          "gauge": 16,
+          "weightPsf": 3.3,
+          "thicknessIn": 0.0598,
+          "fyKsi": 50,
+          "iePlus": 0.364,
+          "ieMinus": 0.367,
+          "sePlus": 0.393,
+          "seMinus": 0.402,
+          "phiMnPlusLbFtFt": 1474,
+          "phiMnMinusLbFtFt": 1508,
+          "phiVnLbFt": 7996
+        }
+      ],
+      "webCrippling": {
+        "unit": "lb/ft (phiRn)",
+        "rows": [
+          {
+            "gauge": 22,
+            "oneFlangeEnd": {
+              "1.5": 1235,
+              "2": 1357,
+              "3": 1563,
+              "4": 1706
+            },
+            "oneFlangeInterior": {
+              "3": 2204,
+              "4": 2383
+            },
+            "twoFlangeEnd": {
+              "1.5": 1289,
+              "2": 1389,
+              "3": 1556,
+              "4": 1672
+            },
+            "twoFlangeInterior": {
+              "3": 2728,
+              "4": 2966
+            }
+          },
+          {
+            "gauge": 20,
+            "oneFlangeEnd": {
+              "1.5": 1763,
+              "2": 1932,
+              "3": 2215,
+              "4": 2408
+            },
+            "oneFlangeInterior": {
+              "3": 3164,
+              "4": 3406
+            },
+            "twoFlangeEnd": {
+              "1.5": 1949,
+              "2": 2093,
+              "3": 2333,
+              "4": 2497
+            },
+            "twoFlangeInterior": {
+              "3": 3960,
+              "4": 4286
+            }
+          },
+          {
+            "gauge": 19,
+            "oneFlangeEnd": {
+              "1.5": 2344,
+              "2": 2562,
+              "3": 2927,
+              "4": 3169
+            },
+            "oneFlangeInterior": {
+              "3": 4222,
+              "4": 4527
+            },
+            "twoFlangeEnd": {
+              "1.5": 2702,
+              "2": 2893,
+              "3": 3213,
+              "4": 3426
+            },
+            "twoFlangeInterior": {
+              "3": 5324,
+              "4": 5740
+            }
+          },
+          {
+            "gauge": 18,
+            "oneFlangeEnd": {
+              "1.5": 2954,
+              "2": 3221,
+              "3": 3669,
+              "4": 3959
+            },
+            "oneFlangeInterior": {
+              "3": 5334,
+              "4": 5699
+            },
+            "twoFlangeEnd": {
+              "1.5": 3515,
+              "2": 3754,
+              "3": 4156,
+              "4": 4417
+            },
+            "twoFlangeInterior": {
+              "3": 6762,
+              "4": 7265
+            }
+          },
+          {
+            "gauge": 16,
+            "oneFlangeEnd": {
+              "1.5": 4525,
+              "2": 4915,
+              "3": 5568,
+              "4": 5967
+            },
+            "oneFlangeInterior": {
+              "3": 8206,
+              "4": 8709
+            },
+            "twoFlangeEnd": {
+              "1.5": 5681,
+              "2": 6043,
+              "3": 6651,
+              "4": 7023
+            },
+            "twoFlangeInterior": {
+              "3": 10487,
+              "4": 11191
+            }
+          }
+        ]
+      },
+      "deckSlab": {
+        "nwc": {
+          "concreteLabel": "Normal Weight Concrete (145 pcf)",
+          "fcPsi": 3000,
+          "unshoredSpans": [
+            {
+              "slabTotalIn": "3½",
+              "slabToppingIn": "2",
+              "gauge": 22,
+              "span1": "6'-6\"",
+              "span2": "7'-7\"",
+              "span3": "7'-8\"",
+              "wcPsf": 32.2,
+              "icr": 2.64,
+              "phiMnKipFtFt": 2.73,
+              "phiVnKipFt": 3.02
+            },
+            {
+              "slabTotalIn": "3½",
+              "slabToppingIn": "2",
+              "gauge": 20,
+              "span1": "7'-10\"",
+              "span2": "9'-0\"",
+              "span3": "9'-3\"",
+              "wcPsf": 32.6,
+              "icr": 2.85,
+              "phiMnKipFtFt": 3.22,
+              "phiVnKipFt": 3.02
+            },
+            {
+              "slabTotalIn": "3½",
+              "slabToppingIn": "2",
+              "gauge": 19,
+              "span1": "8'-4\"",
+              "span2": "9'-11\"",
+              "span3": "10'-3\"",
+              "wcPsf": 32.9,
+              "icr": 3.03,
+              "phiMnKipFtFt": 3.67,
+              "phiVnKipFt": 3.02
+            },
+            {
+              "slabTotalIn": "3½",
+              "slabToppingIn": "2",
+              "gauge": 18,
+              "span1": "8'-9\"",
+              "span2": "10'-7\"",
+              "span3": "10'-11\"",
+              "wcPsf": 33.2,
+              "icr": 3.19,
+              "phiMnKipFtFt": 4.07,
+              "phiVnKipFt": 3.02
+            },
+            {
+              "slabTotalIn": "3½",
+              "slabToppingIn": "2",
+              "gauge": 16,
+              "span1": "9'-6\"",
+              "span2": "11'-10\"",
+              "span3": "11'-8\"",
+              "wcPsf": 33.9,
+              "icr": 3.52,
+              "phiMnKipFtFt": 4.91,
+              "phiVnKipFt": 3.02
+            },
+            {
+              "slabTotalIn": "5",
+              "slabToppingIn": "3½",
+              "gauge": 22,
+              "span1": "5'-8\"",
+              "span2": "6'-7\"",
+              "span3": "6'-8\"",
+              "wcPsf": 50.3,
+              "icr": 7.62,
+              "phiMnKipFtFt": 4.79,
+              "phiVnKipFt": 4.93
+            },
+            {
+              "slabTotalIn": "5",
+              "slabToppingIn": "3½",
+              "gauge": 20,
+              "span1": "6'-9\"",
+              "span2": "7'-9\"",
+              "span3": "7'-11\"",
+              "wcPsf": 50.7,
+              "icr": 8.18,
+              "phiMnKipFtFt": 5.69,
+              "phiVnKipFt": 4.93
+            },
+            {
+              "slabTotalIn": "5",
+              "slabToppingIn": "3½",
+              "gauge": 19,
+              "span1": "7'-3\"",
+              "span2": "8'-7\"",
+              "span3": "8'-10\"",
+              "wcPsf": 51.0,
+              "icr": 8.68,
+              "phiMnKipFtFt": 6.54,
+              "phiVnKipFt": 4.93
+            },
+            {
+              "slabTotalIn": "5",
+              "slabToppingIn": "3½",
+              "gauge": 18,
+              "span1": "7'-8\"",
+              "span2": "9'-2\"",
+              "span3": "9'-5\"",
+              "wcPsf": 51.3,
+              "icr": 9.12,
+              "phiMnKipFtFt": 7.3,
+              "phiVnKipFt": 4.93
+            },
+            {
+              "slabTotalIn": "5",
+              "slabToppingIn": "3½",
+              "gauge": 16,
+              "span1": "8'-4\"",
+              "span2": "10'-3\"",
+              "span3": "10'-4\"",
+              "wcPsf": 52.0,
+              "icr": 10.02,
+              "phiMnKipFtFt": 8.92,
+              "phiVnKipFt": 4.93
+            },
+            {
+              "slabTotalIn": "6",
+              "slabToppingIn": "4½",
+              "gauge": 22,
+              "span1": "5'-3\"",
+              "span2": "6'-1\"",
+              "span3": "6'-2\"",
+              "wcPsf": 62.4,
+              "icr": 13.11,
+              "phiMnKipFtFt": 6.3,
+              "phiVnKipFt": 6.41
+            },
+            {
+              "slabTotalIn": "6",
+              "slabToppingIn": "4½",
+              "gauge": 20,
+              "span1": "6'-3\"",
+              "span2": "7'-2\"",
+              "span3": "7'-4\"",
+              "wcPsf": 62.8,
+              "icr": 14.02,
+              "phiMnKipFtFt": 7.51,
+              "phiVnKipFt": 6.41
+            },
+            {
+              "slabTotalIn": "6",
+              "slabToppingIn": "4½",
+              "gauge": 19,
+              "span1": "6'-10\"",
+              "span2": "7'-11\"",
+              "span3": "8'-2\"",
+              "wcPsf": 63.1,
+              "icr": 14.85,
+              "phiMnKipFtFt": 8.64,
+              "phiVnKipFt": 6.41
+            },
+            {
+              "slabTotalIn": "6",
+              "slabToppingIn": "4½",
+              "gauge": 18,
+              "span1": "7'-2\"",
+              "span2": "8'-5\"",
+              "span3": "8'-9\"",
+              "wcPsf": 63.4,
+              "icr": 15.57,
+              "phiMnKipFtFt": 9.67,
+              "phiVnKipFt": 6.41
+            },
+            {
+              "slabTotalIn": "6",
+              "slabToppingIn": "4½",
+              "gauge": 16,
+              "span1": "7'-10\"",
+              "span2": "9'-6\"",
+              "span3": "9'-8\"",
+              "wcPsf": 64.1,
+              "icr": 17.06,
+              "phiMnKipFtFt": 11.87,
+              "phiVnKipFt": 6.41
+            }
+          ],
+          "superimposedLoad": {
+            "unit": "psf, 하중/처짐(L/360) 쌍",
+            "spanColumns": [
+              "4'-0\"",
+              "5'-0\"",
+              "6'-0\"",
+              "7'-0\"",
+              "8'-0\"",
+              "9'-0\"",
+              "10'-0\"",
+              "12'-0\""
+            ],
+            "rows": [
+              {
+                "slabDepthIn": "3½",
+                "gauge": 22,
+                "values": [
+                  "1327/1804",
+                  "835/923",
+                  "568/534",
+                  "407/336",
+                  "302/225",
+                  "231/158",
+                  "179/115",
+                  "113/66"
+                ]
+              },
+              {
+                "slabDepthIn": "3½",
+                "gauge": 20,
+                "values": [
+                  "1471/1944",
+                  "990/995",
+                  "676/576",
+                  "486/362",
+                  "363/243",
+                  "278/170",
+                  "218/124",
+                  "139/72"
+                ]
+              },
+              {
+                "slabDepthIn": "3½",
+                "gauge": 19,
+                "values": [
+                  "1471/2071",
+                  "1135/1060",
+                  "776/613",
+                  "560/386",
+                  "419/258",
+                  "323/181",
+                  "254/132",
+                  "164/76"
+                ]
+              },
+              {
+                "slabDepthIn": "3½",
+                "gauge": 18,
+                "values": [
+                  "1471/2179",
+                  "1168/1115",
+                  "864/645",
+                  "624/406",
+                  "469/272",
+                  "362/191",
+                  "285/139",
+                  "186/80"
+                ]
+              },
+              {
+                "slabDepthIn": "3½",
+                "gauge": 16,
+                "values": [
+                  "1470/2401",
+                  "1168/1229",
+                  "966/711",
+                  "761/448",
+                  "573/300",
+                  "444/210",
+                  "352/153",
+                  "232/88"
+                ]
+              },
+              {
+                "slabDepthIn": "5",
+                "gauge": 22,
+                "values": [
+                  "2336/5206",
+                  "1473/2665",
+                  "1004/1542",
+                  "722/971",
+                  "538/650",
+                  "412/457",
+                  "323/333",
+                  "205/192"
+                ]
+              },
+              {
+                "slabDepthIn": "5",
+                "gauge": 20,
+                "values": [
+                  "2405/5585",
+                  "1761/2859",
+                  "1204/1654",
+                  "868/1042",
+                  "650/698",
+                  "501/490",
+                  "394/357",
+                  "255/206"
+                ]
+              },
+              {
+                "slabDepthIn": "5",
+                "gauge": 19,
+                "values": [
+                  "2404/5929",
+                  "1911/3035",
+                  "1391/1756",
+                  "1006/1106",
+                  "756/741",
+                  "584/520",
+                  "461/379",
+                  "302/219"
+                ]
+              },
+              {
+                "slabDepthIn": "5",
+                "gauge": 18,
+                "values": [
+                  "2404/6228",
+                  "1911/3188",
+                  "1559/1845",
+                  "1129/1162",
+                  "850/778",
+                  "659/546",
+                  "522/398",
+                  "343/230"
+                ]
+              },
+              {
+                "slabDepthIn": "5",
+                "gauge": 16,
+                "values": [
+                  "2403/6842",
+                  "1910/3503",
+                  "1581/2027",
+                  "1346/1276",
+                  "1052/855",
+                  "818/600",
+                  "651/437",
+                  "433/253"
+                ]
+              },
+              {
+                "slabDepthIn": "6",
+                "gauge": 22,
+                "values": [
+                  "3075/8955",
+                  "1941/4585",
+                  "1325/2653",
+                  "953/1670",
+                  "712/1119",
+                  "547/786",
+                  "429/573",
+                  "275/331"
+                ]
+              },
+              {
+                "slabDepthIn": "6",
+                "gauge": 20,
+                "values": [
+                  "3130/9574",
+                  "2327/4902",
+                  "1593/2836",
+                  "1150/1786",
+                  "863/1196",
+                  "666/840",
+                  "525/612",
+                  "341/354"
+                ]
+              },
+              {
+                "slabDepthIn": "6",
+                "gauge": 19,
+                "values": [
+                  "3129/10137",
+                  "2488/5190",
+                  "1845/3003",
+                  "1335/1891",
+                  "1004/1267",
+                  "777/889",
+                  "615/648",
+                  "404/375"
+                ]
+              },
+              {
+                "slabDepthIn": "6",
+                "gauge": 18,
+                "values": [
+                  "3129/10630",
+                  "2488/5443",
+                  "2060/3149",
+                  "1502/1983",
+                  "1132/1328",
+                  "878/933",
+                  "697/680",
+                  "461/393"
+                ]
+              },
+              {
+                "slabDepthIn": "6",
+                "gauge": 16,
+                "values": [
+                  "3128/11651",
+                  "2487/5965",
+                  "2060/3452",
+                  "1754/2174",
+                  "1407/1456",
+                  "1095/1022",
+                  "873/745",
+                  "582/431"
+                ]
+              }
+            ]
+          }
+        },
+        "lwc": {
+          "concreteLabel": "Light Weight Concrete (110 pcf)",
+          "fcPsi": 3000,
+          "unshoredSpans": [
+            {
+              "slabTotalIn": "3½",
+              "slabToppingIn": "2",
+              "gauge": 22,
+              "span1": "7'-1\"",
+              "span2": "8'-4\"",
+              "span3": "8'-5\"",
+              "wcPsf": 24.8,
+              "icr": 2.07,
+              "phiMnKipFtFt": 2.58,
+              "phiVnKipFt": 3.02
+            },
+            {
+              "slabTotalIn": "3½",
+              "slabToppingIn": "2",
+              "gauge": 20,
+              "span1": "8'-7\"",
+              "span2": "9'-10\"",
+              "span3": "10'-2\"",
+              "wcPsf": 25.2,
+              "icr": 2.24,
+              "phiMnKipFtFt": 3.03,
+              "phiVnKipFt": 3.02
+            },
+            {
+              "slabTotalIn": "3½",
+              "slabToppingIn": "2",
+              "gauge": 19,
+              "span1": "9'-2\"",
+              "span2": "10'-10\"",
+              "span3": "11'-2\"",
+              "wcPsf": 25.5,
+              "icr": 2.39,
+              "phiMnKipFtFt": 3.44,
+              "phiVnKipFt": 3.02
+            },
+            {
+              "slabTotalIn": "3½",
+              "slabToppingIn": "2",
+              "gauge": 18,
+              "span1": "9'-7\"",
+              "span2": "11'-6\"",
+              "span3": "11'-10\"",
+              "wcPsf": 25.8,
+              "icr": 2.52,
+              "phiMnKipFtFt": 3.8,
+              "phiVnKipFt": 3.02
+            },
+            {
+              "slabTotalIn": "3½",
+              "slabToppingIn": "2",
+              "gauge": 16,
+              "span1": "10'-5\"",
+              "span2": "12'-11\"",
+              "span3": "12'-5\"",
+              "wcPsf": 26.5,
+              "icr": 2.79,
+              "phiMnKipFtFt": 4.56,
+              "phiVnKipFt": 3.02
+            },
+            {
+              "slabTotalIn": "4",
+              "slabToppingIn": "2½",
+              "gauge": 22,
+              "span1": "6'-9\"",
+              "span2": "7'-11\"",
+              "span3": "8'-0\"",
+              "wcPsf": 29.4,
+              "icr": 3.06,
+              "phiMnKipFtFt": 3.18,
+              "phiVnKipFt": 3.62
+            },
+            {
+              "slabTotalIn": "4",
+              "slabToppingIn": "2½",
+              "gauge": 20,
+              "span1": "8'-1\"",
+              "span2": "9'-4\"",
+              "span3": "9'-7\"",
+              "wcPsf": 29.8,
+              "icr": 3.31,
+              "phiMnKipFtFt": 3.75,
+              "phiVnKipFt": 3.62
+            },
+            {
+              "slabTotalIn": "4",
+              "slabToppingIn": "2½",
+              "gauge": 19,
+              "span1": "8'-8\"",
+              "span2": "10'-3\"",
+              "span3": "10'-8\"",
+              "wcPsf": 30.1,
+              "icr": 3.54,
+              "phiMnKipFtFt": 4.27,
+              "phiVnKipFt": 3.62
+            },
+            {
+              "slabTotalIn": "4",
+              "slabToppingIn": "2½",
+              "gauge": 18,
+              "span1": "9'-1\"",
+              "span2": "11'-0\"",
+              "span3": "11'-4\"",
+              "wcPsf": 30.4,
+              "icr": 3.73,
+              "phiMnKipFtFt": 4.73,
+              "phiVnKipFt": 3.62
+            },
+            {
+              "slabTotalIn": "4",
+              "slabToppingIn": "2½",
+              "gauge": 16,
+              "span1": "9'-10\"",
+              "span2": "12'-3\"",
+              "span3": "12'-0\"",
+              "wcPsf": 31.1,
+              "icr": 4.12,
+              "phiMnKipFtFt": 5.71,
+              "phiVnKipFt": 3.62
+            },
+            {
+              "slabTotalIn": "4¾",
+              "slabToppingIn": "3¼",
+              "gauge": 22,
+              "span1": "6'-4\"",
+              "span2": "7'-5\"",
+              "span3": "7'-6\"",
+              "wcPsf": 36.3,
+              "icr": 5.07,
+              "phiMnKipFtFt": 4.23,
+              "phiVnKipFt": 4.59
+            },
+            {
+              "slabTotalIn": "4¾",
+              "slabToppingIn": "3¼",
+              "gauge": 20,
+              "span1": "7'-7\"",
+              "span2": "8'-9\"",
+              "span3": "9'-0\"",
+              "wcPsf": 36.7,
+              "icr": 5.48,
+              "phiMnKipFtFt": 5.0,
+              "phiVnKipFt": 4.59
+            },
+            {
+              "slabTotalIn": "4¾",
+              "slabToppingIn": "3¼",
+              "gauge": 19,
+              "span1": "8'-2\"",
+              "span2": "9'-8\"",
+              "span3": "9'-11\"",
+              "wcPsf": 37.0,
+              "icr": 5.85,
+              "phiMnKipFtFt": 5.72,
+              "phiVnKipFt": 4.59
+            },
+            {
+              "slabTotalIn": "4¾",
+              "slabToppingIn": "3¼",
+              "gauge": 18,
+              "span1": "8'-6\"",
+              "span2": "10'-3\"",
+              "span3": "10'-8\"",
+              "wcPsf": 37.3,
+              "icr": 6.17,
+              "phiMnKipFtFt": 6.36,
+              "phiVnKipFt": 4.59
+            },
+            {
+              "slabTotalIn": "4¾",
+              "slabToppingIn": "3¼",
+              "gauge": 16,
+              "span1": "9'-3\"",
+              "span2": "11'-6\"",
+              "span3": "11'-5\"",
+              "wcPsf": 38.0,
+              "icr": 6.81,
+              "phiMnKipFtFt": 7.71,
+              "phiVnKipFt": 4.59
+            }
+          ],
+          "superimposedLoad": {
+            "unit": "psf, 하중/처짐(L/360) 쌍",
+            "spanColumns": [
+              "4'-0\"",
+              "5'-0\"",
+              "6'-0\"",
+              "7'-0\"",
+              "8'-0\"",
+              "9'-0\"",
+              "10'-0\"",
+              "12'-0\""
+            ],
+            "rows": [
+              {
+                "slabDepthIn": "3½",
+                "gauge": 22,
+                "values": [
+                  "1262/1410",
+                  "797/722",
+                  "544/417",
+                  "392/263",
+                  "293/176",
+                  "225/123",
+                  "176/90",
+                  "113/52"
+                ]
+              },
+              {
+                "slabDepthIn": "3½",
+                "gauge": 20,
+                "values": [
+                  "1480/1528",
+                  "939/782",
+                  "643/452",
+                  "464/285",
+                  "348/191",
+                  "268/134",
+                  "212/97",
+                  "138/56"
+                ]
+              },
+              {
+                "slabDepthIn": "3½",
+                "gauge": 19,
+                "values": [
+                  "1480/1634",
+                  "1071/837",
+                  "734/484",
+                  "531/305",
+                  "399/204",
+                  "309/143",
+                  "244/104",
+                  "160/60"
+                ]
+              },
+              {
+                "slabDepthIn": "3½",
+                "gauge": 18,
+                "values": [
+                  "1479/1723",
+                  "1177/882",
+                  "814/510",
+                  "589/321",
+                  "444/215",
+                  "344/151",
+                  "273/110",
+                  "180/63"
+                ]
+              },
+              {
+                "slabDepthIn": "3½",
+                "gauge": 16,
+                "values": [
+                  "1479/1904",
+                  "1176/975",
+                  "975/564",
+                  "712/355",
+                  "538/238",
+                  "418/167",
+                  "332/121",
+                  "221/70"
+                ]
+              },
+              {
+                "slabDepthIn": "4",
+                "gauge": 22,
+                "values": [
+                  "1556/2088",
+                  "983/1069",
+                  "671/618",
+                  "484/389",
+                  "362/261",
+                  "279/183",
+                  "219/133",
+                  "141/77"
+                ]
+              },
+              {
+                "slabDepthIn": "4",
+                "gauge": 20,
+                "values": [
+                  "1772/2260",
+                  "1163/1157",
+                  "796/669",
+                  "576/421",
+                  "432/282",
+                  "334/198",
+                  "264/144",
+                  "172/83"
+                ]
+              },
+              {
+                "slabDepthIn": "4",
+                "gauge": 19,
+                "values": [
+                  "1772/2415",
+                  "1330/1236",
+                  "913/715",
+                  "661/450",
+                  "497/301",
+                  "385/212",
+                  "305/154",
+                  "201/89"
+                ]
+              },
+              {
+                "slabDepthIn": "4",
+                "gauge": 18,
+                "values": [
+                  "1772/2546",
+                  "1410/1303",
+                  "1015/754",
+                  "736/475",
+                  "555/318",
+                  "431/223",
+                  "342/162",
+                  "226/94"
+                ]
+              },
+              {
+                "slabDepthIn": "4",
+                "gauge": 16,
+                "values": [
+                  "1771/2811",
+                  "1409/1439",
+                  "1168/833",
+                  "894/524",
+                  "676/351",
+                  "526/246",
+                  "419/179",
+                  "279/104"
+                ]
+              },
+              {
+                "slabDepthIn": "4¾",
+                "gauge": 22,
+                "values": [
+                  "2072/3463",
+                  "1310/1773",
+                  "896/1026",
+                  "647/646",
+                  "485/432",
+                  "374/304",
+                  "294/221",
+                  "191/128"
+                ]
+              },
+              {
+                "slabDepthIn": "4¾",
+                "gauge": 20,
+                "values": [
+                  "2249/3745",
+                  "1556/1917",
+                  "1067/1109",
+                  "772/698",
+                  "581/468",
+                  "450/328",
+                  "356/239",
+                  "233/138"
+                ]
+              },
+              {
+                "slabDepthIn": "4¾",
+                "gauge": 19,
+                "values": [
+                  "2249/3997",
+                  "1785/2046",
+                  "1226/1184",
+                  "889/745",
+                  "670/499",
+                  "520/350",
+                  "413/255",
+                  "273/148"
+                ]
+              },
+              {
+                "slabDepthIn": "4¾",
+                "gauge": 18,
+                "values": [
+                  "2249/4213",
+                  "1790/2157",
+                  "1367/1248",
+                  "993/786",
+                  "749/526",
+                  "583/369",
+                  "463/269",
+                  "308/156"
+                ]
+              },
+              {
+                "slabDepthIn": "4¾",
+                "gauge": 16,
+                "values": [
+                  "2248/4649",
+                  "1789/2380",
+                  "1483/1377",
+                  "1213/867",
+                  "918/581",
+                  "715/408",
+                  "571/297",
+                  "382/172"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "reinforcing": {
+        "fcPsi": 3000,
+        "note": "온도·수축 철근 (Temperature and Shrinkage). Bekaert Dramix 강섬유는 WWR 대안.",
+        "nwc": [
+          {
+            "slabDepthIn": "3½",
+            "coverDepthIn": "2",
+            "concreteVolumeYd3per100ft2": 0.78,
+            "minAsIn2": 0.028,
+            "wwr": "6x6-W1.4xW1.4",
+            "fiber4DLbYd3": 23
+          },
+          {
+            "slabDepthIn": "4",
+            "coverDepthIn": "2½",
+            "concreteVolumeYd3per100ft2": 0.94,
+            "minAsIn2": 0.028,
+            "wwr": "6x6-W1.4xW1.4",
+            "fiber4DLbYd3": 18
+          },
+          {
+            "slabDepthIn": "4½",
+            "coverDepthIn": "3",
+            "concreteVolumeYd3per100ft2": 1.09,
+            "minAsIn2": 0.028,
+            "wwr": "6x6-W1.4xW1.4",
+            "fiber4DLbYd3": 15
+          },
+          {
+            "slabDepthIn": "5",
+            "coverDepthIn": "3½",
+            "concreteVolumeYd3per100ft2": 1.24,
+            "minAsIn2": 0.032,
+            "wwr": "6x6-W2.1xW2.1",
+            "fiber4DLbYd3": 15
+          },
+          {
+            "slabDepthIn": "5½",
+            "coverDepthIn": "4",
+            "concreteVolumeYd3per100ft2": 1.4,
+            "minAsIn2": 0.036,
+            "wwr": "6x6-W2.1xW2.1",
+            "fiber4DLbYd3": 15
+          },
+          {
+            "slabDepthIn": "6",
+            "coverDepthIn": "4½",
+            "concreteVolumeYd3per100ft2": 1.55,
+            "minAsIn2": 0.041,
+            "wwr": "6x6-W2.1xW2.1",
+            "fiber4DLbYd3": 15
+          }
+        ],
+        "lwc": [
+          {
+            "slabDepthIn": "3½",
+            "coverDepthIn": "2",
+            "concreteVolumeYd3per100ft2": 0.78,
+            "minAsIn2": 0.028,
+            "wwr": "6x6-W1.4xW1.4",
+            "fiber4DLbYd3": 33
+          },
+          {
+            "slabDepthIn": "4",
+            "coverDepthIn": "2½",
+            "concreteVolumeYd3per100ft2": 0.94,
+            "minAsIn2": 0.028,
+            "wwr": "6x6-W1.4xW1.4",
+            "fiber4DLbYd3": 25
+          },
+          {
+            "slabDepthIn": "4½",
+            "coverDepthIn": "3",
+            "concreteVolumeYd3per100ft2": 1.09,
+            "minAsIn2": 0.028,
+            "wwr": "6x6-W1.4xW1.4",
+            "fiber4DLbYd3": 20
+          },
+          {
+            "slabDepthIn": "4¾",
+            "coverDepthIn": "3¼",
+            "concreteVolumeYd3per100ft2": 1.17,
+            "minAsIn2": 0.029,
+            "wwr": "6x6-W2.1xW2.1",
+            "fiber4DLbYd3": 20
+          },
+          {
+            "slabDepthIn": "5",
+            "coverDepthIn": "3½",
+            "concreteVolumeYd3per100ft2": 1.24,
+            "minAsIn2": 0.032,
+            "wwr": "6x6-W2.1xW2.1",
+            "fiber4DLbYd3": 20
+          },
+          {
+            "slabDepthIn": "5¾",
+            "coverDepthIn": "4¼",
+            "concreteVolumeYd3per100ft2": 1.48,
+            "minAsIn2": 0.038,
+            "wwr": "6x6-W2.1xW2.1",
+            "fiber4DLbYd3": 20
+          }
+        ]
+      }
+    },
+    {
+      "depthIn": 2,
+      "profiles": [
+        {
+          "name": "2VLJ-36",
+          "fastening": "Side-lap Screws"
+        },
+        {
+          "name": "2VLI-36",
+          "fastening": "TSWs or BPs (Top Seam Welds / Button Punches)"
+        },
+        {
+          "name": "2PLVLI-36",
+          "fastening": "PunchLok® II System"
+        }
+      ],
+      "widthIn": 36,
+      "grade": "ASTM A653 SS GR50 (or A1008 SS GR50)",
+      "standard": "ANSI/SDI C-2017, IAPMO UES ER-0652, UL Listed",
+      "sectionProperties": [
+        {
+          "gauge": 22,
+          "weightPsf": 1.6,
+          "thicknessIn": 0.0295,
+          "fyKsi": 50,
+          "iePlus": 0.324,
+          "ieMinus": 0.324,
+          "sePlus": 0.244,
+          "seMinus": 0.255,
+          "phiMnPlusLbFtFt": 915,
+          "phiMnMinusLbFtFt": 957,
+          "phiVnLbFt": 2495
+        },
+        {
+          "gauge": 20,
+          "weightPsf": 1.9,
+          "thicknessIn": 0.0358,
+          "fyKsi": 50,
+          "iePlus": 0.409,
+          "ieMinus": 0.407,
+          "sePlus": 0.326,
+          "seMinus": 0.337,
+          "phiMnPlusLbFtFt": 1222,
+          "phiMnMinusLbFtFt": 1264,
+          "phiVnLbFt": 3677
+        },
+        {
+          "gauge": 19,
+          "weightPsf": 2.2,
+          "thicknessIn": 0.0418,
+          "fyKsi": 50,
+          "iePlus": 0.49,
+          "ieMinus": 0.488,
+          "sePlus": 0.409,
+          "seMinus": 0.421,
+          "phiMnPlusLbFtFt": 1534,
+          "phiMnMinusLbFtFt": 1579,
+          "phiVnLbFt": 4352
+        },
+        {
+          "gauge": 18,
+          "weightPsf": 2.5,
+          "thicknessIn": 0.0474,
+          "fyKsi": 50,
+          "iePlus": 0.557,
+          "ieMinus": 0.557,
+          "sePlus": 0.485,
+          "seMinus": 0.5,
+          "phiMnPlusLbFtFt": 1819,
+          "phiMnMinusLbFtFt": 1875,
+          "phiVnLbFt": 4925
+        },
+        {
+          "gauge": 16,
+          "weightPsf": 3.2,
+          "thicknessIn": 0.0598,
+          "fyKsi": 50,
+          "iePlus": 0.703,
+          "ieMinus": 0.703,
+          "sePlus": 0.643,
+          "seMinus": 0.652,
+          "phiMnPlusLbFtFt": 2411,
+          "phiMnMinusLbFtFt": 2445,
+          "phiVnLbFt": 6185
+        }
+      ],
+      "reinforcing": {
+        "fcPsi": 3000,
+        "note": "온도·수축 철근 (Temperature and Shrinkage). Bekaert Dramix 강섬유는 WWR 대안.",
+        "nwc": [
+          {
+            "slabDepthIn": "4",
+            "coverDepthIn": "2",
+            "concreteVolumeYd3per100ft2": 0.93,
+            "minAsIn2": 0.028,
+            "wwr": "6x6-W1.4xW1.4",
+            "fiber4DLbYd3": 23
+          },
+          {
+            "slabDepthIn": "4½",
+            "coverDepthIn": "2½",
+            "concreteVolumeYd3per100ft2": 1.08,
+            "minAsIn2": 0.028,
+            "wwr": "6x6-W1.4xW1.4",
+            "fiber4DLbYd3": 18
+          },
+          {
+            "slabDepthIn": "5",
+            "coverDepthIn": "3",
+            "concreteVolumeYd3per100ft2": 1.23,
+            "minAsIn2": 0.028,
+            "wwr": "6x6-W1.4xW1.4",
+            "fiber4DLbYd3": 15
+          },
+          {
+            "slabDepthIn": "5½",
+            "coverDepthIn": "3½",
+            "concreteVolumeYd3per100ft2": 1.39,
+            "minAsIn2": 0.032,
+            "wwr": "6x6-W2.1xW2.1",
+            "fiber4DLbYd3": 15
+          },
+          {
+            "slabDepthIn": "6",
+            "coverDepthIn": "4",
+            "concreteVolumeYd3per100ft2": 1.54,
+            "minAsIn2": 0.036,
+            "wwr": "6x6-W2.1xW2.1",
+            "fiber4DLbYd3": 15
+          },
+          {
+            "slabDepthIn": "6½",
+            "coverDepthIn": "4½",
+            "concreteVolumeYd3per100ft2": 1.7,
+            "minAsIn2": 0.041,
+            "wwr": "6x6-W2.1xW2.1",
+            "fiber4DLbYd3": 15
+          }
+        ],
+        "lwc": [
+          {
+            "slabDepthIn": "4",
+            "coverDepthIn": "2",
+            "concreteVolumeYd3per100ft2": 0.93,
+            "minAsIn2": 0.028,
+            "wwr": "6x6-W1.4xW1.4",
+            "fiber4DLbYd3": 33
+          },
+          {
+            "slabDepthIn": "4½",
+            "coverDepthIn": "2½",
+            "concreteVolumeYd3per100ft2": 1.08,
+            "minAsIn2": 0.028,
+            "wwr": "6x6-W1.4xW1.4",
+            "fiber4DLbYd3": 25
+          },
+          {
+            "slabDepthIn": "5",
+            "coverDepthIn": "3",
+            "concreteVolumeYd3per100ft2": 1.23,
+            "minAsIn2": 0.028,
+            "wwr": "6x6-W1.4xW1.4",
+            "fiber4DLbYd3": 20
+          },
+          {
+            "slabDepthIn": "5¼",
+            "coverDepthIn": "3¼",
+            "concreteVolumeYd3per100ft2": 1.31,
+            "minAsIn2": 0.029,
+            "wwr": "6x6-W2.1xW2.1",
+            "fiber4DLbYd3": 20
+          },
+          {
+            "slabDepthIn": "5½",
+            "coverDepthIn": "3½",
+            "concreteVolumeYd3per100ft2": 1.39,
+            "minAsIn2": 0.032,
+            "wwr": "6x6-W2.1xW2.1",
+            "fiber4DLbYd3": 20
+          },
+          {
+            "slabDepthIn": "6¼",
+            "coverDepthIn": "4¼",
+            "concreteVolumeYd3per100ft2": 1.62,
+            "minAsIn2": 0.038,
+            "wwr": "6x6-W2.1xW2.1",
+            "fiber4DLbYd3": 20
+          }
+        ]
+      }
+    },
+    {
+      "depthIn": 3,
+      "profiles": [
+        {
+          "name": "3VLJ-36",
+          "fastening": "Side-lap Screws"
+        },
+        {
+          "name": "3VLI-36",
+          "fastening": "TSWs or BPs (Top Seam Welds / Button Punches)"
+        },
+        {
+          "name": "3PLVLI-36",
+          "fastening": "PunchLok® II System"
+        }
+      ],
+      "widthIn": 36,
+      "grade": "ASTM A653 SS GR50 (or A1008 SS GR50)",
+      "standard": "ANSI/SDI C-2017, IAPMO UES ER-0652, UL Listed",
+      "sectionProperties": [
+        {
+          "gauge": 22,
+          "weightPsf": 1.7,
+          "thicknessIn": 0.0295,
+          "fyKsi": 50,
+          "iePlus": 0.732,
+          "ieMinus": 0.737,
+          "sePlus": 0.387,
+          "seMinus": 0.41,
+          "phiMnPlusLbFtFt": 1452,
+          "phiMnMinusLbFtFt": 1537,
+          "phiVnLbFt": 2138
+        },
+        {
+          "gauge": 20,
+          "weightPsf": 2.1,
+          "thicknessIn": 0.0358,
+          "fyKsi": 50,
+          "iePlus": 0.919,
+          "ieMinus": 0.921,
+          "sePlus": 0.512,
+          "seMinus": 0.539,
+          "phiMnPlusLbFtFt": 1920,
+          "phiMnMinusLbFtFt": 2021,
+          "phiVnLbFt": 3777
+        },
+        {
+          "gauge": 19,
+          "weightPsf": 2.4,
+          "thicknessIn": 0.0418,
+          "fyKsi": 50,
+          "iePlus": 1.099,
+          "ieMinus": 1.101,
+          "sePlus": 0.639,
+          "seMinus": 0.669,
+          "phiMnPlusLbFtFt": 2397,
+          "phiMnMinusLbFtFt": 2509,
+          "phiVnLbFt": 5152
+        },
+        {
+          "gauge": 18,
+          "weightPsf": 2.7,
+          "thicknessIn": 0.0474,
+          "fyKsi": 50,
+          "iePlus": 1.253,
+          "ieMinus": 1.253,
+          "sePlus": 0.761,
+          "seMinus": 0.794,
+          "phiMnPlusLbFtFt": 2854,
+          "phiMnMinusLbFtFt": 2977,
+          "phiVnLbFt": 6628
+        },
+        {
+          "gauge": 16,
+          "weightPsf": 3.5,
+          "thicknessIn": 0.0598,
+          "fyKsi": 50,
+          "iePlus": 1.58,
+          "ieMinus": 1.58,
+          "sePlus": 1.013,
+          "seMinus": 1.013,
+          "phiMnPlusLbFtFt": 3799,
+          "phiMnMinusLbFtFt": 3799,
+          "phiVnLbFt": 9312
+        }
+      ],
+      "reinforcing": {
+        "fcPsi": 3000,
+        "note": "온도·수축 철근 (Temperature and Shrinkage). Bekaert Dramix 강섬유는 WWR 대안.",
+        "nwc": [
+          {
+            "slabDepthIn": "5",
+            "coverDepthIn": "2",
+            "concreteVolumeYd3per100ft2": 1.08,
+            "minAsIn2": 0.028,
+            "wwr": "6x6-W1.4xW1.4",
+            "fiber4DLbYd3": 23
+          },
+          {
+            "slabDepthIn": "5½",
+            "coverDepthIn": "2½",
+            "concreteVolumeYd3per100ft2": 1.23,
+            "minAsIn2": 0.028,
+            "wwr": "6x6-W1.4xW1.4",
+            "fiber4DLbYd3": 18
+          },
+          {
+            "slabDepthIn": "6",
+            "coverDepthIn": "3",
+            "concreteVolumeYd3per100ft2": 1.39,
+            "minAsIn2": 0.028,
+            "wwr": "6x6-W1.4xW1.4",
+            "fiber4DLbYd3": 15
+          },
+          {
+            "slabDepthIn": "6½",
+            "coverDepthIn": "3½",
+            "concreteVolumeYd3per100ft2": 1.54,
+            "minAsIn2": 0.032,
+            "wwr": "6x6-W2.1xW2.1",
+            "fiber4DLbYd3": 15
+          },
+          {
+            "slabDepthIn": "7",
+            "coverDepthIn": "4",
+            "concreteVolumeYd3per100ft2": 1.7,
+            "minAsIn2": 0.036,
+            "wwr": "6x6-W2.1xW2.1",
+            "fiber4DLbYd3": 15
+          },
+          {
+            "slabDepthIn": "7½",
+            "coverDepthIn": "4½",
+            "concreteVolumeYd3per100ft2": 1.85,
+            "minAsIn2": 0.041,
+            "wwr": "6x6-W2.1xW2.1",
+            "fiber4DLbYd3": 15
+          }
+        ],
+        "lwc": [
+          {
+            "slabDepthIn": "5",
+            "coverDepthIn": "2",
+            "concreteVolumeYd3per100ft2": 1.08,
+            "minAsIn2": 0.028,
+            "wwr": "6x6-W1.4xW1.4",
+            "fiber4DLbYd3": 33
+          },
+          {
+            "slabDepthIn": "5½",
+            "coverDepthIn": "2½",
+            "concreteVolumeYd3per100ft2": 1.23,
+            "minAsIn2": 0.028,
+            "wwr": "6x6-W1.4xW1.4",
+            "fiber4DLbYd3": 25
+          },
+          {
+            "slabDepthIn": "6",
+            "coverDepthIn": "3",
+            "concreteVolumeYd3per100ft2": 1.39,
+            "minAsIn2": 0.028,
+            "wwr": "6x6-W1.4xW1.4",
+            "fiber4DLbYd3": 20
+          },
+          {
+            "slabDepthIn": "6¼",
+            "coverDepthIn": "3¼",
+            "concreteVolumeYd3per100ft2": 1.47,
+            "minAsIn2": 0.029,
+            "wwr": "6x6-W2.1xW2.1",
+            "fiber4DLbYd3": 20
+          },
+          {
+            "slabDepthIn": "6½",
+            "coverDepthIn": "3½",
+            "concreteVolumeYd3per100ft2": 1.54,
+            "minAsIn2": 0.032,
+            "wwr": "6x6-W2.1xW2.1",
+            "fiber4DLbYd3": 20
+          },
+          {
+            "slabDepthIn": "7¼",
+            "coverDepthIn": "4¼",
+            "concreteVolumeYd3per100ft2": 1.77,
+            "minAsIn2": 0.038,
+            "wwr": "6x6-W2.1xW2.1",
+            "fiber4DLbYd3": 20
+          }
+        ]
+      }
+    }
+  ]
 }

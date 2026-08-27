@@ -11,6 +11,7 @@ import PurlinView from './components/PurlinView.jsx';
 import MetalDeckView from './components/MetalDeckView.jsx';
 import RebarView from './components/RebarView.jsx';
 import PlatePanel from './components/PlatePanel.jsx';
+import AvailablePlateView from './components/AvailablePlateView.jsx';
 
 export default function App() {
   const { activeKey, shape, query } = useStore();
@@ -38,6 +39,8 @@ export default function App() {
     main = <RebarView />;
   } else if (activeKey === 'PLATE') {
     main = <PlatePanel />;
+  } else if (activeKey === 'PLATE-AVAILABLE') {
+    main = <AvailablePlateView />;
   }
 
   return (

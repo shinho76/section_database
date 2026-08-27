@@ -61,7 +61,19 @@ export default function PlatePanel() {
           <figcaption className="draw-cap">단위중량<span>UNIT WEIGHT</span></figcaption>
           <div className="weight">
             <span className="wv mono">{result.areaLoadPsf.toFixed(2)}</span><span className="wu">psf</span>
-            <span className="wv mono" style={{ marginLeft: 14 }}>{(result.areaLoadPsf * PSF_TO_KGM2).toFixed(1)}</span><span className="wu">kg/m²</span>
+            <span className="wv mono val-conv" style={{ marginLeft: 14 }}>{(result.areaLoadPsf * PSF_TO_KGM2).toFixed(1)}</span><span className="wu val-conv">kg/m²</span>
+            {result.mode === 'lineLoad' && (
+              <>
+                <span className="wv mono" style={{ marginLeft: 24 }}>{result.plf.toFixed(2)}</span><span className="wu">plf (w')</span>
+                <span className="wv mono val-conv" style={{ marginLeft: 14 }}>{result.kgm.toFixed(1)}</span><span className="wu val-conv">kg/m (w')</span>
+              </>
+            )}
+            {result.mode === 'weight' && (
+              <>
+                <span className="wv mono" style={{ marginLeft: 24 }}>{result.totalLb.toFixed(1)}</span><span className="wu">lb (W)</span>
+                <span className="wv mono val-conv" style={{ marginLeft: 14 }}>{result.totalKg.toFixed(1)}</span><span className="wu val-conv">kg (W)</span>
+              </>
+            )}
           </div>
         </figure>
       )}
@@ -70,19 +82,19 @@ export default function PlatePanel() {
         <div className="panel">
           <div className="panel-head"><h2>계산 결과</h2></div>
           <table className="props">
-            <thead><tr><th>Symbol</th><th className="r">Imperial</th><th className="r">Metric</th><th>Description</th></tr></thead>
+            <thead><tr><th>Symbol</th><th className="r">Imperial</th><th className="r">Metric<span className="conv-flag">conv.</span></th><th>Description</th></tr></thead>
             <tbody>
               <tr>
                 <td className="sym mono">w</td>
                 <td className="r mono">{result.areaLoadPsf.toFixed(2)} <em>psf</em></td>
-                <td className="r mono">{(result.areaLoadPsf * PSF_TO_KGM2).toFixed(1)} <em>kg/m²</em></td>
+                <td className="r mono val-conv">{(result.areaLoadPsf * PSF_TO_KGM2).toFixed(1)} <em>kg/m²</em></td>
                 <td className="desc">면적당 하중 (단위중량 × 두께)</td>
               </tr>
               {result.mode === 'lineLoad' && (
                 <tr>
                   <td className="sym mono">w'</td>
                   <td className="r mono">{result.plf.toFixed(2)} <em>plf</em></td>
-                  <td className="r mono">{result.kgm.toFixed(1)} <em>kg/m</em></td>
+                  <td className="r mono val-conv">{result.kgm.toFixed(1)} <em>kg/m</em></td>
                   <td className="desc">길이당 하중 ({result.dimUsed} 기준 폭의 스트립)</td>
                 </tr>
               )}
@@ -90,7 +102,7 @@ export default function PlatePanel() {
                 <tr>
                   <td className="sym mono">W</td>
                   <td className="r mono">{result.totalLb.toFixed(1)} <em>lb</em></td>
-                  <td className="r mono">{result.totalKg.toFixed(1)} <em>kg</em></td>
+                  <td className="r mono val-conv">{result.totalKg.toFixed(1)} <em>kg</em></td>
                   <td className="desc">총 무게 (가로 × 세로 × 두께)</td>
                 </tr>
               )}

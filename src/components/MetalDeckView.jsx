@@ -31,8 +31,8 @@ function SectionPropsTable({ rows }) {
     <table className="list">
       <thead>
         <tr>
-          <th className="r">Gage</th><th className="r">Weight (psf)</th><th className="r">Weight (kg/m²)</th>
-          <th className="r">t (in)</th><th className="r">t (mm)</th>
+          <th className="r">Gage</th><th className="r">Weight (psf)</th><th className="r">Weight (kg/m²)<span className="conv-flag">conv.</span></th>
+          <th className="r">t (in)</th><th className="r">t (mm)<span className="conv-flag">conv.</span></th>
           <th className="r">Fy (ksi)</th><th className="r">Ie+ (in⁴/ft)</th><th className="r">Ie- (in⁴/ft)</th>
           <th className="r">Se+ (in³/ft)</th><th className="r">Se- (in³/ft)</th>
           <th className="r">φMn+ (lb-ft/ft)</th><th className="r">φMn- (lb-ft/ft)</th><th className="r">φVn (lb/ft)</th>
@@ -43,9 +43,9 @@ function SectionPropsTable({ rows }) {
           <tr key={r.gauge}>
             <td className="r mono strong">{r.gauge}</td>
             <td className="r mono">{r.weightPsf}</td>
-            <td className="r mono">{(r.weightPsf * PSF_TO_KGM2).toFixed(1)}</td>
+            <td className="r mono val-conv">{(r.weightPsf * PSF_TO_KGM2).toFixed(1)}</td>
             <td className="r mono">{r.thicknessIn}</td>
-            <td className="r mono">{(r.thicknessIn * 25.4).toFixed(2)}</td>
+            <td className="r mono val-conv">{(r.thicknessIn * 25.4).toFixed(2)}</td>
             <td className="r mono">{r.fyKsi}</td>
             <td className="r mono">{r.iePlus}</td>
             <td className="r mono">{r.ieMinus}</td>
@@ -73,24 +73,24 @@ function ReinforcingTable({ rows }) {
             <th>WWR</th><th className="r" colSpan={2}>4D Fiber</th>
           </tr>
           <tr>
-            <th className="r">in</th><th className="r">mm</th>
-            <th className="r">in</th><th className="r">mm</th>
-            <th className="r">yd³/100ft²</th><th className="r">L/m²</th>
-            <th className="r">in²</th><th className="r">mm²</th>
+            <th className="r">in</th><th className="r">mm<span className="conv-flag">conv.</span></th>
+            <th className="r">in</th><th className="r">mm<span className="conv-flag">conv.</span></th>
+            <th className="r">yd³/100ft²</th><th className="r">L/m²<span className="conv-flag">conv.</span></th>
+            <th className="r">in²</th><th className="r">mm²<span className="conv-flag">conv.</span></th>
             <th></th>
-            <th className="r">lb/yd³</th><th className="r">kg/m³</th>
+            <th className="r">lb/yd³</th><th className="r">kg/m³<span className="conv-flag">conv.</span></th>
           </tr>
         </thead>
         <tbody>
           {rows.map((r, i) => (
             <tr key={i}>
-              <td className="r mono">{r.slabDepthIn}″</td><td className="r mono">{inToMm(r.slabDepthIn).toFixed(0)}</td>
-              <td className="r mono">{r.coverDepthIn}″</td><td className="r mono">{inToMm(r.coverDepthIn).toFixed(0)}</td>
+              <td className="r mono">{r.slabDepthIn}″</td><td className="r mono val-conv">{inToMm(r.slabDepthIn).toFixed(0)}</td>
+              <td className="r mono">{r.coverDepthIn}″</td><td className="r mono val-conv">{inToMm(r.coverDepthIn).toFixed(0)}</td>
               <td className="r mono">{r.concreteVolumeYd3per100ft2}</td>
-              <td className="r mono">{(r.concreteVolumeYd3per100ft2 * 82.3).toFixed(1)}</td>
-              <td className="r mono">{r.minAsIn2}</td><td className="r mono">{(r.minAsIn2 * 645.16).toFixed(0)}</td>
+              <td className="r mono val-conv">{(r.concreteVolumeYd3per100ft2 * 82.3).toFixed(1)}</td>
+              <td className="r mono">{r.minAsIn2}</td><td className="r mono val-conv">{(r.minAsIn2 * 645.16).toFixed(0)}</td>
               <td className="mono">{r.wwr}</td>
-              <td className="r mono">{r.fiber4DLbYd3}</td><td className="r mono">{(r.fiber4DLbYd3 * 0.593276).toFixed(0)}</td>
+              <td className="r mono">{r.fiber4DLbYd3}</td><td className="r mono val-conv">{(r.fiber4DLbYd3 * 0.593276).toFixed(0)}</td>
             </tr>
           ))}
         </tbody>
@@ -110,12 +110,14 @@ export default function MetalDeckView() {
 
   if (!data) return <div className="empty">불러오는 중…</div>;
 
-  const f = data.family;
-  const profile = f.profiles.find((p) => p.name === '1.5VLI-36') || f.profiles[0];
   const profileNames = data.nominalDimensions.profiles.map((p) => p.name);
   const dims = data.nominalDimensions.profiles.find((p) => p.name === profileName);
   const dimsMm = toMmProfile(dims);
-  const hasSectionData = profileName === '1.5VLI-36';
+  // Each depth group (1.5/2/3in) shares one family of section+reinforcing data
+  // across its 3 side-lap fastening variants (VL/VLJ, VLI, PLVLI).
+  const f = data.families.find((fam) => fam.depthIn === dims.depthIn);
+  const profile = f && f.profiles.find((p) => p.name.includes('VLI')) || f?.profiles[0];
+  const hasSectionData = !!f;
 
   return (
     <>
@@ -153,7 +155,7 @@ export default function MetalDeckView() {
         </figure>
       </div>
 
-      {hasSectionData ? (
+      {hasSectionData && (
         <>
           <div className="deck-tabs">
             {SECTIONS.map((s) => (
@@ -175,11 +177,6 @@ export default function MetalDeckView() {
           )}
           {section === 'reinforcing' && <ReinforcingTable rows={f.reinforcing.nwc} />}
         </>
-      ) : (
-        <div className="panel">
-          <div className="panel-head"><h2>단면성능 · 하중표</h2></div>
-          <p className="note">{data.otherProfiles.find((p) => p.name === profileName)?.note}</p>
-        </div>
       )}
 
       <div className="panel">

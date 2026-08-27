@@ -13,7 +13,7 @@ export const GRID_GROUPS = [
 // Below the grid: single-column groups with no AISC/KS split.
 // PLATE is listed first so it sits directly under the CHANNELS row of the grid above.
 export const BELOW_GROUPS = [
-  { label: 'PLATE', items: ['PLATE'] },
+  { label: 'PLATE', items: ['PLATE-AVAILABLE', 'PLATE'] },
   { label: 'BUILT-UP H-SECTION', items: ['BH-1', 'BH-2', 'BH-3', 'BH-4'] },
   { label: 'PURLIN', items: ['PURLIN-CEE', 'PURLIN-ZEE'] },
   { label: 'METAL DECK', items: ['METALDECK'] },
@@ -23,6 +23,7 @@ export const BELOW_GROUPS = [
 // Short sidebar labels for BELOW_GROUPS items whose key isn't already readable.
 export const NAV_ITEM_LABEL = {
   PLATE: 'Plate',
+  'PLATE-AVAILABLE': 'Available Plate',
   'BH-1': 'Built-up H-Shape',
   'BH-2': 'Unequal Built-up H-Shape',
   'BH-3': 'Rolled : H+T-Bar',

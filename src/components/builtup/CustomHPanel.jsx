@@ -70,7 +70,7 @@ export default function CustomHPanel() {
           <figure className="panel draw">
             <figcaption className="draw-cap">Metric<span>mm</span></figcaption>
             <div dangerouslySetInnerHTML={{ __html: drawShapeSVG(shape, 'mt') }} />
-            <div className="weight">
+            <div className="weight val-conv">
               <span className="wv mono">{shape.mt.W}</span><span className="wu">kg/m</span>
               <span className="wv mono" style={{ marginLeft: 14 }}>{shape.mt.A}</span><span className="wu">mm²</span>
             </div>
@@ -82,12 +82,12 @@ export default function CustomHPanel() {
         <div className="panel">
           <div className="panel-head"><h2>단면성능 (계산값)</h2></div>
           <table className="props">
-            <thead><tr><th>Symbol</th><th className="r">Imperial</th><th className="r">Metric</th><th>Description</th></tr></thead>
+            <thead><tr><th>Symbol</th><th className="r">Imperial</th><th className="r">Metric<span className="conv-flag">conv.</span></th><th>Description</th></tr></thead>
             <tbody>
-              <tr><td className="sym mono">A</td><td className="r mono">{shape.us.A} <em>in²</em></td><td className="r mono">{shape.mt.A} <em>mm²</em></td><td className="desc">단면적</td></tr>
-              <tr><td className="sym mono">Ix</td><td className="r mono">{propsIn.Ix.toFixed(1)} <em>in⁴</em></td><td className="r mono">{(propsIn.Ix * IN4_TO_MM4 / 1e6).toFixed(1)} <em>×10⁶ mm⁴</em></td><td className="desc">x축 관성모멘트</td></tr>
-              <tr><td className="sym mono">Iy</td><td className="r mono">{propsIn.Iy.toFixed(1)} <em>in⁴</em></td><td className="r mono">{(propsIn.Iy * IN4_TO_MM4 / 1e6).toFixed(1)} <em>×10⁶ mm⁴</em></td><td className="desc">y축 관성모멘트</td></tr>
-              <tr><td className="sym mono">W</td><td className="r mono">{shape.us.W} <em>lb/ft</em></td><td className="r mono">{shape.mt.W} <em>kg/m</em></td><td className="desc">단위중량</td></tr>
+              <tr><td className="sym mono">A</td><td className="r mono">{shape.us.A} <em>in²</em></td><td className="r mono val-conv">{shape.mt.A} <em>mm²</em></td><td className="desc">단면적</td></tr>
+              <tr><td className="sym mono">Ix</td><td className="r mono">{propsIn.Ix.toFixed(1)} <em>in⁴</em></td><td className="r mono val-conv">{(propsIn.Ix * IN4_TO_MM4 / 1e6).toFixed(1)} <em>×10⁶ mm⁴</em></td><td className="desc">x축 관성모멘트</td></tr>
+              <tr><td className="sym mono">Iy</td><td className="r mono">{propsIn.Iy.toFixed(1)} <em>in⁴</em></td><td className="r mono val-conv">{(propsIn.Iy * IN4_TO_MM4 / 1e6).toFixed(1)} <em>×10⁶ mm⁴</em></td><td className="desc">y축 관성모멘트</td></tr>
+              <tr><td className="sym mono">W</td><td className="r mono">{shape.us.W} <em>lb/ft</em></td><td className="r mono val-conv">{shape.mt.W} <em>kg/m</em></td><td className="desc">단위중량</td></tr>
             </tbody>
           </table>
           <p className="note">⚠ 계산값입니다 (필렛·용접부 미고려). A572 GR50/A36 표기는 두께에 따른 일반적 유통 규격 안내이며, 실제 조달 가능 여부는 제작사에 확인하시기 바랍니다.</p>

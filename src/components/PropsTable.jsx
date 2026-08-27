@@ -25,6 +25,10 @@ const UNITS = {
 
 export default function PropsTable({ shape, defs }) {
   const keys = Object.keys(defs).filter((k) => shape.us[k] !== undefined || shape.mt[k] !== undefined);
+  // AISC rows publish BOTH Imperial and Metric natively (SI table, not a
+  // conversion); KS rows publish only Metric, so their Imperial column here
+  // is unit-converted by this app - dim it to flag that difference.
+  const isKs = shape.type.startsWith('KS');
 
   return (
     <div className="panel">
@@ -34,7 +38,12 @@ export default function PropsTable({ shape, defs }) {
       </div>
       <table className="props">
         <thead>
-          <tr><th>Symbol</th><th className="r">Imperial</th><th className="r">Metric</th><th>Description</th></tr>
+          <tr>
+            <th>Symbol</th>
+            <th className="r">Imperial{isKs && <span className="conv-flag">conv.</span>}</th>
+            <th className="r">Metric</th>
+            <th>Description</th>
+          </tr>
         </thead>
         <tbody>
           {keys.map((k) => {
@@ -42,7 +51,7 @@ export default function PropsTable({ shape, defs }) {
             return (
               <tr key={k}>
                 <td className="sym mono">{k}</td>
-                <td className="r mono">{shape.us[k] ?? '—'} <em>{ui}</em></td>
+                <td className={`r mono${isKs ? ' val-conv' : ''}`}>{shape.us[k] ?? '—'} <em>{ui}</em></td>
                 <td className="r mono">{shape.mt[k] ?? '—'} <em>{um}</em></td>
                 <td className="desc">{defs[k]}</td>
               </tr>
@@ -51,9 +60,9 @@ export default function PropsTable({ shape, defs }) {
         </tbody>
       </table>
       <p className="note">
-        {shape.type.startsWith('KS')
-          ? 'Metric 값은 KS D 3502:2022 규격표의 값을 그대로 사용합니다. Imperial 값은 단위 환산값입니다.'
-          : <>Metric 값은 AISC Shapes Database v16.0의 SI 표에 있는 값을 그대로 사용합니다.
+        {isKs
+          ? 'Metric 값은 KS D 3502:2022 규격표의 값을 그대로 사용합니다. Imperial 값(흐리게 표시)은 이 앱이 계산한 단위 환산값입니다.'
+          : <>Metric 값은 AISC Shapes Database v16.0의 SI 표에 있는 값을 그대로 사용합니다 (단위 환산이 아닌 원본 값).
               KS 호칭은 depth × width × t<sub>w</sub> × t<sub>f</sub> (mm) 형태로 파생됩니다.</>}
       </p>
     </div>
