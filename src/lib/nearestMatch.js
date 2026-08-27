@@ -1,5 +1,7 @@
-// Nearest-match lookup between an AISC type and its KS D 3502 counterpart
-// (and back), used to cross-reference W<->KSH, WT<->KST, HSS-BOX<->KSB,
+// Nearest-match lookup between an AISC type and its KS counterpart (KS D
+// 3502 for H/L/T/C, KS D 3568 for KSB, KS D 3566 for KSP — see
+// KS_STANDARD in store.js) (and back), used to cross-reference W<->KSH,
+// WT<->KST, HSS-BOX<->KSB,
 // HSS-ROUND/PIPE<->KSP, L<->KSL, C<->KSC in the shape list. Distance is a
 // weighted relative difference over depth/OD (highest priority), width,
 // then thickness — matching the user's stated priority order.

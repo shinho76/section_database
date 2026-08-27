@@ -31,7 +31,8 @@ function AstmTable({ rows }) {
   );
 }
 
-/** KS D 3568 checked-plate table: thicknessMm/kgm2/panel weights (kg) are
+/** KR checked-plate table (no active KS standard covers this product —
+ * see checkedPlate.json's note): thicknessMm/kgm2/panel weights (kg) are
  * the source's native values; psf and lb panel weights are this app's
  * conversion. */
 function KsTable({ rows }) {
@@ -60,8 +61,9 @@ function KsTable({ rows }) {
 }
 
 /** Checked/diamond-plate unit-weight reference, per standard: `standard`
- * is 'astm' (ASTM A786, imperial-native) or 'ks' (KS D 3568, SI-native) —
- * same AISC/KS split pattern as the H-Shape sidebar entries. */
+ * is 'astm' (ASTM A786, imperial-native) or 'ks' (KR manufacturer spec,
+ * SI-native — the old KS D 3633 standard was abolished in 2013) — same
+ * AISC/KS split pattern as the H-Shape sidebar entries. */
 export default function CheckedPlateView({ standard }) {
   const isKs = standard === 'ks';
   const d = isKs ? data.ks : data.astm;
@@ -69,7 +71,7 @@ export default function CheckedPlateView({ standard }) {
   return (
     <>
       <div className="detail-head">
-        <div><h1 className="mono">Checked Plate — {isKs ? 'KS D 3568' : 'ASTM A786'}</h1></div>
+        <div><h1 className="mono">Checked Plate — {isKs ? 'KR (제조사 규격)' : 'ASTM A786'}</h1></div>
       </div>
 
       <div className="panel">

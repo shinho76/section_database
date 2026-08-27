@@ -50,7 +50,7 @@ export default function Sidebar() {
           <tr>
             <th className="nav-grid-spine" />
             <th>AISC V16.0</th>
-            <th>KS D 3502 : 2022</th>
+            <th>KS D 3502 · 3566 · 3568</th>
           </tr>
         </thead>
         <tbody>

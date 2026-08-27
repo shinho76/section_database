@@ -29,7 +29,7 @@ export const NAV_ITEM_LABEL = {
   PLATE: 'Plate',
   'PLATE-AVAILABLE': 'Plate Stock Availability',
   'PLATE-CHECKED-ASTM': 'Checked Plate (ASTM A786)',
-  'PLATE-CHECKED-KS': 'Checked Plate (KS D 3568)',
+  'PLATE-CHECKED-KS': 'Checked Plate (KR 제조사 규격)',
   'BH-1': 'Built-up H-Shape',
   'BH-2': 'Unequal Built-up H-Shape',
   'BH-3': 'Rolled : H+T-Bar',
@@ -63,8 +63,18 @@ export const TYPE_LABEL = {
   'PURLIN-CEE': 'Purlin-CEE', 'PURLIN-ZEE': 'Purlin-ZEE',
   METALDECK: 'Metal Deck', REBAR: 'Rebar',
   KSH: 'KS H Section — H형강 (KS D 3502)', KSL: 'KS L Section — 등변앵글 (KS D 3502)',
-  KSP: 'KS P Section — 원형강관 (KS D 3502)', KST: 'KS T Section — T형강 (KS D 3502)',
-  KSB: 'KS B Section — 각형강관 (KS D 3502)', KSC: 'KS C Section — ㄷ형강 (KS D 3502)',
+  KSP: 'KS P Section — 원형강관, 구조용 (KS D 3566)', KST: 'KS T Section — T형강 (KS D 3502)',
+  KSB: 'KS B Section — 각형강관 (KS D 3568)', KSC: 'KS C Section — ㄷ형강 (KS D 3502)',
+};
+
+// Real KS standard number per type — H/L/T/C (rolled shapes) all fall under
+// the umbrella "형강" standard KS D 3502, but the two welded-tube types are
+// governed by separate standards: KSB (square/rect tube) by KS D 3568, KSP
+// (round tube) by KS D 3566. Verified against standard.go.kr / KSSN listings
+// — do not fold these back into a single constant without re-checking.
+export const KS_STANDARD = {
+  KSH: 'KS D 3502:2022', KSL: 'KS D 3502:2022', KST: 'KS D 3502:2022', KSC: 'KS D 3502:2022',
+  KSB: 'KS D 3568', KSP: 'KS D 3566',
 };
 
 // Short "KS <X> Section" name for raw type codes shown in badges/chips

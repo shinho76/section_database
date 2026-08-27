@@ -1,3 +1,5 @@
+import { KS_STANDARD } from '../store.js';
+
 const UNITS = {
   W: ['lb/ft', 'kg/m'], A: ['in²', 'mm²'],
   d: ['in', 'mm'], ddet: ['in', 'mm'], Ht: ['in', 'mm'], h: ['in', 'mm'], OD: ['in', 'mm'],
@@ -25,12 +27,14 @@ const UNITS = {
 
 export default function PropsTable({ shape, defs }) {
   const keys = Object.keys(defs).filter((k) => shape.us[k] !== undefined || shape.mt[k] !== undefined);
-  // Source files: KS shapes come from KS D 3502's SI-unit text tables (KS
-  // D 3502.txt etc.), so Metric is DB-native and Imperial is this app's
-  // conversion. AISC shapes come from the AISC Shapes Database v16.0 Excel
-  // file in imperial units, so Imperial is DB-native and Metric is the
-  // conversion - the reverse of KS.
+  // Source files: KS shapes come from each type's own KS standard's SI-unit
+  // text table (KS D 3502 for H/L/T/C, KS D 3568 for KSB, KS D 3566 for
+  // KSP — see KS_STANDARD), so Metric is DB-native and Imperial is this
+  // app's conversion. AISC shapes come from the AISC Shapes Database v16.0
+  // Excel file in imperial units, so Imperial is DB-native and Metric is
+  // the conversion - the reverse of KS.
   const isKs = shape.type.startsWith('KS');
+  const ksStd = KS_STANDARD[shape.type] || 'KS';
 
   return (
     <div className="panel">
@@ -63,7 +67,7 @@ export default function PropsTable({ shape, defs }) {
       </table>
       <p className="note">
         {isKs
-          ? 'Metric 값은 KS D 3502:2022 규격표(SI 단위 원본)의 값을 그대로 사용합니다. Imperial 값은 이 앱이 계산한 단위 환산값입니다.'
+          ? `Metric 값은 ${ksStd} 규격표(SI 단위 원본)의 값을 그대로 사용합니다. Imperial 값은 이 앱이 계산한 단위 환산값입니다.`
           : 'Imperial 값은 AISC Shapes Database v16.0 Excel 파일(imperial 단위 원본)의 값을 그대로 사용합니다. Metric 값은 이 앱이 계산한 단위 환산값입니다.'}
       </p>
     </div>
