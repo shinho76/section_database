@@ -31,8 +31,8 @@ function SectionPropsTable({ rows }) {
     <table className="list">
       <thead>
         <tr>
-          <th className="r">Gage</th><th className="r">Weight (psf)</th><th className="r">Weight (kg/m²)<span className="conv-flag">conv.</span></th>
-          <th className="r">t (in)</th><th className="r">t (mm)<span className="conv-flag">conv.</span></th>
+          <th className="r">Gage</th><th className="r">Weight (psf)</th><th className="r">Weight (kg/m²)</th>
+          <th className="r">t (in)</th><th className="r">t (mm)</th>
           <th className="r">Fy (ksi)</th><th className="r">Ie+ (in⁴/ft)</th><th className="r">Ie- (in⁴/ft)</th>
           <th className="r">Se+ (in³/ft)</th><th className="r">Se- (in³/ft)</th>
           <th className="r">φMn+ (lb-ft/ft)</th><th className="r">φMn- (lb-ft/ft)</th><th className="r">φVn (lb/ft)</th>
@@ -73,12 +73,12 @@ function ReinforcingTable({ rows }) {
             <th>WWR</th><th className="r" colSpan={2}>4D Fiber</th>
           </tr>
           <tr>
-            <th className="r">in</th><th className="r">mm<span className="conv-flag">conv.</span></th>
-            <th className="r">in</th><th className="r">mm<span className="conv-flag">conv.</span></th>
-            <th className="r">yd³/100ft²</th><th className="r">L/m²<span className="conv-flag">conv.</span></th>
-            <th className="r">in²</th><th className="r">mm²<span className="conv-flag">conv.</span></th>
+            <th className="r">in</th><th className="r">mm</th>
+            <th className="r">in</th><th className="r">mm</th>
+            <th className="r">yd³/100ft²</th><th className="r">L/m²</th>
+            <th className="r">in²</th><th className="r">mm²</th>
             <th></th>
-            <th className="r">lb/yd³</th><th className="r">kg/m³<span className="conv-flag">conv.</span></th>
+            <th className="r">lb/yd³</th><th className="r">kg/m³</th>
           </tr>
         </thead>
         <tbody>

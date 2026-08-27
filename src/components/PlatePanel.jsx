@@ -82,7 +82,7 @@ export default function PlatePanel() {
         <div className="panel">
           <div className="panel-head"><h2>계산 결과</h2></div>
           <table className="props">
-            <thead><tr><th>Symbol</th><th className="r">Imperial</th><th className="r">Metric<span className="conv-flag">conv.</span></th><th>Description</th></tr></thead>
+            <thead><tr><th>Symbol</th><th className="r">Imperial</th><th className="r">Metric</th><th>Description</th></tr></thead>
             <tbody>
               <tr>
                 <td className="sym mono">w</td>

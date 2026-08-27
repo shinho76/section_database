@@ -7,7 +7,7 @@ import rows from '../data/plateAvailability.json';
 export default function AvailablePlateView() {
   return (
     <>
-      <div className="detail-head"><div><h1 className="mono">Available Plate</h1></div></div>
+      <div className="detail-head"><div><h1 className="mono">Plate Stock Availability</h1></div></div>
 
       <div className="panel">
         <div className="panel-head">
@@ -20,7 +20,7 @@ export default function AvailablePlateView() {
               <th className="r">Thickness</th>
               <th>Grade</th>
               <th className="r">Unit Weight (psf)</th>
-              <th className="r">Unit Weight (kg/m²)<span className="conv-flag">conv.</span></th>
+              <th className="r">Unit Weight (kg/m²)</th>
             </tr>
           </thead>
           <tbody>

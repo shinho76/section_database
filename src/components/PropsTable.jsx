@@ -25,9 +25,11 @@ const UNITS = {
 
 export default function PropsTable({ shape, defs }) {
   const keys = Object.keys(defs).filter((k) => shape.us[k] !== undefined || shape.mt[k] !== undefined);
-  // AISC rows publish BOTH Imperial and Metric natively (SI table, not a
-  // conversion); KS rows publish only Metric, so their Imperial column here
-  // is unit-converted by this app - dim it to flag that difference.
+  // Source files: KS shapes come from KS D 3502's SI-unit text tables (KS
+  // D 3502.txt etc.), so Metric is DB-native and Imperial is this app's
+  // conversion. AISC shapes come from the AISC Shapes Database v16.0 Excel
+  // file in imperial units, so Imperial is DB-native and Metric is the
+  // conversion - the reverse of KS.
   const isKs = shape.type.startsWith('KS');
 
   return (
@@ -40,7 +42,7 @@ export default function PropsTable({ shape, defs }) {
         <thead>
           <tr>
             <th>Symbol</th>
-            <th className="r">Imperial{isKs && <span className="conv-flag">conv.</span>}</th>
+            <th className="r">Imperial</th>
             <th className="r">Metric</th>
             <th>Description</th>
           </tr>
@@ -52,7 +54,7 @@ export default function PropsTable({ shape, defs }) {
               <tr key={k}>
                 <td className="sym mono">{k}</td>
                 <td className={`r mono${isKs ? ' val-conv' : ''}`}>{shape.us[k] ?? '—'} <em>{ui}</em></td>
-                <td className="r mono">{shape.mt[k] ?? '—'} <em>{um}</em></td>
+                <td className={`r mono${isKs ? '' : ' val-conv'}`}>{shape.mt[k] ?? '—'} <em>{um}</em></td>
                 <td className="desc">{defs[k]}</td>
               </tr>
             );
@@ -61,9 +63,8 @@ export default function PropsTable({ shape, defs }) {
       </table>
       <p className="note">
         {isKs
-          ? 'Metric 값은 KS D 3502:2022 규격표의 값을 그대로 사용합니다. Imperial 값(흐리게 표시)은 이 앱이 계산한 단위 환산값입니다.'
-          : <>Metric 값은 AISC Shapes Database v16.0의 SI 표에 있는 값을 그대로 사용합니다 (단위 환산이 아닌 원본 값).
-              KS 호칭은 depth × width × t<sub>w</sub> × t<sub>f</sub> (mm) 형태로 파생됩니다.</>}
+          ? 'Metric 값은 KS D 3502:2022 규격표(SI 단위 원본)의 값을 그대로 사용합니다. Imperial 값은 이 앱이 계산한 단위 환산값입니다.'
+          : 'Imperial 값은 AISC Shapes Database v16.0 Excel 파일(imperial 단위 원본)의 값을 그대로 사용합니다. Metric 값은 이 앱이 계산한 단위 환산값입니다.'}
       </p>
     </div>
   );

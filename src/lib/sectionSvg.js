@@ -105,12 +105,17 @@ export function drawShapeSVG(s, u) {
   const id = `dw${uid++}`;
   const unit = u === 'us' ? '"' : 'mm';
 
-  // Flange/web (or leg) fillet radius, in the shape's own unit: AISC/KS
-  // tables don't publish a bare fillet radius for most types, but `kdes`
-  // (design distance from the outer face to the web/leg toe) already
-  // includes the material thickness, so r = kdes - thickness recovers it.
-  // KST/KSL/KSC/HSS/KSB rows have neither field, so this returns 0 (sharp).
+  // Flange/web (or leg) fillet radius, in the shape's own unit. KSH publishes
+  // a bare `r`; KSC (source: source/ks/C.txt) publishes `r1` (web/flange
+  // fillet, r2 is the flange-toe rounding and isn't modeled here). AISC
+  // W/M/S/HP/WT/MT/ST/C/L don't publish a bare radius, but `kdes` (design
+  // distance from the outer face to the web/leg toe) already includes the
+  // material thickness, so r = kdes - thickness recovers it. KST/KSL rows
+  // have none of these fields (verified against their source .txt tables,
+  // which only carry d/bf/tw/tf) - this returns 0 (sharp) for those.
   const filletIn = (thicknessKey) => {
+    const rVal = g('r') ?? g('r1');
+    if (rVal) return rVal;
     const kdesVal = g('kdes');
     const th = g(thicknessKey);
     if (!kdesVal || !th) return 0;
@@ -200,7 +205,12 @@ export function drawShapeSVG(s, u) {
   } else if (isTee) {
     const bw = sx(g('bf')), bh = sx(g('d')), twpx = sx(g('tw')), tfpx = sx(g('tf'));
     const x0 = cx - bw / 2, y0 = cy - bh / 2;
-    body = tBodyStemDownPath(x0, y0, bw, bh, twpx, tfpx, sx(filletIn('tf')), fill, stroke);
+    // ST is cut from an S-shape, so it inherits the S-shape's tapered
+    // flange (see sShapeBodyPath's comment re: this being a visual
+    // approximation) instead of WT/MT's flat/parallel flange.
+    body = t === 'ST'
+      ? stTeeBodyPath(x0, y0, bw, bh, twpx, tfpx, sx(filletIn('tf')), fill, stroke)
+      : tBodyStemDownPath(x0, y0, bw, bh, twpx, tfpx, sx(filletIn('tf')), fill, stroke);
     hDim(dim, id, x0, x0 + bw, y0 - 22, y0, `bf=${p.bf}${unit}`);
     vDim(dim, id, y0, y0 + bh, x0 - 24, x0, `d=${p.d}${unit}`);
     microV(dim, id, y0, y0 + tfpx, x0 + bw + 26, `tf=${p.tf}${unit}`);
@@ -378,6 +388,28 @@ function sShapeBodyPath(x0, yTop, bw, bh, tw, tf, r, fill, stroke) {
     v${-webSpan}
     a${rc},${rc} 0 0,0 ${-rc},${-rc}
     l${-shRun},${-tipDrop} Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+}
+
+/** ST outline: like tBodyStemDownPath, but the flange's inner face (facing
+ * the stem) tapers from a thinner tip up to the full tabulated tf at the
+ * stem, same 1:6 slope and same "visual approximation" caveat as
+ * sShapeBodyPath - because ST is a Tee cut from an S-shape, it inherits
+ * that flange taper rather than WT/MT's flat/parallel flange. */
+function stTeeBodyPath(x0, yTop, bw, bh, tw, tf, r, fill, stroke) {
+  const sh = (bw - tw) / 2;
+  const rc = Math.max(0, Math.min(r, sh - 1, bh - tf - 1));
+  const slope = 1 / 6;
+  const tipDrop = Math.min(tf * 0.5, slope * sh);
+  const tfTip = tf - tipDrop;
+  const stemRun = bh - tf - rc;
+  const shRun = sh - rc;
+  return `<path d="M${x0},${yTop} h${bw} v${tfTip}
+    l${-shRun},${tipDrop}
+    a${rc},${rc} 0 0,0 ${-rc},${rc}
+    v${stemRun} h${-tw} v${-stemRun}
+    a${rc},${rc} 0 0,0 ${-rc},${-rc}
+    l${-shRun},${-tipDrop}
+    v${-tfTip} Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
 }
 
 /** Symmetric I-shape outline (both flanges equal), with rounded flange/web

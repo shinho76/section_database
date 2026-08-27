@@ -74,8 +74,8 @@ header{position:sticky;top:0;z-index:50;height:64px;display:flex;align-items:cen
 .nav-grid th.nav-grid-spine{background:var(--bg-surface);border-top:0;border-left:0}
 .nav-grid-spine{border:1px solid var(--bd-subtle);background:var(--bg-inset);padding:0}
 .nav-grid-spine span{display:block;writing-mode:vertical-rl;text-orientation:mixed;
-  transform:rotate(180deg);font-size:12px;font-weight:800;letter-spacing:.09em;
-  color:var(--tx-primary);text-align:center;padding:6px 0;white-space:nowrap}
+  transform:rotate(180deg);font-size:14px;font-weight:800;letter-spacing:.09em;
+  color:var(--ac-main);text-align:center;padding:6px 0;white-space:nowrap}
 .nav-grid-cell{border:1px solid var(--bd-subtle);padding:0;vertical-align:middle}
 .nav-cell-btn{display:flex;flex-direction:row;align-items:center;justify-content:center;
   gap:5px;width:100%;height:100%;min-height:32px;padding:4px 3px;background:none;border:0;
@@ -114,14 +114,14 @@ header{position:sticky;top:0;z-index:50;height:64px;display:flex;align-items:cen
   background:var(--bg-inset);color:var(--tx-muted);font-family:ui-monospace,monospace}
 .unit-tag{margin-left:8px;font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--ac-main)}
 
-/* DB-native vs converted values: converted numbers are visually de-emphasized
- * (dimmer + slightly smaller) so the reader can tell at a glance which side
- * came straight from the source table/catalog and which was unit-converted
- * or derived by this app. Applied per-column/value, never to row labels. */
-.val-conv{opacity:.62;font-weight:500}
-.val-conv em{opacity:.85}
-.conv-flag{margin-left:6px;font-size:9px;font-weight:700;letter-spacing:.04em;
-  color:var(--tx-muted);text-transform:uppercase;vertical-align:middle}
+/* DB-native vs converted/calculated values: converted numbers use a muted
+ * color and a slightly smaller size (no opacity fade, no tag) so the reader
+ * can tell at a glance which side came straight from the source file (KS:
+ * SI-unit .txt tables; AISC: the imperial-unit Shapes Database Excel file)
+ * and which was unit-converted or derived by this app. Applied per-column/
+ * value, never to row labels. */
+.val-conv{color:var(--tx-secondary);font-size:.92em;font-weight:500}
+.val-conv em{color:var(--tx-muted)}
 .not-available{color:var(--val-warn);opacity:.75;font-style:italic}
 
 /* SAMPLE — decimal/unit-aligned number cell (NumUnit.jsx), pending approval.

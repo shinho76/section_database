@@ -69,7 +69,7 @@ export default function UnequalHPanel() {
         <div className="panel">
           <div className="panel-head"><h2>단면성능 (계산값)</h2></div>
           <table className="props">
-            <thead><tr><th>Symbol</th><th className="r">Imperial</th><th className="r">Metric<span className="conv-flag">conv.</span></th><th>Description</th></tr></thead>
+            <thead><tr><th>Symbol</th><th className="r">Imperial</th><th className="r">Metric</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td className="sym mono">A</td><td className="r mono">{propsIn.A.toFixed(2)} <em>in²</em></td><td className="r mono val-conv">{aMm.toFixed(0)} <em>mm²</em></td><td className="desc">단면적</td></tr>
               <tr><td className="sym mono">Ix</td><td className="r mono">{propsIn.Ix.toFixed(1)} <em>in⁴</em></td><td className="r mono val-conv">{(propsIn.Ix * IN4_TO_MM4 / 1e6).toFixed(1)} <em>×10⁶ mm⁴</em></td><td className="desc">x축 관성모멘트 (도심 기준)</td></tr>

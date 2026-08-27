@@ -23,7 +23,7 @@ export const BELOW_GROUPS = [
 // Short sidebar labels for BELOW_GROUPS items whose key isn't already readable.
 export const NAV_ITEM_LABEL = {
   PLATE: 'Plate',
-  'PLATE-AVAILABLE': 'Available Plate',
+  'PLATE-AVAILABLE': 'Plate Stock Availability',
   'BH-1': 'Built-up H-Shape',
   'BH-2': 'Unequal Built-up H-Shape',
   'BH-3': 'Rolled : H+T-Bar',

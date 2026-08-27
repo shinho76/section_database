@@ -367,7 +367,7 @@ export default function HPlusTPanel({ baseKind }) {
         <div className="panel">
           <div className="panel-head"><h2>합성 단면성능 (계산값)</h2></div>
           <table className="props">
-            <thead><tr><th>Symbol</th><th className="r">Imperial</th><th className="r">Metric<span className="conv-flag">conv.</span></th><th>Description</th></tr></thead>
+            <thead><tr><th>Symbol</th><th className="r">Imperial</th><th className="r">Metric</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td className="sym mono">A</td><td className="r mono"><NumUnit value={composite.A.toFixed(2)} unit="in²" /></td><td className="r mono val-conv">{(composite.A * IN2_TO_MM2).toFixed(0)} <em>mm²</em></td><td className="desc">단면적</td></tr>
               <tr><td className="sym mono">Ix</td><td className="r mono"><NumUnit value={composite.Ix.toFixed(1)} unit="in⁴" /></td><td className="r mono val-conv">{(composite.Ix * IN4_TO_MM4 / 1e6).toFixed(1)} <em>×10⁶ mm⁴</em></td><td className="desc">x축 관성모멘트 (합성 도심 기준)</td></tr>
