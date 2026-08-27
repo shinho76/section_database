@@ -105,6 +105,19 @@ export function drawShapeSVG(s, u) {
   const id = `dw${uid++}`;
   const unit = u === 'us' ? '"' : 'mm';
 
+  // Flange/web (or leg) fillet radius, in the shape's own unit: AISC/KS
+  // tables don't publish a bare fillet radius for most types, but `kdes`
+  // (design distance from the outer face to the web/leg toe) already
+  // includes the material thickness, so r = kdes - thickness recovers it.
+  // KST/KSL/KSC/HSS/KSB rows have neither field, so this returns 0 (sharp).
+  const filletIn = (thicknessKey) => {
+    const kdesVal = g('kdes');
+    const th = g(thicknessKey);
+    if (!kdesVal || !th) return 0;
+    const v = kdesVal - th;
+    return v > 0 ? v : 0;
+  };
+
   const isRound = t === 'PIPE' || t === 'KSP' || (t === 'HSS' && p.OD);
   const isBox = t === 'KSB' || (t === 'HSS' && !p.OD);
   const isAng = t === 'L' || t === '2L' || t === 'KSL';
@@ -142,9 +155,16 @@ export function drawShapeSVG(s, u) {
   } else if (isBox) {
     const bw = sx(g('B')), bh = sx(g('Ht')), th = sx(g('tdes') || g('tnom'));
     const x0 = cx - bw / 2, y0 = cy - bh / 2;
-    body = `<path d="M${x0},${y0} h${bw} v${bh} h${-bw} Z
-              M${x0 + th},${y0 + th} v${bh - 2 * th} h${bw - 2 * th} v${-(bh - 2 * th)} Z"
-              fill="${fill}" fill-rule="evenodd" stroke="${stroke}" stroke-width="1.5" rx="${th * 1.4}"/>`;
+    // HSS/KSB corner radii aren't tabulated in this dataset; ASTM A500's
+    // standard approximation (outer ≈ 2t, inner ≈ outer − t = t) is used
+    // instead of the fixed `rx` attribute this used to carry — `rx` has no
+    // effect on a <path> (only <rect>/<ellipse> support it), so corners were
+    // silently rendering sharp despite that attribute being present.
+    const ro = Math.max(0, Math.min(2 * th, bw / 2 - 1, bh / 2 - 1));
+    const ri = Math.max(0, Math.min(ro - th, (bw - 2 * th) / 2 - 1, (bh - 2 * th) / 2 - 1));
+    body = `<path d="${roundedRectPath(x0, y0, bw, bh, ro)}
+              ${roundedRectPath(x0 + th, y0 + th, bw - 2 * th, bh - 2 * th, ri)}"
+              fill="${fill}" fill-rule="evenodd" stroke="${stroke}" stroke-width="1.5"/>`;
     hDim(dim, id, x0, x0 + bw, y0 - 22, y0, `B=${p.B}${unit}`);
     vDim(dim, id, y0, y0 + bh, x0 - 24, x0, `Ht=${p.Ht}${unit}`);
     microV(dim, id, y0, y0 + th, x0 + bw + 26, `t=${p.tdes || p.tnom}${unit}`);
@@ -153,8 +173,15 @@ export function drawShapeSVG(s, u) {
     const lw = sx(g('b')), lh = sx(g('d')), th = sx(g('t'));
     const totalW = t === '2L' ? lw * 2 + Math.max(6, sx(0.375)) : lw;
     const x0 = cx - totalW / 2, y0 = cy - lh / 2;
+    // Heel fillet at the inside corner where the two legs meet.
+    const rc = Math.max(0, Math.min(sx(filletIn('t')), th - 1, Math.min(lh, lw) - th - 1));
     const one = (ox, flip) => {
       const x = ox, y = y0;
+      if (rc > 0.75) {
+        return flip
+          ? `M${x},${y} h${-th} v${lh - th - rc} a${rc},${rc} 0 0,1 ${-rc},${rc} h${-(lw - th - rc)} v${th} h${lw} Z`
+          : `M${x},${y} h${th} v${lh - th - rc} a${rc},${rc} 0 0,0 ${rc},${rc} h${lw - th - rc} v${th} h${-lw} Z`;
+      }
       return flip
         ? `M${x},${y} h${-th} v${lh - th} h${-(lw - th)} v${th} h${lw} Z`
         : `M${x},${y} h${th} v${lh - th} h${lw - th} v${th} h${-lw} Z`;
@@ -173,9 +200,7 @@ export function drawShapeSVG(s, u) {
   } else if (isTee) {
     const bw = sx(g('bf')), bh = sx(g('d')), twpx = sx(g('tw')), tfpx = sx(g('tf'));
     const x0 = cx - bw / 2, y0 = cy - bh / 2;
-    body = `<path d="M${x0},${y0} h${bw} v${tfpx} h${-(bw - twpx) / 2} v${bh - tfpx} h${-twpx}
-              v${-(bh - tfpx)} h${-(bw - twpx) / 2} Z"
-              fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+    body = tBodyStemDownPath(x0, y0, bw, bh, twpx, tfpx, sx(filletIn('tf')), fill, stroke);
     hDim(dim, id, x0, x0 + bw, y0 - 22, y0, `bf=${p.bf}${unit}`);
     vDim(dim, id, y0, y0 + bh, x0 - 24, x0, `d=${p.d}${unit}`);
     microV(dim, id, y0, y0 + tfpx, x0 + bw + 26, `tf=${p.tf}${unit}`);
@@ -184,8 +209,7 @@ export function drawShapeSVG(s, u) {
   } else if (isChan) {
     const bw = sx(g('bf')), bh = sx(g('d')), twpx = sx(g('tw')), tfpx = sx(g('tf'));
     const x0 = cx - bw / 2, y0 = cy - bh / 2;
-    body = `<path d="M${x0},${y0} h${bw} v${tfpx} h${-(bw - twpx)} v${bh - 2 * tfpx} h${bw - twpx} v${tfpx} h${-bw} Z"
-              fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+    body = channelBodyPath(x0, y0, bw, bh, twpx, tfpx, sx(filletIn('tf')), fill, stroke);
     hDim(dim, id, x0, x0 + bw, y0 - 22, y0, `bf=${p.bf}${unit}`);
     vDim(dim, id, y0, y0 + bh, x0 - 24, x0, `d=${p.d}${unit}`);
     microV(dim, id, y0, y0 + tfpx, x0 + bw + 26, `tf=${p.tf}${unit}`);
@@ -197,27 +221,10 @@ export function drawShapeSVG(s, u) {
     const x0 = cx - bw / 2, y0 = cy - bh / 2, sh = (bw - twpx) / 2;
     // Fillet radius at the flange/web junction, approximated as kdes - tf
     // (the AISC k-dimension already includes the flange thickness).
-    const kdesVal = g('kdes');
-    let r = kdesVal ? sx(kdesVal) - tfpx : 0;
-    r = Math.max(0, Math.min(r, sh - 1, (bh - 2 * tfpx) / 2 - 1));
-    if (r > 0.75) {
-      const webSpan = bh - 2 * tfpx - 2 * r;
-      body = `<path d="M${x0},${y0} h${bw} v${tfpx} h${-(sh - r)}
-                a${r},${r} 0 0,0 ${-r},${r}
-                v${webSpan}
-                a${r},${r} 0 0,0 ${r},${r}
-                h${sh - r} v${tfpx} h${-bw}
-                v${-tfpx} h${sh - r}
-                a${r},${r} 0 0,0 ${r},${-r}
-                v${-webSpan}
-                a${r},${r} 0 0,0 ${-r},${-r}
-                h${-(sh - r)} Z"
-                fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
-    } else {
-      body = `<path d="M${x0},${y0} h${bw} v${tfpx} h${-sh} v${bh - 2 * tfpx} h${sh} v${tfpx} h${-bw}
-                v${-tfpx} h${sh} v${-(bh - 2 * tfpx)} h${-sh} Z"
-                fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
-    }
+    const r = sx(filletIn('tf'));
+    body = t === 'S'
+      ? sShapeBodyPath(x0, y0, bw, bh, twpx, tfpx, r, fill, stroke)
+      : iBodyPath(x0, y0, bw, bh, twpx, tfpx, r, fill, stroke);
     hDim(dim, id, x0, x0 + bw, y0 - 22, y0, `bf=${p.bf}${unit}`);
     vDim(dim, id, y0, y0 + bh, x0 - 24, x0, `d=${p.d}${unit}`);
     // tf on the top flange, k mirrored onto the bottom flange — vertically
@@ -308,6 +315,69 @@ export function drawPurlinSVG(row, kind, unit) {
 
   return `<svg viewBox="0 0 ${W} ${H}" class="section-svg" role="img"
     aria-label="${kind} purlin cross section in ${unit}">${defsBlock(id)}${body}${dim.join('')}</svg>`;
+}
+
+/** Rectangle outline with all four corners rounded to radius `r` (falls back
+ * to a sharp rectangle when r is too small to render). Used for HSS/KSB box
+ * sections — SVG's `rx`/`ry` attributes only work on <rect>/<ellipse>, not
+ * on a <path>, so a real rounded-corner path is needed instead. */
+function roundedRectPath(x, y, w, h, r) {
+  const rc = Math.max(0, Math.min(r, w / 2 - 0.5, h / 2 - 0.5));
+  if (rc < 0.75) return `M${x},${y} h${w} v${h} h${-w} Z`;
+  return `M${x + rc},${y} H${x + w - rc} A${rc},${rc} 0 0 1 ${x + w},${y + rc}
+    V${y + h - rc} A${rc},${rc} 0 0 1 ${x + w - rc},${y + h}
+    H${x + rc} A${rc},${rc} 0 0 1 ${x},${y + h - rc}
+    V${y + rc} A${rc},${rc} 0 0 1 ${x + rc},${y} Z`;
+}
+
+/** Channel (C/MC/KSC) outline: web at the left (x0..x0+tw), flanges spanning
+ * the full width top and bottom, open on the right. Fillets only apply on
+ * the left (closed) side where the flanges meet the web — the right side is
+ * just the flanges' free tips, always sharp. Same corner convention as
+ * iBodyPath (clockwise outline, concave corners use sweep-flag 0). */
+function channelBodyPath(x0, y0, bw, bh, tw, tf, r, fill, stroke) {
+  const shoulder = bw - tw;
+  const rc = Math.max(0, Math.min(r, shoulder - 1, (bh - 2 * tf) / 2 - 1));
+  if (rc > 0.75) {
+    const webSpan = bh - 2 * tf - 2 * rc;
+    return `<path d="M${x0},${y0} h${bw} v${tf} h${-(shoulder - rc)}
+      a${rc},${rc} 0 0,0 ${-rc},${rc}
+      v${webSpan}
+      a${rc},${rc} 0 0,0 ${rc},${rc}
+      h${shoulder - rc} v${tf} h${-bw} Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+  }
+  return `<path d="M${x0},${y0} h${bw} v${tf} h${-shoulder} v${bh - 2 * tf} h${shoulder} v${tf} h${-bw} Z"
+    fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+}
+
+/** S-shape (American Standard Beam) outline: like iBodyPath, but the flange's
+ * inner face (facing the web cavity) slopes from a thinner tip up to the
+ * full tabulated tf at the web, using the standard 1:6 (16-2/3%) S-shape
+ * flange slope. AISC's shape tables don't publish a separate tip thickness
+ * or the exact reference point tf is measured at, so this is a labeled
+ * VISUAL APPROXIMATION for the drawing only — dimension lines still show
+ * the tabulated tf/bf/d/tw values unchanged, and section properties (Ix,
+ * Sx, W, …) come from the tabulated values too, not from this geometry. */
+function sShapeBodyPath(x0, yTop, bw, bh, tw, tf, r, fill, stroke) {
+  const sh = (bw - tw) / 2;
+  const rc = Math.max(0, Math.min(r, sh - 1, (bh - 2 * tf) / 2 - 1));
+  const slope = 1 / 6;
+  const tipDrop = Math.min(tf * 0.5, slope * sh);
+  const tfTip = tf - tipDrop;
+  const webSpan = bh - 2 * tf - 2 * rc;
+  const shRun = sh - rc;
+  return `<path d="M${x0},${yTop} h${bw} v${tfTip}
+    l${-shRun},${tipDrop}
+    a${rc},${rc} 0 0,0 ${-rc},${rc}
+    v${webSpan}
+    a${rc},${rc} 0 0,0 ${rc},${rc}
+    l${shRun},${tipDrop}
+    v${tfTip} h${-bw} v${-tfTip}
+    l${shRun},${-tipDrop}
+    a${rc},${rc} 0 0,0 ${rc},${-rc}
+    v${-webSpan}
+    a${rc},${rc} 0 0,0 ${-rc},${-rc}
+    l${-shRun},${-tipDrop} Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
 }
 
 /** Symmetric I-shape outline (both flanges equal), with rounded flange/web
