@@ -13,10 +13,9 @@ export const GRID_GROUPS = [
 // Below the grid: single-column groups with no AISC/KS split.
 // PLATE is listed first so it sits directly under the CHANNELS row of the grid above.
 export const BELOW_GROUPS = [
-  { label: 'PLATE', items: ['PLATE-AVAILABLE', 'PLATE', 'PLATE-CHECKED-ASTM', 'PLATE-CHECKED-KS'] },
+  { label: 'PLATE', items: ['PLATE-AVAILABLE', 'PLATE', 'PLATE-CHECKED-ASTM', 'PLATE-CHECKED-KS', 'METALDECK'] },
   { label: 'BUILT-UP H-SECTION', items: ['BH-1', 'BH-2', 'BH-3', 'BH-4'] },
   { label: 'PURLIN', items: ['PURLIN-CEE', 'PURLIN-ZEE'] },
-  { label: 'METAL DECK', items: ['METALDECK'] },
   { label: 'REINFORCEMENT', items: ['REBAR', 'WWR'] },
 ];
 

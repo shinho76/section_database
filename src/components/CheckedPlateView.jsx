@@ -14,7 +14,7 @@ function AstmTable({ rows }) {
           <th>Gauge / Thickness</th>
           <th className="r">Thickness (in)</th><th className="r">Thickness (mm)</th>
           <th className="r">Unit Weight (psf)</th><th className="r">Unit Weight (kg/m²)</th>
-          <th className="r">4' × 8' Panel Weight (lb)</th>
+          <th className="r">4' × 8' Panel Weight (lb)</th><th className="r">4' × 8' Panel Weight (kg)</th>
         </tr>
       </thead>
       <tbody>
@@ -23,7 +23,7 @@ function AstmTable({ rows }) {
             <td className="mono strong">{r.gaugeLabel}</td>
             <td className="r mono">{r.thicknessIn.toFixed(3)}</td><td className="r mono">{r.thicknessMm}</td>
             <td className="r mono">{r.psf.toFixed(2)}</td><td className="r mono">{r.kgm2.toFixed(2)}</td>
-            <td className="r mono">{r.panel4x8Lb.toFixed(1)}</td>
+            <td className="r mono">{r.panel4x8Lb.toFixed(1)}</td><td className="r mono val-conv">{(r.panel4x8Lb * 0.453592).toFixed(1)}</td>
           </tr>
         ))}
       </tbody>
