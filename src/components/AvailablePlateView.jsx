@@ -17,7 +17,8 @@ export default function AvailablePlateView() {
         <table className="list">
           <thead>
             <tr>
-              <th className="r">Thickness</th>
+              <th className="r">Thickness (in)</th>
+              <th className="r">Thickness (mm)</th>
               <th>Grade</th>
               <th className="r">Unit Weight (psf)</th>
               <th className="r">Unit Weight (kg/m²)</th>
@@ -27,6 +28,7 @@ export default function AvailablePlateView() {
             {rows.map((r) => (
               <tr key={r.thickness}>
                 <td className="r mono strong">{r.thickness}</td>
+                <td className="r mono val-conv">{(r.thicknessIn * 25.4).toFixed(1)}</td>
                 <td className={`mono${r.grade ? '' : ' not-available'}`}>{r.grade || 'NOT AVAILABLE'}</td>
                 <td className="r mono">{r.psf.toFixed(2)}</td>
                 <td className="r mono val-conv">{r.kgm2.toFixed(1)}</td>

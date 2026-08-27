@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import meshDesignationDiagram from '../assets/wwr-mesh-designation-diagram.png';
 
 /** Standard Reinforcing Mesh Chart: common WWR styles by both the current
  * (D/W-size) and legacy (steel-wire-gauge) designations, with approximate
@@ -167,6 +168,18 @@ export default function WWRView() {
         </div>
         <MeshChartTable rows={data.meshChart.rolls} />
         <p className="note">{data.meshChart.note}</p>
+      </div>
+
+      <div className="panel">
+        <div className="panel-head"><h2>Industry Method for Designating Style</h2></div>
+        <div style={{ padding: 14, background: '#fff' }}>
+          <img
+            src={meshDesignationDiagram}
+            alt="Industry method for designating WWR style: a 3D grid diagram labeling longitudinal wire, transverse wire, length, and width, next to the example 6 x 6 - (D/W)2.1 x (D/W)2.1 with longitudinal wire spacing, transverse wire spacing, transverse wire size, and longitudinal wire size each color-coded."
+            style={{ display: 'block', width: '100%', height: 'auto' }}
+          />
+        </div>
+        <p className="note">출처: InterMetal Steel, Standard Reinforcing Mesh Chart (2023) — {data.productPdfUrl}</p>
       </div>
 
       <div className="panel">
