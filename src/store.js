@@ -5,13 +5,13 @@ import { create } from 'zustand';
 export const GRID_GROUPS = [
   { label: 'H-SHAPE', aisc: ['W', 'M', 'S', 'HP'], ks: ['KSH'] },
   { label: 'TEES', aisc: ['WT', 'MT', 'ST'], ks: ['KST'] },
-  { label: 'HOLLOW', aisc: ['HSS-BOX', 'HSS-ROUND', 'PIPE'], ks: ['KSB', 'KSP', 'KSP'] },
+  { label: 'HOLLOW', aisc: ['HSS-BOX', 'HSS-ROUND', 'PIPE'], ks: ['KSB', 'KSP', 'KSPP'] },
   { label: 'ANGLES', aisc: ['L', '2L'], ks: ['KSL'] },
   { label: 'CHANNELS', aisc: ['C', 'MC'], ks: ['KSC'] },
 ];
 
 // Short labels for grid cells whose typeKey is too long to fit as-is.
-export const GRID_CELL_LABEL = { 'HSS-BOX': 'HSS-B', 'HSS-ROUND': 'HSS-R' };
+export const GRID_CELL_LABEL = { 'HSS-BOX': 'HSS-B', 'HSS-ROUND': 'HSS-R', KSPP: 'PIPE' };
 
 // Below the grid: single-column groups with no AISC/KS split.
 // PLATE is listed first so it sits directly under the CHANNELS row of the grid above.
@@ -46,7 +46,7 @@ export const NAV_ITEM_LABEL = {
 
 export const DB_TYPES = new Set([
   'W', 'M', 'S', 'HP', 'WT', 'MT', 'ST', 'HSS-BOX', 'HSS-ROUND', 'PIPE', 'L', '2L', 'C', 'MC',
-  'KSH', 'KSL', 'KSP', 'KST', 'KSB', 'KSC',
+  'KSH', 'KSL', 'KSP', 'KSPP', 'KST', 'KSB', 'KSC',
 ]);
 
 export const TYPE_LABEL = {
@@ -65,6 +65,7 @@ export const TYPE_LABEL = {
   KSH: 'KS H Section — H형강 (KS D 3502)', KSL: 'KS L Section — 등변앵글 (KS D 3502)',
   KSP: 'KS P Section — 원형강관, 구조용 (KS D 3566)', KST: 'KS T Section — T형강 (KS D 3502)',
   KSB: 'KS B Section — 각형강관 (KS D 3568)', KSC: 'KS C Section — ㄷ형강 (KS D 3502)',
+  KSPP: 'KS SPP Section — 배관용 탄소강관 (KS D 3507)',
 };
 
 // Real KS standard number per type — H/L/T/C (rolled shapes) all fall under
@@ -74,7 +75,7 @@ export const TYPE_LABEL = {
 // — do not fold these back into a single constant without re-checking.
 export const KS_STANDARD = {
   KSH: 'KS D 3502:2022', KSL: 'KS D 3502:2022', KST: 'KS D 3502:2022', KSC: 'KS D 3502:2022',
-  KSB: 'KS D 3568', KSP: 'KS D 3566',
+  KSB: 'KS D 3568', KSP: 'KS D 3566', KSPP: 'KS D 3507',
 };
 
 // Short "KS <X> Section" name for raw type codes shown in badges/chips
@@ -83,7 +84,7 @@ export const KS_STANDARD = {
 export const TYPE_DISPLAY = {
   KSH: 'KS H Section', KSL: 'KS L Section', KSP: 'KS P Section',
   KST: 'KS T Section', KSB: 'KS B Section', KSC: 'KS C Section',
-  'HSS-BOX': 'HSS Box', 'HSS-ROUND': 'HSS Round', HSS: 'HSS',
+  KSPP: 'KS SPP Section', 'HSS-BOX': 'HSS Box', 'HSS-ROUND': 'HSS Round', HSS: 'HSS',
 };
 export const displayType = (t) => TYPE_DISPLAY[t] || t;
 

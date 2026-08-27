@@ -1,14 +1,17 @@
 // Nearest-match lookup between an AISC type and its KS counterpart (KS D
-// 3502 for H/L/T/C, KS D 3568 for KSB, KS D 3566 for KSP — see
-// KS_STANDARD in store.js) (and back), used to cross-reference W<->KSH,
-// WT<->KST, HSS-BOX<->KSB,
-// HSS-ROUND/PIPE<->KSP, L<->KSL, C<->KSC in the shape list. Distance is a
-// weighted relative difference over depth/OD (highest priority), width,
-// then thickness — matching the user's stated priority order.
+// 3502 for H/L/T/C, KS D 3568 for KSB, KS D 3566 for KSP, KS D 3507 for
+// KSPP — see KS_STANDARD in store.js), used to cross-reference W<->KSH,
+// WT<->KST, HSS-BOX<->KSB, HSS-ROUND<->KSP, PIPE<->KSPP, L<->KSL, C<->KSC
+// in the shape list. Distance is a weighted relative difference over
+// depth/OD (highest priority), width, then thickness — matching the
+// user's stated priority order.
 //
 // HSS is split into two sidebar entries (HSS-BOX / HSS-ROUND) since a
 // single "HSS" list otherwise mixes rectangular/square tube (which should
-// compare against KSB) with round tube (which should compare against KSP).
+// compare against KSB) with round tube (which should compare against
+// KSP). AISC PIPE is matched against KSPP (KS D 3507, piping-use) rather
+// than KSP (KS D 3566, structural-use) since both PIPE and KSPP share the
+// same piping-derived material spec and intended use.
 
 const PAIR = {
   W: 'KSH', KSH: 'W',
@@ -16,8 +19,8 @@ const PAIR = {
   L: 'KSL', KSL: 'L',
   C: 'KSC', KSC: 'C',
   'HSS-BOX': 'KSB', KSB: 'HSS-BOX',
-  'HSS-ROUND': 'KSP',
-  PIPE: 'KSP', KSP: 'PIPE',
+  'HSS-ROUND': 'KSP', KSP: 'HSS-ROUND',
+  PIPE: 'KSPP', KSPP: 'PIPE',
 };
 
 const SPEC = {
@@ -31,7 +34,7 @@ const SPEC = {
   KSC: [['d', 3], ['bf', 2], ['tf', 1]],
   'HSS-BOX': [['Ht', 3], ['B', 2], ['tdes', 1]],
   KSB: [['Ht', 3], ['B', 2], ['tdes', 1]],
-  ROUND: [['OD', 3], ['tdes', 1]], // HSS-ROUND, PIPE, KSP
+  ROUND: [['OD', 3], ['tdes', 1]], // HSS-ROUND, PIPE, KSP, KSPP
 };
 
 export function hasMatchPair(type) {
@@ -42,8 +45,10 @@ export function matchTargetType(sourceType) {
   return PAIR[sourceType];
 }
 
+const ROUND_TYPES = new Set(['HSS-ROUND', 'PIPE', 'KSP', 'KSPP']);
+
 function specFor(sourceType) {
-  if (sourceType === 'HSS-ROUND' || sourceType === 'PIPE' || sourceType === 'KSP') return SPEC.ROUND;
+  if (ROUND_TYPES.has(sourceType)) return SPEC.ROUND;
   return SPEC[sourceType];
 }
 

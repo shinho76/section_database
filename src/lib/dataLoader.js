@@ -1,7 +1,7 @@
 const TYPE_FILE = {
   W: 'w', M: 'm', S: 's', HP: 'hp', WT: 'wt', MT: 'mt', ST: 'st',
   HSS: 'hss', PIPE: 'pipe', L: 'l', '2L': '2l', C: 'c', MC: 'mc',
-  KSH: 'ksh', KSL: 'ksl', KSP: 'ksp', KST: 'kst', KSB: 'ksb', KSC: 'ksc',
+  KSH: 'ksh', KSL: 'ksl', KSP: 'ksp', KSPP: 'kspp', KST: 'kst', KSB: 'ksb', KSC: 'ksc',
 };
 
 const typeCache = new Map();
