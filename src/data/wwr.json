@@ -1,0 +1,856 @@
+{
+ "source": "ASTM A1064/A1064M-22, Standard Specification for Steel Wire and Welded Wire Reinforcement, Plain and Deformed, for Concrete — Table 1–4",
+ "standardUrl": "https://wirereinforcementinstitute.org/",
+ "productPdfUrl": "https://wirereinforcementinstitute.org/application/files/7217/8472/2671/WWR-500-R-26_MSP.pdf",
+ "referenceUrl": "https://gemini.google.com/app/48cca301749c2008",
+ "note": "단위중량(Weight/Mass)은 원문 표 3·4에 주어진 값(D/MD 계열)을 그대로 쓰고, lb/ft↔kg/m 변환만 이 앱에서 계산했습니다. 원문 표 1·2(Plain Wire, W/MW 계열)는 단위중량을 직접 주지 않아, ASTM 각주의 A(in²)=W(lb/ft)/3.4 (강재 밀도 기준) 및 그 SI 환산(밀도 7850kg/m³)으로 이 앱이 계산했습니다 — 이렇게 계산한 값은 옅게 표시됩니다.",
+ "plainImperial": [
+  {
+   "size": "W0.5",
+   "diaIn": 0.08,
+   "diaMm": 2.03,
+   "areaIn2": 0.005,
+   "areaMm2": 3.23,
+   "weightLbFt": 0.017,
+   "weightKgM": 0.025
+  },
+  {
+   "size": "W1.2",
+   "diaIn": 0.124,
+   "diaMm": 3.14,
+   "areaIn2": 0.012,
+   "areaMm2": 7.74,
+   "weightLbFt": 0.041,
+   "weightKgM": 0.061
+  },
+  {
+   "size": "W1.4",
+   "diaIn": 0.134,
+   "diaMm": 3.39,
+   "areaIn2": 0.014,
+   "areaMm2": 9.03,
+   "weightLbFt": 0.048,
+   "weightKgM": 0.071
+  },
+  {
+   "size": "W2",
+   "diaIn": 0.16,
+   "diaMm": 4.05,
+   "areaIn2": 0.02,
+   "areaMm2": 12.9,
+   "weightLbFt": 0.068,
+   "weightKgM": 0.101
+  },
+  {
+   "size": "W2.5",
+   "diaIn": 0.178,
+   "diaMm": 4.53,
+   "areaIn2": 0.025,
+   "areaMm2": 16.1,
+   "weightLbFt": 0.085,
+   "weightKgM": 0.126
+  },
+  {
+   "size": "W2.9",
+   "diaIn": 0.192,
+   "diaMm": 4.88,
+   "areaIn2": 0.029,
+   "areaMm2": 18.7,
+   "weightLbFt": 0.099,
+   "weightKgM": 0.147
+  },
+  {
+   "size": "W3.5",
+   "diaIn": 0.211,
+   "diaMm": 5.36,
+   "areaIn2": 0.035,
+   "areaMm2": 22.6,
+   "weightLbFt": 0.119,
+   "weightKgM": 0.177
+  },
+  {
+   "size": "W4",
+   "diaIn": 0.226,
+   "diaMm": 5.73,
+   "areaIn2": 0.04,
+   "areaMm2": 25.8,
+   "weightLbFt": 0.136,
+   "weightKgM": 0.202
+  },
+  {
+   "size": "W4.5",
+   "diaIn": 0.239,
+   "diaMm": 6.08,
+   "areaIn2": 0.045,
+   "areaMm2": 29,
+   "weightLbFt": 0.153,
+   "weightKgM": 0.228
+  },
+  {
+   "size": "W5",
+   "diaIn": 0.252,
+   "diaMm": 6.41,
+   "areaIn2": 0.05,
+   "areaMm2": 32.3,
+   "weightLbFt": 0.17,
+   "weightKgM": 0.253
+  },
+  {
+   "size": "W5.5",
+   "diaIn": 0.265,
+   "diaMm": 6.72,
+   "areaIn2": 0.055,
+   "areaMm2": 35.5,
+   "weightLbFt": 0.187,
+   "weightKgM": 0.278
+  },
+  {
+   "size": "W6",
+   "diaIn": 0.276,
+   "diaMm": 7.02,
+   "areaIn2": 0.06,
+   "areaMm2": 38.7,
+   "weightLbFt": 0.204,
+   "weightKgM": 0.304
+  },
+  {
+   "size": "W8",
+   "diaIn": 0.319,
+   "diaMm": 8.11,
+   "areaIn2": 0.08,
+   "areaMm2": 51.6,
+   "weightLbFt": 0.272,
+   "weightKgM": 0.405
+  },
+  {
+   "size": "W10",
+   "diaIn": 0.357,
+   "diaMm": 9.06,
+   "areaIn2": 0.1,
+   "areaMm2": 64.5,
+   "weightLbFt": 0.34,
+   "weightKgM": 0.506
+  },
+  {
+   "size": "W11",
+   "diaIn": 0.374,
+   "diaMm": 9.5,
+   "areaIn2": 0.11,
+   "areaMm2": 71,
+   "weightLbFt": 0.374,
+   "weightKgM": 0.557
+  },
+  {
+   "size": "W12",
+   "diaIn": 0.391,
+   "diaMm": 9.93,
+   "areaIn2": 0.12,
+   "areaMm2": 77.4,
+   "weightLbFt": 0.408,
+   "weightKgM": 0.607
+  },
+  {
+   "size": "W14",
+   "diaIn": 0.422,
+   "diaMm": 10.7,
+   "areaIn2": 0.14,
+   "areaMm2": 90.3,
+   "weightLbFt": 0.476,
+   "weightKgM": 0.708
+  },
+  {
+   "size": "W16",
+   "diaIn": 0.451,
+   "diaMm": 11.5,
+   "areaIn2": 0.16,
+   "areaMm2": 103,
+   "weightLbFt": 0.544,
+   "weightKgM": 0.81
+  },
+  {
+   "size": "W18",
+   "diaIn": 0.479,
+   "diaMm": 12.2,
+   "areaIn2": 0.18,
+   "areaMm2": 116,
+   "weightLbFt": 0.612,
+   "weightKgM": 0.911
+  },
+  {
+   "size": "W20",
+   "diaIn": 0.505,
+   "diaMm": 12.8,
+   "areaIn2": 0.2,
+   "areaMm2": 129,
+   "weightLbFt": 0.68,
+   "weightKgM": 1.012
+  },
+  {
+   "size": "W22",
+   "diaIn": 0.529,
+   "diaMm": 13.4,
+   "areaIn2": 0.22,
+   "areaMm2": 142,
+   "weightLbFt": 0.748,
+   "weightKgM": 1.113
+  },
+  {
+   "size": "W24",
+   "diaIn": 0.553,
+   "diaMm": 14,
+   "areaIn2": 0.24,
+   "areaMm2": 155,
+   "weightLbFt": 0.816,
+   "weightKgM": 1.214
+  },
+  {
+   "size": "W26",
+   "diaIn": 0.575,
+   "diaMm": 14.6,
+   "areaIn2": 0.26,
+   "areaMm2": 168,
+   "weightLbFt": 0.884,
+   "weightKgM": 1.316
+  },
+  {
+   "size": "W28",
+   "diaIn": 0.597,
+   "diaMm": 15.2,
+   "areaIn2": 0.28,
+   "areaMm2": 181,
+   "weightLbFt": 0.952,
+   "weightKgM": 1.417
+  },
+  {
+   "size": "W30",
+   "diaIn": 0.618,
+   "diaMm": 15.7,
+   "areaIn2": 0.3,
+   "areaMm2": 194,
+   "weightLbFt": 1.02,
+   "weightKgM": 1.518
+  },
+  {
+   "size": "W31",
+   "diaIn": 0.628,
+   "diaMm": 16,
+   "areaIn2": 0.31,
+   "areaMm2": 200,
+   "weightLbFt": 1.054,
+   "weightKgM": 1.569
+  },
+  {
+   "size": "W45",
+   "diaIn": 0.757,
+   "diaMm": 19.2,
+   "areaIn2": 0.45,
+   "areaMm2": 290,
+   "weightLbFt": 1.53,
+   "weightKgM": 2.277
+  }
+ ],
+ "plainSI": [
+  {
+   "size": "MW5",
+   "diaMm": 2.52,
+   "diaIn": 0.099,
+   "areaMm2": 5,
+   "areaIn2": 0.008,
+   "weightKgM": 0.039,
+   "weightLbFt": 0.026
+  },
+  {
+   "size": "MW10",
+   "diaMm": 3.57,
+   "diaIn": 0.14,
+   "areaMm2": 10,
+   "areaIn2": 0.016,
+   "weightKgM": 0.079,
+   "weightLbFt": 0.053
+  },
+  {
+   "size": "MW15",
+   "diaMm": 4.37,
+   "diaIn": 0.172,
+   "areaMm2": 15,
+   "areaIn2": 0.023,
+   "weightKgM": 0.118,
+   "weightLbFt": 0.079
+  },
+  {
+   "size": "MW20",
+   "diaMm": 5.05,
+   "diaIn": 0.199,
+   "areaMm2": 20,
+   "areaIn2": 0.031,
+   "weightKgM": 0.157,
+   "weightLbFt": 0.105
+  },
+  {
+   "size": "MW25",
+   "diaMm": 5.64,
+   "diaIn": 0.222,
+   "areaMm2": 25,
+   "areaIn2": 0.039,
+   "weightKgM": 0.196,
+   "weightLbFt": 0.132
+  },
+  {
+   "size": "MW30",
+   "diaMm": 6.18,
+   "diaIn": 0.243,
+   "areaMm2": 30,
+   "areaIn2": 0.047,
+   "weightKgM": 0.235,
+   "weightLbFt": 0.158
+  },
+  {
+   "size": "MW35",
+   "diaMm": 6.68,
+   "diaIn": 0.263,
+   "areaMm2": 35,
+   "areaIn2": 0.054,
+   "weightKgM": 0.275,
+   "weightLbFt": 0.185
+  },
+  {
+   "size": "MW40",
+   "diaMm": 7.14,
+   "diaIn": 0.281,
+   "areaMm2": 40,
+   "areaIn2": 0.062,
+   "weightKgM": 0.314,
+   "weightLbFt": 0.211
+  },
+  {
+   "size": "MW45",
+   "diaMm": 7.57,
+   "diaIn": 0.298,
+   "areaMm2": 45,
+   "areaIn2": 0.07,
+   "weightKgM": 0.353,
+   "weightLbFt": 0.237
+  },
+  {
+   "size": "MW50",
+   "diaMm": 7.98,
+   "diaIn": 0.314,
+   "areaMm2": 50,
+   "areaIn2": 0.078,
+   "weightKgM": 0.393,
+   "weightLbFt": 0.264
+  },
+  {
+   "size": "MW55",
+   "diaMm": 8.37,
+   "diaIn": 0.329,
+   "areaMm2": 55,
+   "areaIn2": 0.085,
+   "weightKgM": 0.432,
+   "weightLbFt": 0.29
+  },
+  {
+   "size": "MW60",
+   "diaMm": 8.74,
+   "diaIn": 0.344,
+   "areaMm2": 60,
+   "areaIn2": 0.093,
+   "weightKgM": 0.471,
+   "weightLbFt": 0.316
+  },
+  {
+   "size": "MW65",
+   "diaMm": 9.1,
+   "diaIn": 0.358,
+   "areaMm2": 65,
+   "areaIn2": 0.101,
+   "weightKgM": 0.51,
+   "weightLbFt": 0.343
+  },
+  {
+   "size": "MW70",
+   "diaMm": 9.44,
+   "diaIn": 0.372,
+   "areaMm2": 70,
+   "areaIn2": 0.109,
+   "weightKgM": 0.549,
+   "weightLbFt": 0.369
+  },
+  {
+   "size": "MW80",
+   "diaMm": 10.1,
+   "diaIn": 0.397,
+   "areaMm2": 80,
+   "areaIn2": 0.124,
+   "weightKgM": 0.628,
+   "weightLbFt": 0.422
+  },
+  {
+   "size": "MW90",
+   "diaMm": 10.7,
+   "diaIn": 0.421,
+   "areaMm2": 90,
+   "areaIn2": 0.14,
+   "weightKgM": 0.707,
+   "weightLbFt": 0.475
+  },
+  {
+   "size": "MW100",
+   "diaMm": 11.3,
+   "diaIn": 0.444,
+   "areaMm2": 100,
+   "areaIn2": 0.155,
+   "weightKgM": 0.785,
+   "weightLbFt": 0.527
+  },
+  {
+   "size": "MW120",
+   "diaMm": 12.4,
+   "diaIn": 0.487,
+   "areaMm2": 120,
+   "areaIn2": 0.186,
+   "weightKgM": 0.942,
+   "weightLbFt": 0.633
+  },
+  {
+   "size": "MW130",
+   "diaMm": 12.9,
+   "diaIn": 0.507,
+   "areaMm2": 130,
+   "areaIn2": 0.202,
+   "weightKgM": 1.02,
+   "weightLbFt": 0.686
+  },
+  {
+   "size": "MW200",
+   "diaMm": 16,
+   "diaIn": 0.628,
+   "areaMm2": 200,
+   "areaIn2": 0.31,
+   "weightKgM": 1.57,
+   "weightLbFt": 1.055
+  },
+  {
+   "size": "MW290",
+   "diaMm": 19.2,
+   "diaIn": 0.757,
+   "areaMm2": 290,
+   "areaIn2": 0.45,
+   "weightKgM": 2.276,
+   "weightLbFt": 1.53
+  }
+ ],
+ "deformedImperial": [
+  {
+   "size": "D1",
+   "weightLbFt": 0.034,
+   "weightKgM": 0.051,
+   "diaIn": 0.113,
+   "areaIn2": 0.01,
+   "minDeformIn": 0.0045
+  },
+  {
+   "size": "D2",
+   "weightLbFt": 0.068,
+   "weightKgM": 0.101,
+   "diaIn": 0.16,
+   "areaIn2": 0.02,
+   "minDeformIn": 0.0063
+  },
+  {
+   "size": "D3",
+   "weightLbFt": 0.102,
+   "weightKgM": 0.152,
+   "diaIn": 0.195,
+   "areaIn2": 0.03,
+   "minDeformIn": 0.0078
+  },
+  {
+   "size": "D4",
+   "weightLbFt": 0.136,
+   "weightKgM": 0.202,
+   "diaIn": 0.226,
+   "areaIn2": 0.04,
+   "minDeformIn": 0.0101
+  },
+  {
+   "size": "D5",
+   "weightLbFt": 0.17,
+   "weightKgM": 0.253,
+   "diaIn": 0.252,
+   "areaIn2": 0.05,
+   "minDeformIn": 0.0113
+  },
+  {
+   "size": "D6",
+   "weightLbFt": 0.204,
+   "weightKgM": 0.304,
+   "diaIn": 0.276,
+   "areaIn2": 0.06,
+   "minDeformIn": 0.0124
+  },
+  {
+   "size": "D7",
+   "weightLbFt": 0.238,
+   "weightKgM": 0.354,
+   "diaIn": 0.299,
+   "areaIn2": 0.07,
+   "minDeformIn": 0.0134
+  },
+  {
+   "size": "D8",
+   "weightLbFt": 0.272,
+   "weightKgM": 0.405,
+   "diaIn": 0.319,
+   "areaIn2": 0.08,
+   "minDeformIn": 0.0143
+  },
+  {
+   "size": "D9",
+   "weightLbFt": 0.306,
+   "weightKgM": 0.455,
+   "diaIn": 0.339,
+   "areaIn2": 0.09,
+   "minDeformIn": 0.0152
+  },
+  {
+   "size": "D10",
+   "weightLbFt": 0.34,
+   "weightKgM": 0.506,
+   "diaIn": 0.357,
+   "areaIn2": 0.1,
+   "minDeformIn": 0.016
+  },
+  {
+   "size": "D11",
+   "weightLbFt": 0.374,
+   "weightKgM": 0.557,
+   "diaIn": 0.374,
+   "areaIn2": 0.11,
+   "minDeformIn": 0.0187
+  },
+  {
+   "size": "D12",
+   "weightLbFt": 0.408,
+   "weightKgM": 0.607,
+   "diaIn": 0.391,
+   "areaIn2": 0.12,
+   "minDeformIn": 0.0195
+  },
+  {
+   "size": "D13",
+   "weightLbFt": 0.442,
+   "weightKgM": 0.658,
+   "diaIn": 0.407,
+   "areaIn2": 0.13,
+   "minDeformIn": 0.0203
+  },
+  {
+   "size": "D14",
+   "weightLbFt": 0.476,
+   "weightKgM": 0.708,
+   "diaIn": 0.422,
+   "areaIn2": 0.14,
+   "minDeformIn": 0.0211
+  },
+  {
+   "size": "D15",
+   "weightLbFt": 0.51,
+   "weightKgM": 0.759,
+   "diaIn": 0.437,
+   "areaIn2": 0.15,
+   "minDeformIn": 0.0218
+  },
+  {
+   "size": "D16",
+   "weightLbFt": 0.544,
+   "weightKgM": 0.81,
+   "diaIn": 0.451,
+   "areaIn2": 0.16,
+   "minDeformIn": 0.0225
+  },
+  {
+   "size": "D17",
+   "weightLbFt": 0.578,
+   "weightKgM": 0.86,
+   "diaIn": 0.465,
+   "areaIn2": 0.17,
+   "minDeformIn": 0.0232
+  },
+  {
+   "size": "D18",
+   "weightLbFt": 0.612,
+   "weightKgM": 0.911,
+   "diaIn": 0.479,
+   "areaIn2": 0.18,
+   "minDeformIn": 0.0239
+  },
+  {
+   "size": "D19",
+   "weightLbFt": 0.646,
+   "weightKgM": 0.961,
+   "diaIn": 0.492,
+   "areaIn2": 0.19,
+   "minDeformIn": 0.0245
+  },
+  {
+   "size": "D20",
+   "weightLbFt": 0.68,
+   "weightKgM": 1.012,
+   "diaIn": 0.505,
+   "areaIn2": 0.2,
+   "minDeformIn": 0.0252
+  },
+  {
+   "size": "D21",
+   "weightLbFt": 0.714,
+   "weightKgM": 1.063,
+   "diaIn": 0.517,
+   "areaIn2": 0.21,
+   "minDeformIn": 0.0259
+  },
+  {
+   "size": "D22",
+   "weightLbFt": 0.748,
+   "weightKgM": 1.113,
+   "diaIn": 0.529,
+   "areaIn2": 0.22,
+   "minDeformIn": 0.0265
+  },
+  {
+   "size": "D23",
+   "weightLbFt": 0.782,
+   "weightKgM": 1.164,
+   "diaIn": 0.541,
+   "areaIn2": 0.23,
+   "minDeformIn": 0.0271
+  },
+  {
+   "size": "D24",
+   "weightLbFt": 0.816,
+   "weightKgM": 1.214,
+   "diaIn": 0.553,
+   "areaIn2": 0.24,
+   "minDeformIn": 0.0277
+  },
+  {
+   "size": "D25",
+   "weightLbFt": 0.85,
+   "weightKgM": 1.265,
+   "diaIn": 0.564,
+   "areaIn2": 0.25,
+   "minDeformIn": 0.0282
+  },
+  {
+   "size": "D26",
+   "weightLbFt": 0.884,
+   "weightKgM": 1.316,
+   "diaIn": 0.575,
+   "areaIn2": 0.26,
+   "minDeformIn": 0.0288
+  },
+  {
+   "size": "D27",
+   "weightLbFt": 0.918,
+   "weightKgM": 1.366,
+   "diaIn": 0.586,
+   "areaIn2": 0.27,
+   "minDeformIn": 0.0293
+  },
+  {
+   "size": "D28",
+   "weightLbFt": 0.952,
+   "weightKgM": 1.417,
+   "diaIn": 0.597,
+   "areaIn2": 0.28,
+   "minDeformIn": 0.0299
+  },
+  {
+   "size": "D29",
+   "weightLbFt": 0.986,
+   "weightKgM": 1.467,
+   "diaIn": 0.608,
+   "areaIn2": 0.29,
+   "minDeformIn": 0.0304
+  },
+  {
+   "size": "D30",
+   "weightLbFt": 1.02,
+   "weightKgM": 1.518,
+   "diaIn": 0.618,
+   "areaIn2": 0.3,
+   "minDeformIn": 0.0309
+  },
+  {
+   "size": "D31",
+   "weightLbFt": 1.05,
+   "weightKgM": 1.563,
+   "diaIn": 0.628,
+   "areaIn2": 0.31,
+   "minDeformIn": 0.0314
+  },
+  {
+   "size": "D45",
+   "weightLbFt": 1.53,
+   "weightKgM": 2.277,
+   "diaIn": 0.757,
+   "areaIn2": 0.45,
+   "minDeformIn": 0.0379
+  }
+ ],
+ "deformedSI": [
+  {
+   "size": "MD25",
+   "dEquiv": "D3.9",
+   "weightKgM": 0.196,
+   "weightLbFt": 0.132,
+   "diaMm": 5.64,
+   "areaMm2": 25,
+   "minDeformMm": 0.252
+  },
+  {
+   "size": "MD30",
+   "dEquiv": "D4.7",
+   "weightKgM": 0.235,
+   "weightLbFt": 0.158,
+   "diaMm": 6.18,
+   "areaMm2": 30,
+   "minDeformMm": 0.279
+  },
+  {
+   "size": "MD35",
+   "dEquiv": "D5.4",
+   "weightKgM": 0.275,
+   "weightLbFt": 0.185,
+   "diaMm": 6.68,
+   "areaMm2": 35,
+   "minDeformMm": 0.302
+  },
+  {
+   "size": "MD40",
+   "dEquiv": "D6.2",
+   "weightKgM": 0.314,
+   "weightLbFt": 0.211,
+   "diaMm": 7.14,
+   "areaMm2": 40,
+   "minDeformMm": 0.32
+  },
+  {
+   "size": "MD45",
+   "dEquiv": "D7.0",
+   "weightKgM": 0.353,
+   "weightLbFt": 0.237,
+   "diaMm": 7.57,
+   "areaMm2": 45,
+   "minDeformMm": 0.342
+  },
+  {
+   "size": "MD50",
+   "dEquiv": "D7.8",
+   "weightKgM": 0.392,
+   "weightLbFt": 0.263,
+   "diaMm": 7.98,
+   "areaMm2": 50,
+   "minDeformMm": 0.36
+  },
+  {
+   "size": "MD55",
+   "dEquiv": "D8.5",
+   "weightKgM": 0.432,
+   "weightLbFt": 0.29,
+   "diaMm": 8.37,
+   "areaMm2": 55,
+   "minDeformMm": 0.378
+  },
+  {
+   "size": "MD60",
+   "dEquiv": "D9.3",
+   "weightKgM": 0.471,
+   "weightLbFt": 0.316,
+   "diaMm": 8.74,
+   "areaMm2": 60,
+   "minDeformMm": 0.392
+  },
+  {
+   "size": "MD65",
+   "dEquiv": "D10.1",
+   "weightKgM": 0.51,
+   "weightLbFt": 0.343,
+   "diaMm": 9.1,
+   "areaMm2": 65,
+   "minDeformMm": 0.455
+  },
+  {
+   "size": "MD70",
+   "dEquiv": "D10.9",
+   "weightKgM": 0.549,
+   "weightLbFt": 0.369,
+   "diaMm": 9.44,
+   "areaMm2": 70,
+   "minDeformMm": 0.47
+  },
+  {
+   "size": "MD80",
+   "dEquiv": "D12.4",
+   "weightKgM": 0.628,
+   "weightLbFt": 0.422,
+   "diaMm": 10.1,
+   "areaMm2": 80,
+   "minDeformMm": 0.505
+  },
+  {
+   "size": "MD90",
+   "dEquiv": "D14.0",
+   "weightKgM": 0.706,
+   "weightLbFt": 0.474,
+   "diaMm": 10.7,
+   "areaMm2": 90,
+   "minDeformMm": 0.535
+  },
+  {
+   "size": "MD100",
+   "dEquiv": "D15.5",
+   "weightKgM": 0.785,
+   "weightLbFt": 0.527,
+   "diaMm": 11.3,
+   "areaMm2": 100,
+   "minDeformMm": 0.565
+  },
+  {
+   "size": "MD120",
+   "dEquiv": "D18.6",
+   "weightKgM": 0.942,
+   "weightLbFt": 0.633,
+   "diaMm": 12.4,
+   "areaMm2": 120,
+   "minDeformMm": 0.62
+  },
+  {
+   "size": "MD130",
+   "dEquiv": "D20.2",
+   "weightKgM": 1.02,
+   "weightLbFt": 0.685,
+   "diaMm": 12.9,
+   "areaMm2": 130,
+   "minDeformMm": 0.645
+  },
+  {
+   "size": "MD200",
+   "dEquiv": "D31.0",
+   "weightKgM": 1.57,
+   "weightLbFt": 1.055,
+   "diaMm": 16,
+   "areaMm2": 200,
+   "minDeformMm": 0.8
+  },
+  {
+   "size": "MD290",
+   "dEquiv": "D45.0",
+   "weightKgM": 2.28,
+   "weightLbFt": 1.532,
+   "diaMm": 19.2,
+   "areaMm2": 290,
+   "minDeformMm": 0.961
+  }
+ ]
+}

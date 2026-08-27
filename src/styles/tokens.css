@@ -160,6 +160,8 @@ td em{font-style:normal;font-size:10px;color:var(--tx-muted);margin-left:2px}
 .props tbody tr:hover{background:var(--bg-hover)}
 .note{margin:0;padding:12px 18px;font-size:11px;color:var(--tx-muted);
   border-top:1px solid var(--bd-subtle)}
+.note a{color:var(--ac-main);text-decoration:none;word-break:break-all}
+.note a:hover{text-decoration:underline}
 
 /* detail ------------------------------------------------------------- */
 .detail-head{display:flex;gap:16px;align-items:flex-start;margin-bottom:20px}

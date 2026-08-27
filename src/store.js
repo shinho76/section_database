@@ -17,7 +17,7 @@ export const BELOW_GROUPS = [
   { label: 'BUILT-UP H-SECTION', items: ['BH-1', 'BH-2', 'BH-3', 'BH-4'] },
   { label: 'PURLIN', items: ['PURLIN-CEE', 'PURLIN-ZEE'] },
   { label: 'METAL DECK', items: ['METALDECK'] },
-  { label: 'REBAR', items: ['REBAR'] },
+  { label: 'REBAR', items: ['REBAR', 'WWR'] },
 ];
 
 // Short sidebar labels for BELOW_GROUPS items whose key isn't already readable.
@@ -29,7 +29,7 @@ export const NAV_ITEM_LABEL = {
   'BH-3': 'Rolled : H+T-Bar',
   'BH-4': 'Built-up : H+T-Bar',
   'PURLIN-CEE': 'Purlin-CEE', 'PURLIN-ZEE': 'Purlin-ZEE',
-  METALDECK: 'Metal Deck', REBAR: 'Rebar',
+  METALDECK: 'Metal Deck', REBAR: 'Rebar', WWR: 'WWR (Welded Wire Reinforcement)',
 };
 
 export const DB_TYPES = new Set([

@@ -10,6 +10,7 @@ import HPlusTPanel from './components/builtup/HPlusTPanel.jsx';
 import PurlinView from './components/PurlinView.jsx';
 import MetalDeckView from './components/MetalDeckView.jsx';
 import RebarView from './components/RebarView.jsx';
+import WWRView from './components/WWRView.jsx';
 import PlatePanel from './components/PlatePanel.jsx';
 import AvailablePlateView from './components/AvailablePlateView.jsx';
 
@@ -37,6 +38,8 @@ export default function App() {
     main = <MetalDeckView />;
   } else if (activeKey === 'REBAR') {
     main = <RebarView />;
+  } else if (activeKey === 'WWR') {
+    main = <WWRView />;
   } else if (activeKey === 'PLATE') {
     main = <PlatePanel />;
   } else if (activeKey === 'PLATE-AVAILABLE') {
