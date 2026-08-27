@@ -1,5 +1,9 @@
 import data from '../data/anchorbolt.json';
 
+const MM_PER_IN = 25.4;
+const LBFT_PER_IN2 = 2.6729;
+const KG_PER_LB = 0.453592, M_PER_FT = 0.3048;
+
 export default function AnchorBoltView() {
   return (
     <>
@@ -36,6 +40,41 @@ export default function AnchorBoltView() {
         </table>
         <p className="note">{data.source}</p>
         <p className="note">{data.note}</p>
+      </div>
+
+      <div className="panel">
+        <div className="panel-head">
+          <h2>사용 가능한 직경 및 단위중량</h2>
+          <span className="tag">{data.sizes.length} sizes</span>
+        </div>
+        <table className="list">
+          <thead>
+            <tr>
+              <th>Diameter (in)</th><th className="r">Diameter (mm)</th>
+              <th className="r">Grade 36</th><th className="r">Grade 55</th><th className="r">Grade 105</th>
+              <th className="r">Unit Weight (lb/ft)</th><th className="r">Unit Weight (kg/m)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.sizes.map((s) => {
+              const lbft = LBFT_PER_IN2 * s.diaIn * s.diaIn;
+              const kgm = lbft * KG_PER_LB / M_PER_FT;
+              const has105 = s.diaIn <= 3;
+              return (
+                <tr key={s.label}>
+                  <td className="mono strong">{s.label}</td>
+                  <td className="r mono val-conv">{(s.diaIn * MM_PER_IN).toFixed(1)}</td>
+                  <td className="r mono">✓</td>
+                  <td className="r mono">✓</td>
+                  <td className={`r mono${has105 ? '' : ' not-available'}`}>{has105 ? '✓' : '—'}</td>
+                  <td className="r mono">{lbft.toFixed(3)}</td>
+                  <td className="r mono val-conv">{kgm.toFixed(3)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <p className="note">{data.sizesNote}</p>
       </div>
     </>
   );

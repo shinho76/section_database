@@ -2,6 +2,7 @@ import data from '../data/bolt.json';
 
 const KIPS_PER_KN = 0.224809;
 const KN_PER_KIPS = 1 / KIPS_PER_KN;
+const MM_PER_IN = 25.4;
 
 /** ASTM F3125 A325/A490: kips values are the AISC J3.1 native table; kN is
  * this app's conversion. */
@@ -10,7 +11,7 @@ function AstmTable({ rows }) {
     <table className="list">
       <thead>
         <tr>
-          <th>Nominal Dia.</th>
+          <th>Nominal Dia.</th><th className="r">Dia. (mm)</th>
           <th className="r">A325 Min. Pretension (kips)</th><th className="r">A325 (kN)</th>
           <th className="r">A490 Min. Pretension (kips)</th><th className="r">A490 (kN)</th>
         </tr>
@@ -19,6 +20,7 @@ function AstmTable({ rows }) {
         {rows.map((r) => (
           <tr key={r.label}>
             <td className="mono strong">{r.label}</td>
+            <td className="r mono val-conv">{(r.diaIn * MM_PER_IN).toFixed(1)}</td>
             <td className="r mono">{r.a325Kips}</td>
             <td className="r mono val-conv">{(r.a325Kips * KN_PER_KIPS).toFixed(1)}</td>
             <td className="r mono">{r.a490Kips}</td>
@@ -37,7 +39,7 @@ function KsTable({ rows }) {
     <table className="list">
       <thead>
         <tr>
-          <th>호칭 (Nominal)</th><th className="r">유효단면적 As (mm²)</th>
+          <th>호칭 (Nominal)</th><th className="r">호칭경 (in)</th><th className="r">유효단면적 As (mm²)</th>
           <th className="r">F8T 최소인장하중 (kN)</th><th className="r">F8T (kips)</th>
           <th className="r">F10T 최소인장하중 (kN)</th><th className="r">F10T (kips)</th>
         </tr>
@@ -49,6 +51,7 @@ function KsTable({ rows }) {
           return (
             <tr key={r.label}>
               <td className="mono strong">{r.label}</td>
+              <td className="r mono val-conv">{(r.diaMm / MM_PER_IN).toFixed(3)}</td>
               <td className="r mono">{as.toFixed(1)}</td>
               <td className="r mono">{f8t.toFixed(1)}</td>
               <td className="r mono val-conv">{(f8t * KIPS_PER_KN).toFixed(1)}</td>
