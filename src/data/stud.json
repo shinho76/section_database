@@ -1,0 +1,13 @@
+{
+  "source": "AWS D1.1/D1.1M (Structural Welding Code — Steel), Type B 헤드형 시어 스터드 (Headed Shear Stud Connector)",
+  "note": "모재는 ASTM A29/A108 (Grade C1010~C1020) 냉간가공 저탄소강이며, AWS D1.1 §7 기준 최소 인장강도 Fu=65ksi(448MPa), 최소 항복강도 Fy=51ksi(352MPa), 최소연신율 20%(2in 게이지)입니다. 헤드직경(≥1.5d)·헤드높이(≥0.4d)는 AWS D1.1 최소 형상비 기준의 계산값이며, 인장/항복 내력은 축부 단면적×강도로 산출한 계산값입니다. 실제 제품 치수는 제작사 카탈로그를 확인하시기 바랍니다. 합성보/합성슬래브의 전단내력(Qn)은 AISC 사양의 콘크리트 조건에 따라 별도 산정이 필요합니다.",
+  "fuKsi": 65, "fyKsi": 51, "fuMpa": 448, "fyMpa": 352,
+  "rows": [
+    { "label": "3/8\"", "diaIn": 0.375 },
+    { "label": "1/2\"", "diaIn": 0.5 },
+    { "label": "5/8\"", "diaIn": 0.625 },
+    { "label": "3/4\"", "diaIn": 0.75 },
+    { "label": "7/8\"", "diaIn": 0.875 },
+    { "label": "1\"", "diaIn": 1 }
+  ]
+}

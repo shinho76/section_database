@@ -1,0 +1,24 @@
+{
+  "source": "ASTM F1554 — Anchor Bolts, Steel, 36/55/105-ksi Yield Strength (기초-철골 접합용 앵커로드)",
+  "note": "F1554는 재질(항복·인장강도) 등급 규격이며 지름 목록 자체를 규정하지 않습니다. 지름 범위는 규격에 명시된 상용 범위이며, 실제 설계 지름·매입깊이는 AISC Design Guide 1 등 별도 설계기준에 따라 산정해야 합니다. MPa 값은 이 앱이 변환한 값입니다.",
+  "grades": [
+    {
+      "grade": "Grade 36", "color": "무도색 (uncolored)",
+      "fyKsi": 36, "fyMpa": 248,
+      "fuMinKsi": 58, "fuMaxKsi": 80, "fuMinMpa": 400, "fuMaxMpa": 552,
+      "diaRange": "1/4\" ~ 4\"", "note": "저탄소강, 가장 일반적인 등급"
+    },
+    {
+      "grade": "Grade 55", "color": "청색 (blue)",
+      "fyKsi": 55, "fyMpa": 379,
+      "fuMinKsi": 75, "fuMaxKsi": 95, "fuMinMpa": 517, "fuMaxMpa": 655,
+      "diaRange": "1/4\" ~ 4\"", "note": "중탄소강"
+    },
+    {
+      "grade": "Grade 105", "color": "적색 (red)",
+      "fyKsi": 105, "fyMpa": 724,
+      "fuMinKsi": 125, "fuMaxKsi": 150, "fuMinMpa": 862, "fuMaxMpa": 1034,
+      "diaRange": "1/4\" ~ 3\"", "note": "합금강, 고강도 앵커가 필요한 대형 기초용"
+    }
+  ]
+}

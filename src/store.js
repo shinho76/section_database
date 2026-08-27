@@ -17,6 +17,8 @@ export const BELOW_GROUPS = [
   { label: 'BUILT-UP H-SECTION', items: ['BH-1', 'BH-2', 'BH-3', 'BH-4'] },
   { label: 'PURLIN', items: ['PURLIN-CEE', 'PURLIN-ZEE'] },
   { label: 'REINFORCEMENT', items: ['REBAR', 'WWR'] },
+  { label: 'ROD BAR', items: ['RODBAR-KS', 'RODBAR-ASTM'] },
+  { label: 'FASTENERS', items: ['BOLT-ASTM', 'BOLT-KS', 'ANCHORBOLT', 'STUD'] },
 ];
 
 // Short sidebar labels for BELOW_GROUPS items whose key isn't already readable.
@@ -31,6 +33,12 @@ export const NAV_ITEM_LABEL = {
   'BH-4': 'Built-up : H+T-Bar',
   'PURLIN-CEE': 'Purlin-CEE', 'PURLIN-ZEE': 'Purlin-ZEE',
   METALDECK: 'Metal Deck', REBAR: 'Rebar', WWR: 'WWR (Welded Wire Reinforcement)',
+  'RODBAR-KS': 'Rod Bar (KS SS400)',
+  'RODBAR-ASTM': 'Rod Bar (ASTM A36)',
+  'BOLT-ASTM': 'High-Strength Bolt (ASTM F3125)',
+  'BOLT-KS': 'High-Strength Bolt (KS B 1010/2819)',
+  ANCHORBOLT: 'Anchor Bolt (ASTM F1554)',
+  STUD: 'Shear Stud (AWS D1.1)',
 };
 
 export const DB_TYPES = new Set([
