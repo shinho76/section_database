@@ -20,6 +20,20 @@ function HeaderCell({ f }) {
   );
 }
 
+/** Row-header cell for the field-per-row layout: same main/unit split as
+ * HeaderCell, but rendered inline (label · unit) since it's a row label
+ * sitting to the left of the value cells, not a two-line column head. */
+function RowLabelCell({ f }) {
+  const m = f.label.match(LABEL_RE);
+  if (!m) return <th scope="row">{f.label}</th>;
+  return (
+    <th scope="row">
+      <span className="dim-th-main">{m[1]}</span>{' '}
+      <span className="dim-th-unit">{m[2]}</span>
+    </th>
+  );
+}
+
 /** One field's IN-side cell content: thickness dropdown (if flagged) + the
  * inch input + grade badge. Shared by both the merged table and the split
  * IN/MM card layout below. */
@@ -72,29 +86,31 @@ function MmCell({ f, mm, onChangeMm }) {
   return <input type="number" step={f.thickness ? 0.1 : 1} value={v == null ? '' : +v.toFixed(1)} onChange={onType} />;
 }
 
-/** Dimension-entry table: row 1 = field names (height/width/thickness…),
- * row 2 = inch values, row 3 = mm values — editing either unit row updates
- * the other live. Thickness fields (`thickness: true`) get a standard-size
+/** Dimension-entry table, one row per field (D/Bf/Tw/Tf…) with the IN and MM
+ * values side by side in that row — editing either updates the other live.
+ * Narrower than a field-per-column layout (fixed value-column widths, no
+ * stretch to 100%), meant to sit in a compact card rather than span the
+ * full panel width. Thickness fields (`thickness: true`) get a standard-size
  * dropdown and an ASTM grade-availability hint next to the inch value.
  * `mm` is the field->mm value map; `onChangeMm(key)` returns a setter. */
 export default function BHDimTable({ fields, mm, onChangeMm }) {
   return (
-    <table className="bh-dim-table">
+    <table className="bh-dim-table bh-dim-rows">
       <thead>
         <tr>
           <th />
-          {fields.map((f) => <HeaderCell key={f.key} f={f} />)}
+          <th>IN</th>
+          <th>MM</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <th>IN</th>
-          {fields.map((f) => <td key={f.key}><InCell f={f} mm={mm} onChangeMm={onChangeMm} /></td>)}
-        </tr>
-        <tr>
-          <th>MM</th>
-          {fields.map((f) => <td key={f.key}><MmCell f={f} mm={mm} onChangeMm={onChangeMm} /></td>)}
-        </tr>
+        {fields.map((f) => (
+          <tr key={f.key}>
+            <RowLabelCell f={f} />
+            <td><InCell f={f} mm={mm} onChangeMm={onChangeMm} /></td>
+            <td><MmCell f={f} mm={mm} onChangeMm={onChangeMm} /></td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );

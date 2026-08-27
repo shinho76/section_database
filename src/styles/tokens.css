@@ -289,6 +289,27 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
 .bh-dim-table + .bh-dim-table{margin-top:14px}
 .grade-badge{display:block;font-size:15px;color:var(--ac-main);margin-top:4px;white-space:nowrap}
 
+/* field-per-row compact card layout (BH-4 custom plate input) ---------- */
+.bh-dim-group{display:flex;gap:14px;flex-wrap:wrap;padding:4px 14px 12px}
+.bh-dim-piece{flex:0 0 auto;background:var(--bg-inset);border:1px solid var(--bd-subtle);
+  border-radius:10px;padding:10px 12px}
+.bh-dim-piece-title{font-size:12px;font-weight:700;color:var(--tx-secondary);
+  text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.bh-dim-rows{width:auto}
+.bh-dim-rows thead th{font-size:11px;font-weight:700;color:var(--tx-muted);padding:4px 8px;text-align:center}
+.bh-dim-rows thead th:first-child{width:0}
+.bh-dim-rows tbody th{font-size:14px;width:auto;padding:6px 10px 6px 0}
+.bh-dim-rows .dim-th-main{display:inline}
+.bh-dim-rows .dim-th-unit{display:inline;margin-top:0}
+.bh-dim-rows td{padding:4px 6px}
+.bh-dim-rows input{width:84px;min-width:0;font-size:14px}
+.bh-dim-rows select{width:84px;font-size:12px;padding:4px 5px}
+.bh-dim-rows .grade-badge{font-size:11px}
+@media (max-width:640px){
+  .bh-dim-group{flex-direction:column}
+  .bh-dim-piece{width:100%}
+}
+
 .rolled-row{display:grid;grid-template-columns:minmax(260px,1fr) 1fr 1fr;gap:16px;align-items:start}
 @media (max-width:1100px){
   .rolled-row{grid-template-columns:1fr}

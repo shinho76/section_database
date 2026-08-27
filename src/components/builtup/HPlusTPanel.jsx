@@ -308,20 +308,22 @@ export default function HPlusTPanel({ baseKind }) {
                 상부 플레이트 포함 (선택)
               </label>
             </div>
-            {topBarEnabled && (
-              <div style={{ padding: '0 14px 10px', overflowX: 'auto' }}>
-                <BHDimTable fields={T_FIELDS} mm={topBar} onChangeMm={setTopBarField} />
+
+            <div className="bh-dim-group">
+              {topBarEnabled && (
+                <div className="bh-dim-piece">
+                  <div className="bh-dim-piece-title">상부 T-BAR</div>
+                  <BHDimTable fields={T_FIELDS} mm={topBar} onChangeMm={setTopBarField} />
+                </div>
+              )}
+              <div className="bh-dim-piece">
+                <div className="bh-dim-piece-title">중앙부 H-SHAPE</div>
+                <BHDimTable fields={H_FIELDS} mm={customH} onChangeMm={setCustomField} />
               </div>
-            )}
-
-            <div className="panel-head"><h2 style={{ fontSize: 15 }}>중앙부 H-SHAPE</h2></div>
-            <div style={{ padding: '0 14px 10px', overflowX: 'auto' }}>
-              <BHDimTable fields={H_FIELDS} mm={customH} onChangeMm={setCustomField} />
-            </div>
-
-            <div className="panel-head"><h2 style={{ fontSize: 15 }}>하부 T-BAR</h2></div>
-            <div style={{ padding: '0 14px 10px', overflowX: 'auto' }}>
-              <BHDimTable fields={T_FIELDS} mm={botBar} onChangeMm={setBotBarField} />
+              <div className="bh-dim-piece">
+                <div className="bh-dim-piece-title">하부 T-BAR</div>
+                <BHDimTable fields={T_FIELDS} mm={botBar} onChangeMm={setBotBarField} />
+              </div>
             </div>
 
             <p className="note">
