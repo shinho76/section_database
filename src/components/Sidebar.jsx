@@ -54,6 +54,18 @@ export default function Sidebar() {
           </tr>
         </thead>
         <tbody>
+          <tr>
+            <td className="nav-grid-spine" />
+            <td colSpan={2} className="nav-unit-conv-cell">
+              <a
+                className="nav-unit-conv-btn"
+                href="https://shinho76.github.io/web_calculation_03/"
+                target="_blank" rel="noopener noreferrer"
+              >
+                UNIT CONVERSION <span>↗</span>
+              </a>
+            </td>
+          </tr>
           {GRID_GROUPS.map((g) => {
             const rows = Math.max(g.aisc.length, g.ks.length);
             const oneToOne = g.ks.length === g.aisc.length;

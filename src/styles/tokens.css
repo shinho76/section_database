@@ -91,6 +91,14 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
 .nav-cell-btn.is-active{background:var(--ac-select-glow);color:var(--ac-select)}
 .nav-cell-btn.is-active em{color:var(--ac-select)}
 
+.nav-unit-conv-cell{border:1px solid var(--bd-subtle);padding:5px}
+.nav-unit-conv-btn{display:flex;align-items:center;justify-content:center;gap:6px;
+  width:100%;padding:7px 4px;border-radius:6px;cursor:pointer;text-decoration:none;
+  background:var(--ac-glow);border:1px solid var(--bd-accent);color:var(--ac-main);
+  font:800 11.5px/1 Inter,sans-serif;letter-spacing:.05em;box-sizing:border-box}
+.nav-unit-conv-btn:hover{background:var(--ac-select-glow);border-color:var(--ac-main)}
+.nav-unit-conv-btn span{font-size:11px}
+
 .nav-group{margin-bottom:10px;padding-top:10px;border-top:1px solid var(--bd-subtle)}
 .nav-group:first-child{padding-top:0;border-top:0}
 .nav-eyebrow{padding:2px 18px 8px;font-size:13px;font-weight:800;letter-spacing:.08em;
@@ -117,6 +125,10 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
 .tag{margin-left:auto;font-size:11px;padding:2px 8px;border-radius:999px;
   background:var(--bg-inset);color:var(--tx-muted);font-family:ui-monospace,monospace}
 .unit-tag{margin-left:8px;font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--ac-main)}
+
+.avail-legend{display:flex;gap:16px;flex-wrap:wrap;padding:8px 18px;
+  font-size:11px;color:var(--tx-muted);border-bottom:1px solid var(--bd-subtle)}
+.avail-legend em{font-style:normal;margin-right:4px}
 
 /* DB-native vs converted/calculated values: converted numbers use a muted
  * color and a slightly smaller size (no opacity fade, no tag) so the reader

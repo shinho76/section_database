@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useStore, TYPE_LABEL } from '../store.js';
 import { loadType } from '../lib/dataLoader.js';
 import { hasMatchPair, matchTargetType, findNearestInRows, widthHeightSimilarity } from '../lib/nearestMatch.js';
+import { nucorAvailability, AVAIL_COLOR, AVAIL_LABEL } from '../lib/nucorAvailability.js';
 import ShapeCompareModal from './ShapeCompareModal.jsx';
 
 const seriesKey = (name) => name.split(/[X×]/)[0];
@@ -62,6 +63,13 @@ export default function ShapeList() {
         <h2>{TYPE_LABEL[activeKey]}</h2>
         <span className="tag">{rows.length} shapes</span>
       </div>
+      {activeKey === 'W' && (
+        <div className="avail-legend">
+          <span><em style={{ color: AVAIL_COLOR.longlead }}>■</em> {AVAIL_LABEL.longlead}</span>
+          <span><em style={{ color: AVAIL_COLOR.impact }}>■</em> {AVAIL_LABEL.impact}</span>
+          <span><em style={{ color: AVAIL_COLOR.unlisted }}>■</em> {AVAIL_LABEL.unlisted}</span>
+        </div>
+      )}
       <table className="list">
         <thead>
           <tr>
@@ -78,9 +86,16 @@ export default function ShapeList() {
             if (sk !== lastSeries) { band = 1 - band; lastSeries = sk; }
             const aMm2 = parseFloat(s.mt.A);
             const m = matches.get(s.name);
+            const avail = nucorAvailability(activeKey, s.name);
             return (
               <tr key={`${s.name}-${i}`} onClick={() => selectShape(s)} className={`series-band-${band}`}>
-                <td className="mono strong">{s.name}</td>
+                <td
+                  className="mono strong"
+                  style={avail ? { color: AVAIL_COLOR[avail] } : undefined}
+                  title={avail ? AVAIL_LABEL[avail] : undefined}
+                >
+                  {s.name}
+                </td>
                 <td className="mono ks">{s.ks}</td>
                 {showMatch && (
                   <td className="mono ks">
