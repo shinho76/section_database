@@ -1,0 +1,74 @@
+[
+  {
+    "category": "LENGTH",
+    "baseUnit": "m",
+    "units": {
+      "m":    { "factor": 1,       "label": "m (meter)",       "precision": 4, "inputable": true },
+      "cm":   { "factor": 100,     "label": "cm (centimeter)", "precision": 2, "inputable": true },
+      "mm":   { "factor": 1000,    "label": "mm (millimeter)", "precision": 0, "inputable": true },
+      "ft-in":{ "label": "ft / in (feet-inch)", "virtual": true, "inputable": true, "precision": 4 },
+      "ft":   { "factor": 3.28084, "label": "ft (feet)",       "precision": 4, "inputable": false },
+      "in":   { "factor": 39.3701, "label": "in (inch)",       "precision": 4, "inputable": false }
+    }
+  },
+  {
+    "category": "AREA",
+    "baseUnit": "m²",
+    "units": {
+      "m²":  { "factor": 1,        "label": "m² (sq meter)",        "precision": 4, "inputable": true },
+      "cm²": { "factor": 10000,    "label": "cm² (sq centimeter)",  "precision": 0, "inputable": true },
+      "mm²": { "factor": 1000000,  "label": "mm² (sq millimeter)",  "precision": 0, "inputable": true },
+      "ft²": { "factor": 10.7639,  "label": "ft² (sq foot)",        "precision": 4, "inputable": true },
+      "in²": { "factor": 1550.003, "label": "in² (sq inch)",        "precision": 4, "inputable": true }
+    }
+  },
+  {
+    "category": "FORCE",
+    "baseUnit": "KN",
+    "units": {
+      "KN":        { "factor": 1,      "label": "kN",  "precision": 4, "inputable": true },
+      "N":         { "factor": 1000,   "label": "N",   "precision": 1, "inputable": true },
+      "kip force": { "factor": 0.2248, "label": "kip", "precision": 4, "inputable": true },
+      "lb force":  { "factor": 224.83, "label": "lb",  "precision": 2, "inputable": true }
+    }
+  },
+  {
+    "category": "STRESSES",
+    "baseUnit": "MPa",
+    "units": {
+      "MPa": { "factor": 1,     "label": "MPa (N/mm²)", "precision": 4, "inputable": true },
+      "ksi": { "factor": 0.145, "label": "ksi",         "precision": 4, "inputable": true },
+      "psi": { "factor": 145.0, "label": "psi",         "precision": 2, "inputable": true }
+    }
+  },
+  {
+    "category": "MOMENTS",
+    "baseUnit": "kN-m",
+    "units": {
+      "kN-m":   { "factor": 1,      "label": "kN-m",   "precision": 4, "inputable": true },
+      "ft-kip": { "factor": 0.7376, "label": "ft-kip", "precision": 4, "inputable": true }
+    }
+  },
+  {
+    "category": "UNIFORM LOADING (Linear)",
+    "baseUnit": "kN/m",
+    "units": {
+      "kN/m":   { "factor": 1,        "label": "kN/m",   "precision": 4, "inputable": true },
+      "kip/ft": { "factor": 0.06852,  "label": "kip/ft", "precision": 5, "inputable": true },
+      "kip/in": { "factor": 0.00571,  "label": "kip/in", "precision": 6, "inputable": true },
+      "lb/ft":  { "factor": 68.52,    "label": "lb/ft",  "precision": 3, "inputable": true },
+      "lb/in":  { "factor": 5.710,    "label": "lb/in",  "precision": 4, "inputable": true }
+    }
+  },
+  {
+    "category": "UNIFORM LOADING (Area)",
+    "baseUnit": "kN/m²",
+    "units": {
+      "kN/m²":   { "factor": 1,       "label": "kN/m²",       "precision": 4, "inputable": true },
+      "kip/ft²": { "factor": 0.02089, "label": "kip/ft²",     "precision": 5, "inputable": true },
+      "psf":     { "factor": 20.885,  "label": "psf",          "precision": 2, "inputable": true },
+      "lb/in²":  { "factor": 0.145,   "label": "lb/in² (psi)","precision": 4, "inputable": true },
+      "N/m²":    { "factor": 1000,    "label": "N/m² (Pa)",    "precision": 0, "inputable": true }
+    }
+  }
+]

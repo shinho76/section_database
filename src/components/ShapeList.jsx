@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useStore, TYPE_LABEL } from '../store.js';
 import { loadType } from '../lib/dataLoader.js';
 import { hasMatchPair, matchTargetType, findNearestInRows, widthHeightSimilarity } from '../lib/nearestMatch.js';
-import { nucorAvailability, AVAIL_COLOR, AVAIL_LABEL } from '../lib/nucorAvailability.js';
+import { nucorAvailability, AVAIL_LABEL, AVAIL_MARK } from '../lib/nucorAvailability.js';
 import ShapeCompareModal from './ShapeCompareModal.jsx';
 
 const seriesKey = (name) => name.split(/[X×]/)[0];
@@ -65,9 +65,9 @@ export default function ShapeList() {
       </div>
       {activeKey === 'W' && (
         <div className="avail-legend">
-          <span><em style={{ color: AVAIL_COLOR.longlead }}>■</em> {AVAIL_LABEL.longlead}</span>
-          <span><em style={{ color: AVAIL_COLOR.impact }}>■</em> {AVAIL_LABEL.impact}</span>
-          <span><em style={{ color: AVAIL_COLOR.unlisted }}>■</em> {AVAIL_LABEL.unlisted}</span>
+          <span><em className="avail-badge avail-longlead">{AVAIL_MARK.longlead}</em> {AVAIL_LABEL.longlead}</span>
+          <span><em className="avail-badge avail-impact">{AVAIL_MARK.impact}</em> {AVAIL_LABEL.impact}</span>
+          <span><em className="avail-badge avail-unlisted">{AVAIL_MARK.unlisted}</em> {AVAIL_LABEL.unlisted}</span>
         </div>
       )}
       <table className="list">
@@ -89,12 +89,13 @@ export default function ShapeList() {
             const avail = nucorAvailability(activeKey, s.name);
             return (
               <tr key={`${s.name}-${i}`} onClick={() => selectShape(s)} className={`series-band-${band}`}>
-                <td
-                  className="mono strong"
-                  style={avail ? { color: AVAIL_COLOR[avail] } : undefined}
-                  title={avail ? AVAIL_LABEL[avail] : undefined}
-                >
+                <td className="mono strong">
                   {s.name}
+                  {avail && (
+                    <em className={`avail-badge avail-${avail}`} title={AVAIL_LABEL[avail]}>
+                      {AVAIL_MARK[avail]}
+                    </em>
+                  )}
                 </td>
                 <td className="mono ks">{s.ks}</td>
                 {showMatch && (

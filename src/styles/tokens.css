@@ -91,13 +91,12 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
 .nav-cell-btn.is-active{background:var(--ac-select-glow);color:var(--ac-select)}
 .nav-cell-btn.is-active em{color:var(--ac-select)}
 
-.nav-unit-conv-cell{border:1px solid var(--bd-subtle);padding:5px}
 .nav-unit-conv-btn{display:flex;align-items:center;justify-content:center;gap:6px;
-  width:100%;padding:7px 4px;border-radius:6px;cursor:pointer;text-decoration:none;
+  width:calc(100% - 24px);margin:12px 12px 10px;padding:9px 4px;border-radius:8px;cursor:pointer;
   background:var(--ac-glow);border:1px solid var(--bd-accent);color:var(--ac-main);
-  font:800 11.5px/1 Inter,sans-serif;letter-spacing:.05em;box-sizing:border-box}
+  font:800 12px/1 Inter,sans-serif;letter-spacing:.05em;box-sizing:border-box}
 .nav-unit-conv-btn:hover{background:var(--ac-select-glow);border-color:var(--ac-main)}
-.nav-unit-conv-btn span{font-size:11px}
+.nav-unit-conv-btn.is-active{background:var(--ac-select-glow);border-color:var(--ac-select);color:var(--ac-select)}
 
 .nav-group{margin-bottom:10px;padding-top:10px;border-top:1px solid var(--bd-subtle)}
 .nav-group:first-child{padding-top:0;border-top:0}
@@ -126,9 +125,23 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
   background:var(--bg-inset);color:var(--tx-muted);font-family:ui-monospace,monospace}
 .unit-tag{margin-left:8px;font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--ac-main)}
 
-.avail-legend{display:flex;gap:16px;flex-wrap:wrap;padding:8px 18px;
+.avail-legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;padding:8px 18px;
   font-size:11px;color:var(--tx-muted);border-bottom:1px solid var(--bd-subtle)}
-.avail-legend em{font-style:normal;margin-right:4px}
+.avail-legend em{margin-right:6px}
+
+/* Nucor-Yamato availability badge: solid fill in the spec's literal hex +
+ * dark text, so it reads as a distinct flag on both themes — a light-gray
+ * *text color* on this app's near-white dark-theme text (or near-white
+ * light-theme background) was indistinguishable, which is why this is a
+ * filled badge rather than a color override on the label itself. The three
+ * tiers are additionally disambiguated by the reference-table's own "*"/
+ * "**"/"***" notation (AVAIL_MARK), not color alone. */
+.avail-badge{display:inline-block;font-style:normal;font-weight:800;font-size:10px;
+  line-height:1.6;padding:0 5px;margin-left:6px;border-radius:4px;color:#14161d;
+  vertical-align:middle;letter-spacing:.02em}
+.avail-badge.avail-longlead{background:#C0C0C0}
+.avail-badge.avail-impact{background:#D3D3D3}
+.avail-badge.avail-unlisted{background:#DCDCDC}
 
 /* DB-native vs converted/calculated values: converted numbers use a muted
  * color and a slightly smaller size (no opacity fade, no tag) so the reader
@@ -320,6 +333,23 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
 @media (max-width:640px){
   .bh-dim-group{flex-direction:column}
   .bh-dim-piece{width:100%}
+}
+
+/* unit conversion ------------------------------------------------------- */
+.unitconv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+  gap:16px;margin-bottom:20px}
+.unitconv-card .panel-head h2{font-size:12px;color:var(--ac-main)}
+.unitconv-fields{display:flex;flex-direction:column;gap:12px;padding:14px}
+.unitconv-field label{display:block;font-size:11px;color:var(--tx-secondary);margin-bottom:5px}
+.unitconv-field input{width:100%;box-sizing:border-box;text-align:right}
+.unitconv-field input.unitconv-readonly{color:var(--ac-main);border-color:var(--bd-accent);
+  background:var(--ac-glow);font-weight:700}
+.unitconv-ftin{display:flex;gap:6px}
+.unitconv-ftin input{width:50%;text-align:center}
+.unitconv-ftin-sub{display:flex;gap:6px;margin-top:2px}
+.unitconv-ftin-sub span{width:50%;text-align:center;font-size:10px;color:var(--tx-muted)}
+@media (max-width:900px){
+  .unitconv-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
 }
 
 .rolled-row{display:grid;grid-template-columns:minmax(260px,1fr) 1fr 1fr;gap:16px;align-items:start}

@@ -198,6 +198,18 @@ export const AVAIL_LABEL = {
   unlisted: 'Not in Nucor-Yamato Product List (March 2026)',
 };
 
+// Reference-table notation (참고표기): "*" long lead, "**" impact estimated,
+// "***" not in the product list at all. Shown as a colored badge next to the
+// label — text color alone (even the exact spec hex) reads as near-white on
+// this app's dark theme and is invisible against near-white on light theme,
+// so the marker is the real differentiator; the badge fill is a secondary
+// (and correctly literal) cue for whoever prefers scanning by color.
+export const AVAIL_MARK = {
+  longlead: '*',
+  impact: '**',
+  unlisted: '***',
+};
+
 /** Availability tier for `name` under `type`, or null if no data applies
  * (every type other than 'W', or a W-shape with no caveat). */
 export function nucorAvailability(type, name) {

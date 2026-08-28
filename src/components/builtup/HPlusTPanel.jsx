@@ -307,11 +307,11 @@ export default function HPlusTPanel({ baseKind }) {
             <div className="field-row" style={{ alignItems: 'center' }}>
               <label style={{ flex: 'none' }}>
                 <input type="checkbox" checked={topBarEnabled} onChange={(e) => setTopBarEnabled(e.target.checked)} style={{ marginRight: 8 }} />
-                상부 플레이트 포함 (선택)
+                상부 T-BAR 포함 (선택)
               </label>
               <label style={{ flex: 'none' }}>
                 <input type="checkbox" checked={botBarEnabled} onChange={(e) => setBotBarEnabled(e.target.checked)} style={{ marginRight: 8 }} />
-                하부 플레이트 포함 (선택)
+                하부 T-BAR 포함 (선택)
               </label>
             </div>
 
