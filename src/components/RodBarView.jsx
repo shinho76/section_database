@@ -71,7 +71,7 @@ export default function RodBarView({ standard }) {
   return (
     <>
       <div className="detail-head">
-        <div><h1 className="mono">Rod Bar — {isKs ? 'KS D 3503 (SS275, 구 SS400)' : 'ASTM A36'}</h1></div>
+        <div><h1 className="mono">Rod Bar — {isKs ? 'KS D 3503 (SS275)' : 'ASTM A36'}</h1></div>
       </div>
 
       <div className="panel">

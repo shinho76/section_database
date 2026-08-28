@@ -328,8 +328,9 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
 .bh-dim-rows .dim-th-unit{display:inline;margin-top:0}
 .bh-dim-rows td{padding:4px 6px}
 .bh-dim-rows input{width:84px;min-width:0;font-size:14px}
-.bh-dim-rows select{width:84px;font-size:12px;padding:4px 5px}
-.bh-dim-rows .grade-badge{font-size:11px}
+.dim-row-in-thickness{display:flex;gap:6px;align-items:center}
+.dim-row-in-thickness select{width:58px;flex:none;font-size:11px;padding:4px 3px}
+.dim-row-in-thickness input{width:70px;flex:none}
 @media (max-width:640px){
   .bh-dim-group{flex-direction:column}
   .bh-dim-piece{width:100%}

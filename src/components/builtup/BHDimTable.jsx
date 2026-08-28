@@ -86,18 +86,35 @@ function MmCell({ f, mm, onChangeMm }) {
   return <input type="number" step={f.thickness ? 0.1 : 1} value={v == null ? '' : +v.toFixed(1)} onChange={onType} />;
 }
 
-/** MM-side cell for the field-per-row layout only: mirrors InCell's exact
- * vertical stack (spacer-select, then input, then a same-height but
- * invisible badge slot for thickness fields) so the IN and MM inputs in the
- * same row land at the same y — otherwise the IN input (pushed down by its
- * select/badge) and the plain MM input (top-aligned) drift out of line. */
-function MmRowCell({ f, mm, onChangeMm }) {
+/** IN-side cell for the field-per-row layout only: thickness dropdown and
+ * inch input sit inline on one line (no stacked select-above-input, no
+ * grade badge) — every row is a single line, so it lines up with the plain
+ * MM input beside it without needing spacer hacks. */
+function InRowCell({ f, mm, onChangeMm }) {
+  const v = mm[f.key];
+  const inVal = v != null ? v * MM_TO_IN : '';
+  const onType = (e) => {
+    const raw = e.target.value;
+    if (raw === '') { onChangeMm(f.key)(null); return; }
+    const x = parseFloat(raw);
+    if (Number.isFinite(x) && x > 0) onChangeMm(f.key)(x * IN_TO_MM);
+  };
+  if (!f.thickness) {
+    return <input type="number" step={0.01} value={inVal === '' ? '' : +inVal.toFixed(1)} onChange={onType} />;
+  }
+  const selId = v != null ? (thicknesses.find((t) => Math.abs(t.thickness_mm - v) < EPS)?.id ?? '') : '';
+  const onSelect = (e) => {
+    const t = thicknesses.find((x) => String(x.id) === e.target.value);
+    if (t) onChangeMm(f.key)(t.thickness_mm);
+  };
   return (
-    <>
-      <select className="dim-select-spacer" disabled tabIndex={-1} aria-hidden="true"><option /></select>
-      <MmCell f={f} mm={mm} onChangeMm={onChangeMm} />
-      {f.thickness && <span className="grade-badge" aria-hidden="true" style={{ visibility: 'hidden' }}>&nbsp;</span>}
-    </>
+    <div className="dim-row-in-thickness">
+      <select value={selId} onChange={onSelect}>
+        <option value="">직접입력…</option>
+        {thicknesses.map((t) => <option key={t.id} value={t.id}>{t.thickness_in}"</option>)}
+      </select>
+      <input type="number" step={0.001} value={inVal === '' ? '' : +inVal.toFixed(1)} onChange={onType} />
+    </div>
   );
 }
 
@@ -106,8 +123,9 @@ function MmRowCell({ f, mm, onChangeMm }) {
  * Narrower than a field-per-column layout (fixed value-column widths, no
  * stretch to 100%), meant to sit in a compact card rather than span the
  * full panel width. Thickness fields (`thickness: true`) get a standard-size
- * dropdown and an ASTM grade-availability hint next to the inch value.
- * `mm` is the field->mm value map; `onChangeMm(key)` returns a setter. */
+ * dropdown inline with the inch input (no grade badge — this layout keeps
+ * every row to one line). `mm` is the field->mm value map; `onChangeMm(key)`
+ * returns a setter. */
 export default function BHDimTable({ fields, mm, onChangeMm }) {
   return (
     <table className="bh-dim-table bh-dim-rows">
@@ -122,8 +140,8 @@ export default function BHDimTable({ fields, mm, onChangeMm }) {
         {fields.map((f) => (
           <tr key={f.key}>
             <RowLabelCell f={f} />
-            <td><InCell f={f} mm={mm} onChangeMm={onChangeMm} /></td>
-            <td><MmRowCell f={f} mm={mm} onChangeMm={onChangeMm} /></td>
+            <td><InRowCell f={f} mm={mm} onChangeMm={onChangeMm} /></td>
+            <td><MmCell f={f} mm={mm} onChangeMm={onChangeMm} /></td>
           </tr>
         ))}
       </tbody>
