@@ -128,6 +128,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
 .avail-legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;padding:8px 18px;
   font-size:11px;color:var(--tx-muted);border-bottom:1px solid var(--bd-subtle)}
 .avail-legend em{margin-right:6px}
+.avail-legend-prefix{font-weight:700;color:var(--tx-secondary)}
 .avail-filter{display:inline-flex;align-items:center;gap:0;cursor:pointer;user-select:none}
 .avail-filter input{margin-right:8px;accent-color:var(--ac-main);cursor:pointer}
 
@@ -322,7 +323,16 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
   border-radius:10px;padding:10px 12px}
 .bh-dim-piece-title{font-size:12px;font-weight:700;color:var(--tx-secondary);
   text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
-.height-override{max-width:260px;margin:0 14px 12px}
+
+/* Rolled H+T-Bar panel: shrink the Type select so the search box and the
+ * inline T-height override fit on the same row without overflowing. */
+.field-row .t-type-col{flex:0 0 72px;min-width:0}
+.field-row .t-search-col{flex:1 1 130px;min-width:100px}
+.field-row .t-height-col{flex:0 0 auto;min-width:0}
+.t-height-mini{display:flex;gap:4px}
+.t-height-mini .unit-input{width:58px}
+.t-height-mini input{width:100%;min-width:0;font-size:11px;padding:4px 20px 4px 6px}
+.t-height-mini .unit-suffix{right:5px;font-size:9px}
 .bh-dim-rows{width:auto}
 .bh-dim-rows thead th{font-size:11px;font-weight:700;color:var(--tx-muted);padding:4px 8px;text-align:center}
 .bh-dim-rows thead th:first-child{width:0}

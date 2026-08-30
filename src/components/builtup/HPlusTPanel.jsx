@@ -28,7 +28,6 @@ const T_FIELDS = [
   { key: 'tw', label: 'T Tw (두께)', thickness: true },
   { key: 'tf', label: 'T Tf (두께)', thickness: true },
 ];
-const T_HEIGHT_OVERRIDE_FIELD = [{ key: 'h', label: 'T 높이 (직접입력, 선택)' }];
 
 /** Section properties for a T pulled straight from the database. AISC WT/MT/ST
  * rows carry real Ix/Iy/y (distance from flange face to centroid); KST rows
@@ -51,6 +50,43 @@ function tPropsFromDbShape(t, overrideDIn) {
   }
   const geo = manualTProps({ d, bf, tw, tf });
   return { ...geo, A: overrideDIn == null ? (A || geo.A) : geo.A, W: overrideDIn == null ? (W || geo.W) : geo.W, d, bf, tw, tf };
+}
+
+/** Compact IN/MM-synced pair for the T-bar height override, sized to sit
+ * inline next to the shape search box (unlike BHDimTable's full card, which
+ * is too wide to fit alongside the Type select + search combo on one row). */
+function HeightOverrideMini({ mm, onChange, placeholderMm }) {
+  const inVal = mm != null ? mm * MM_TO_IN : '';
+  const onTypeIn = (e) => {
+    const raw = e.target.value;
+    if (raw === '') { onChange(null); return; }
+    const x = parseFloat(raw);
+    if (Number.isFinite(x) && x > 0) onChange(x * IN_TO_MM);
+  };
+  const onTypeMm = (e) => {
+    const raw = e.target.value;
+    if (raw === '') { onChange(null); return; }
+    const x = parseFloat(raw);
+    if (Number.isFinite(x) && x > 0) onChange(x);
+  };
+  return (
+    <span className="t-height-mini">
+      <span className="unit-input">
+        <input
+          type="number" step={0.1} placeholder={placeholderMm ? (placeholderMm * MM_TO_IN).toFixed(1) : ''}
+          value={inVal === '' ? '' : +inVal.toFixed(1)} onChange={onTypeIn}
+        />
+        <span className="unit-suffix">in</span>
+      </span>
+      <span className="unit-input">
+        <input
+          type="number" step={1} placeholder={placeholderMm ? placeholderMm.toFixed(0) : ''}
+          value={mm == null ? '' : +mm.toFixed(1)} onChange={onTypeMm}
+        />
+        <span className="unit-suffix">mm</span>
+      </span>
+    </span>
+  );
 }
 
 /** Rolled-shape flange/web fillet radius for the cross-section drawing. KSH
@@ -91,15 +127,9 @@ export default function HPlusTPanel({ baseKind }) {
   const [botBarEnabled, setBotBarEnabled] = useState(true);
 
   // Rolled T-bars (baseKind 'db') are field-trimmed from a catalog stem
-  // height, so let the user override it — `{ h: null }` means "use the
-  // catalog value". Uses the same mm-keyed-object shape as customH/botBar/
-  // topBar so it can go through BHDimTable's own IN/MM-synced inputs.
-  const [botHeightOverride, setBotHeightOverride] = useState({ h: null });
-  const [topHeightOverride, setTopHeightOverride] = useState({ h: null });
-  const setBotHeightField = (field) => (v) => setBotHeightOverride((m) => ({ ...m, [field]: v }));
-  const setTopHeightField = (field) => (v) => setTopHeightOverride((m) => ({ ...m, [field]: v }));
-  const botHeightOverrideMm = botHeightOverride.h;
-  const topHeightOverrideMm = topHeightOverride.h;
+  // height, so let the user override it — null means "use the catalog value".
+  const [botHeightOverrideMm, setBotHeightOverrideMm] = useState(null);
+  const [topHeightOverrideMm, setTopHeightOverrideMm] = useState(null);
 
   const setCustomField = (field) => (v) => setCustomH((m) => ({ ...m, [field]: v }));
   const setBotBarField = (field) => (v) => setBotBar((m) => ({ ...m, [field]: v }));
@@ -112,11 +142,11 @@ export default function HPlusTPanel({ baseKind }) {
   // Delete buttons next to each selected shape: clear the selection and force
   // the search box to remount (via the gen key) so its displayed text resets.
   const clearHShape = () => { setHShape(null); setHGen((g) => g + 1); };
-  const clearBotShape = () => { setBotShape(null); setBotGen((g) => g + 1); setBotHeightOverride({ h: null }); };
-  const clearTopShape = () => { setTopShape(null); setTopGen((g) => g + 1); setTopHeightOverride({ h: null }); };
+  const clearBotShape = () => { setBotShape(null); setBotGen((g) => g + 1); setBotHeightOverrideMm(null); };
+  const clearTopShape = () => { setTopShape(null); setTopGen((g) => g + 1); setTopHeightOverrideMm(null); };
 
-  const onBotShapeSelect = (s) => { setBotShape(s); setBotHeightOverride({ h: null }); };
-  const onTopShapeSelect = (s) => { setTopShape(s); setTopHeightOverride({ h: null }); };
+  const onBotShapeSelect = (s) => { setBotShape(s); setBotHeightOverrideMm(null); };
+  const onTopShapeSelect = (s) => { setTopShape(s); setTopHeightOverrideMm(null); };
 
   // Pre-select a representative H+bottom-T pair on first load (baseKind='db')
   // so the panel shows a real section immediately instead of an empty state.
@@ -248,23 +278,23 @@ export default function HPlusTPanel({ baseKind }) {
           <div className="panel panel-combo">
             <div className="panel-head"><h2>상부 · 중앙부 · 하부 형강 선택</h2></div>
             <div className="field-row">
-              <label>T Type (상부, 선택)
+              <label className="t-type-col">T Type (상부, 선택)
                 <select value={topType} onChange={(e) => onTopTypeChange(e.target.value)}>
                   {T_TYPES.map((t) => <option key={t} value={t}>{displayType(t)}</option>)}
                 </select>
               </label>
-              <label>상부 T-BAR (검색)
+              <label className="t-search-col">상부 T-BAR (검색)
                 <div className="combo-with-delete">
                   <ShapeAutocomplete key={`${topType}-${topGen}`} type={topType} onSelect={onTopShapeSelect} initialName={topShape?.name} placeholder={`${topType} 검색… (선택 안 해도 됨)`} />
                   {topShape && <button type="button" className="combo-delete" title="상부 T-BAR 삭제" onClick={clearTopShape}>×</button>}
                 </div>
               </label>
+              {topShape && (
+                <label className="t-height-col">T 높이 (선택)
+                  <HeightOverrideMini mm={topHeightOverrideMm} onChange={setTopHeightOverrideMm} placeholderMm={parseFloat(topShape.mt.d)} />
+                </label>
+              )}
             </div>
-            {topShape && (
-              <div className="bh-dim-piece height-override">
-                <BHDimTable fields={T_HEIGHT_OVERRIDE_FIELD} mm={topHeightOverride} onChangeMm={setTopHeightField} />
-              </div>
-            )}
             <div className="field-row">
               <label>H Type (중앙부, 선택)
                 <select value={hType} onChange={(e) => onHTypeChange(e.target.value)}>
@@ -279,23 +309,23 @@ export default function HPlusTPanel({ baseKind }) {
               </label>
             </div>
             <div className="field-row">
-              <label>T Type (하부, 선택)
+              <label className="t-type-col">T Type (하부, 선택)
                 <select value={botType} onChange={(e) => onBotTypeChange(e.target.value)}>
                   {T_TYPES.map((t) => <option key={t} value={t}>{displayType(t)}</option>)}
                 </select>
               </label>
-              <label>하부 T-BAR (검색)
+              <label className="t-search-col">하부 T-BAR (검색)
                 <div className="combo-with-delete">
                   <ShapeAutocomplete key={`${botType}-${botGen}`} type={botType} onSelect={onBotShapeSelect} initialName={botShape?.name} placeholder={`${botType} 검색… (선택 안 해도 됨)`} />
                   {botShape && <button type="button" className="combo-delete" title="하부 T-BAR 삭제" onClick={clearBotShape}>×</button>}
                 </div>
               </label>
+              {botShape && (
+                <label className="t-height-col">T 높이 (선택)
+                  <HeightOverrideMini mm={botHeightOverrideMm} onChange={setBotHeightOverrideMm} placeholderMm={parseFloat(botShape.mt.d)} />
+                </label>
+              )}
             </div>
-            {botShape && (
-              <div className="bh-dim-piece height-override">
-                <BHDimTable fields={T_HEIGHT_OVERRIDE_FIELD} mm={botHeightOverride} onChangeMm={setBotHeightField} />
-              </div>
-            )}
             <p className="note">
               상부·중앙부·하부 모두 선택하지 않아도 됩니다 — 선택한 부재만으로 합성 단면을 계산합니다 (하나 이상 필요).
               하부 T-BAR는 위쪽 부재의 하부 플랜지(또는 바로 위 부재)에, 상부 T-BAR는 아래쪽 부재의 상부 플랜지(또는 바로 아래 부재)에 스템을 맞대어 용접되는 것으로 가정합니다.

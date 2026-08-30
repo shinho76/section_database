@@ -13,9 +13,10 @@ export default function ShapeList() {
   const [loading, setLoading] = useState(true);
   const [matches, setMatches] = useState(new Map()); // name -> { type, shape }
   const [compare, setCompare] = useState(null); // { row, match } while the compare modal is open
-  // Nucor-Yamato availability filter: checked = shown. All on by default so
-  // the initial list is unchanged from before the filter existed.
-  const [availFilter, setAvailFilter] = useState({ longlead: true, impact: true, unlisted: true });
+  // Nucor-Yamato availability filter: checked = shown. All off by default,
+  // so W-shapes with any availability caveat are hidden until the user
+  // opts back in to that tier.
+  const [availFilter, setAvailFilter] = useState({ longlead: false, impact: false, unlisted: false });
 
   useEffect(() => {
     let cancelled = false;
@@ -74,6 +75,7 @@ export default function ShapeList() {
       </div>
       {activeKey === 'W' && (
         <div className="avail-legend">
+          <span className="avail-legend-prefix">Material Availability: </span>
           {[
             ['longlead', 'Long lead'],
             ['impact', 'Impact estimated'],
