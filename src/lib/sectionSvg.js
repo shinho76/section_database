@@ -194,36 +194,38 @@ export function drawShapeSVG(s, u) {
     const totalW = t === '2L' ? lw * 2 + Math.max(6, sx(0.375)) : lw;
     const x0 = cx - totalW / 2, y0 = cy - lh / 2;
     // Heel fillet (R1) at the inside corner where the two legs meet, and toe
-    // fillet (R2) rounding each leg's free-end outer corner — KSL only, per
-    // filletIn/toeIn above (AISC L has neither tabulated, so both are 0 and
-    // every corner stays sharp, same as before).
+    // fillet (R2) rounding each leg's free-end edge — KSL only, per
+    // filletIn/toeIn above (AISC L has neither tabulated: there is no
+    // standardized imperial toe/fillet radius, mill tolerances vary run to
+    // run, so both stay 0 and every corner stays sharp rather than guessing).
+    // R2 rounds BOTH corners of each leg's free-end edge (not just the outer
+    // one) — a leg tip is a short th-wide edge, and reference drawings round
+    // it on both sides, like a rounded-off tab end.
     const rc = Math.max(0, Math.min(sx(filletIn('t')), th - 1, Math.min(lh, lw) - th - 1));
-    const rc2 = Math.max(0, Math.min(sx(toeIn()), th - 1));
-    // 6-vertex L outline, absolute coordinates, walked clockwise from the
-    // vertical leg's outer tip corner: tip1(outer,R2) -> tip1(inner,sharp)
-    // -> heel(concave,R1) -> tip2(inner,sharp) -> tip2(outer,R2) -> outer
-    // corner(sharp) -> back to tip1(outer). R1v/R2v collapse to 0 when the
-    // radius doesn't render, which degenerates every arc below into a
+    const rc2 = Math.max(0, Math.min(sx(toeIn()), th / 2 - 1));
+    // 6-vertex L outline, absolute coordinates, walked clockwise from just
+    // before the vertical leg's outer tip corner: tip1-outer(R2) ->
+    // tip1-inner(R2) -> heel(concave,R1) -> tip2-inner(R2) -> tip2-outer(R2)
+    // -> outer heel corner(sharp) -> back to start. R1v/R2v collapse to 0
+    // when the radius doesn't render, degenerating every arc into a
     // zero-length line — i.e. the plain sharp-cornered outline, unchanged
-    // from before this fillet support existed.
+    // from before fillet support existed.
     const one = (ox, flip) => {
       const R1v = rc > 0.75 ? rc : 0, R2v = rc2 > 0.75 ? rc2 : 0;
       const u = flip ? -1 : 1;
       const X = (dx) => ox + u * dx;
       const Y = (dy) => y0 + dy;
       const sweepRoot = flip ? 1 : 0, sweepToe = flip ? 0 : 1;
+      const toe = (x, y) => R2v > 0 ? `A${R2v},${R2v} 0 0,${sweepToe} ${X(x)},${Y(y)}` : `L${X(x)},${Y(y)}`;
       const rootSeg = R1v > 0
         ? `A${R1v},${R1v} 0 0,${sweepRoot} ${X(th + R1v)},${Y(lh - th)}`
         : `L${X(th)},${Y(lh - th)}`;
-      const toeSeg1 = R2v > 0
-        ? `A${R2v},${R2v} 0 0,${sweepToe} ${X(lw - R2v)},${Y(lh)}`
-        : `L${X(lw)},${Y(lh)}`;
-      const toeSeg2 = R2v > 0
-        ? `A${R2v},${R2v} 0 0,${sweepToe} ${X(R2v)},${Y(0)}`
-        : `L${X(0)},${Y(0)}`;
-      return `M${X(R2v)},${Y(0)} L${X(th)},${Y(0)} L${X(th)},${Y(lh - th - R1v)} ${rootSeg}
-        L${X(lw)},${Y(lh - th)} L${X(lw)},${Y(lh - R2v)} ${toeSeg1}
-        L${X(0)},${Y(lh)} L${X(0)},${Y(R2v)} ${toeSeg2} Z`;
+      return `M${X(0)},${Y(R2v)} ${toe(R2v, 0)}
+        L${X(th - R2v)},${Y(0)} ${toe(th, R2v)}
+        L${X(th)},${Y(lh - th - R1v)} ${rootSeg}
+        L${X(lw - R2v)},${Y(lh - th)} ${toe(lw, lh - th + R2v)}
+        L${X(lw)},${Y(lh - R2v)} ${toe(lw - R2v, lh)}
+        L${X(0)},${Y(lh)} Z`;
     };
     if (t === '2L') {
       const gap = Math.max(6, sx(0.375));
