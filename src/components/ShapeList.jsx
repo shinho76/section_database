@@ -13,6 +13,9 @@ export default function ShapeList() {
   const [loading, setLoading] = useState(true);
   const [matches, setMatches] = useState(new Map()); // name -> { type, shape }
   const [compare, setCompare] = useState(null); // { row, match } while the compare modal is open
+  // Nucor-Yamato availability filter: checked = shown. All on by default so
+  // the initial list is unchanged from before the filter existed.
+  const [availFilter, setAvailFilter] = useState({ longlead: true, impact: true, unlisted: true });
 
   useEffect(() => {
     let cancelled = false;
@@ -54,6 +57,12 @@ export default function ShapeList() {
 
   const isKs = activeKey.startsWith('KS');
   const showMatch = hasMatchPair(activeKey);
+  const visibleRows = activeKey === 'W'
+    ? rows.filter((s) => {
+        const avail = nucorAvailability(activeKey, s.name);
+        return !avail || availFilter[avail];
+      })
+    : rows;
   let lastSeries = null;
   let band = 0;
 
@@ -61,13 +70,24 @@ export default function ShapeList() {
     <div className="panel">
       <div className="panel-head">
         <h2>{TYPE_LABEL[activeKey]}</h2>
-        <span className="tag">{rows.length} shapes</span>
+        <span className="tag">{visibleRows.length} shapes</span>
       </div>
       {activeKey === 'W' && (
         <div className="avail-legend">
-          <span><em className="avail-badge avail-longlead">{AVAIL_MARK.longlead}</em> {AVAIL_LABEL.longlead}</span>
-          <span><em className="avail-badge avail-impact">{AVAIL_MARK.impact}</em> {AVAIL_LABEL.impact}</span>
-          <span><em className="avail-badge avail-unlisted">{AVAIL_MARK.unlisted}</em> {AVAIL_LABEL.unlisted}</span>
+          {[
+            ['longlead', 'Long lead'],
+            ['impact', 'Impact estimated'],
+            ['unlisted', 'Not in Product List'],
+          ].map(([key, text]) => (
+            <label key={key} className="avail-filter" title={AVAIL_LABEL[key]}>
+              <input
+                type="checkbox"
+                checked={availFilter[key]}
+                onChange={(e) => setAvailFilter((f) => ({ ...f, [key]: e.target.checked }))}
+              />
+              <em className={`avail-badge avail-${key}`}>{AVAIL_MARK[key]}</em> {text}
+            </label>
+          ))}
         </div>
       )}
       <table className="list">
@@ -81,7 +101,7 @@ export default function ShapeList() {
           </tr>
         </thead>
         <tbody>
-          {rows.map((s, i) => {
+          {visibleRows.map((s, i) => {
             const sk = seriesKey(s.name);
             if (sk !== lastSeries) { band = 1 - band; lastSeries = sk; }
             const aMm2 = parseFloat(s.mt.A);

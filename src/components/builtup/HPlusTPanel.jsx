@@ -34,15 +34,22 @@ const T_FIELDS = [
  * only carry W/A, so its geometry (and therefore Ix/Iy/centroid) is derived
  * from d/bf/tw/tf via the same formula used for the fully-custom T-bar - the
  * real tabulated W/A are kept over the formula's estimate either way. */
-function tPropsFromDbShape(t) {
-  const d = parseFloat(t.us.d), bf = parseFloat(t.us.bf), tw = parseFloat(t.us.tw), tf = parseFloat(t.us.tf);
+/** `overrideDIn`, when given, is a field-trimmed stem height (in) that
+ * replaces the catalog `d` — since trimming the stem changes the cross-
+ * section, the tabulated A/Ix/Iy/W no longer apply and are recomputed
+ * geometrically via manualTProps instead (same formula already used for
+ * fully-custom T-bars below). Fillet radius is untouched: trimming happens
+ * at the free tip of the stem, not at the flange-web root. */
+function tPropsFromDbShape(t, overrideDIn) {
+  const dCat = parseFloat(t.us.d), bf = parseFloat(t.us.bf), tw = parseFloat(t.us.tw), tf = parseFloat(t.us.tf);
   const A = parseFloat(t.us.A), W = parseFloat(t.us.W);
-  if (t.us.Ix !== undefined && t.us.y !== undefined) {
+  const d = overrideDIn != null ? overrideDIn : dCat;
+  if (overrideDIn == null && t.us.Ix !== undefined && t.us.y !== undefined) {
     const y = parseFloat(t.us.y);
     return { A, Ix: parseFloat(t.us.Ix), Iy: parseFloat(t.us.Iy), W, d, bf, tw, tf, yTopExtent: y, yBotExtent: d - y };
   }
   const geo = manualTProps({ d, bf, tw, tf });
-  return { ...geo, A: A || geo.A, W: W || geo.W, d, bf, tw, tf };
+  return { ...geo, A: overrideDIn == null ? (A || geo.A) : geo.A, W: overrideDIn == null ? (W || geo.W) : geo.W, d, bf, tw, tf };
 }
 
 /** Rolled-shape flange/web fillet radius for the cross-section drawing. KSH
@@ -82,6 +89,13 @@ export default function HPlusTPanel({ baseKind }) {
   const [topBarEnabled, setTopBarEnabled] = useState(false);
   const [botBarEnabled, setBotBarEnabled] = useState(true);
 
+  // Rolled T-bars (baseKind 'db') are field-trimmed from a catalog stem
+  // height, so let the user override it — '' means "use the catalog value".
+  const [botHeightOverride, setBotHeightOverride] = useState('');
+  const [topHeightOverride, setTopHeightOverride] = useState('');
+  const botHeightOverrideMm = botHeightOverride !== '' && parseFloat(botHeightOverride) > 0 ? parseFloat(botHeightOverride) : null;
+  const topHeightOverrideMm = topHeightOverride !== '' && parseFloat(topHeightOverride) > 0 ? parseFloat(topHeightOverride) : null;
+
   const setCustomField = (field) => (v) => setCustomH((m) => ({ ...m, [field]: v }));
   const setBotBarField = (field) => (v) => setBotBar((m) => ({ ...m, [field]: v }));
   const setTopBarField = (field) => (v) => setTopBar((m) => ({ ...m, [field]: v }));
@@ -93,8 +107,11 @@ export default function HPlusTPanel({ baseKind }) {
   // Delete buttons next to each selected shape: clear the selection and force
   // the search box to remount (via the gen key) so its displayed text resets.
   const clearHShape = () => { setHShape(null); setHGen((g) => g + 1); };
-  const clearBotShape = () => { setBotShape(null); setBotGen((g) => g + 1); };
-  const clearTopShape = () => { setTopShape(null); setTopGen((g) => g + 1); };
+  const clearBotShape = () => { setBotShape(null); setBotGen((g) => g + 1); setBotHeightOverride(''); };
+  const clearTopShape = () => { setTopShape(null); setTopGen((g) => g + 1); setTopHeightOverride(''); };
+
+  const onBotShapeSelect = (s) => { setBotShape(s); setBotHeightOverride(''); };
+  const onTopShapeSelect = (s) => { setTopShape(s); setTopHeightOverride(''); };
 
   // Pre-select a representative H+bottom-T pair on first load (baseKind='db')
   // so the panel shows a real section immediately instead of an empty state.
@@ -147,35 +164,35 @@ export default function HPlusTPanel({ baseKind }) {
 
   // --- 하부 (db: optional via search selection, custom: optional via checkbox) --
   const botPropsIn = useMemo(() => {
-    if (baseKind === 'db') return botShape ? tPropsFromDbShape(botShape) : null;
+    if (baseKind === 'db') return botShape ? tPropsFromDbShape(botShape, botHeightOverrideMm != null ? botHeightOverrideMm * MM_TO_IN : null) : null;
     if (!botBarEnabled) return null;
     const dims = { d: botBar.d * MM_TO_IN, bf: botBar.bf * MM_TO_IN, tw: botBar.tw * MM_TO_IN, tf: botBar.tf * MM_TO_IN };
     const valid = dims.d > dims.tf && dims.bf > dims.tw && dims.d > 0 && dims.bf > 0 && dims.tw > 0 && dims.tf > 0;
     return valid ? manualTProps(dims) : null;
-  }, [baseKind, botShape, botBar, botBarEnabled]);
+  }, [baseKind, botShape, botBar, botBarEnabled, botHeightOverrideMm]);
 
   const botDimsIn = botPropsIn
     ? { d: botPropsIn.d, bf: botPropsIn.bf, tw: botPropsIn.tw, tf: botPropsIn.tf, r: baseKind === 'db' ? filletR(botShape.us) : 0 }
     : null;
   const botDimsMm = baseKind === 'db'
-    ? (botShape ? { d: parseFloat(botShape.mt.d), bf: parseFloat(botShape.mt.bf), tw: parseFloat(botShape.mt.tw), tf: parseFloat(botShape.mt.tf), r: filletR(botShape.mt) } : null)
+    ? (botShape ? { d: botHeightOverrideMm ?? parseFloat(botShape.mt.d), bf: parseFloat(botShape.mt.bf), tw: parseFloat(botShape.mt.tw), tf: parseFloat(botShape.mt.tf), r: filletR(botShape.mt) } : null)
     : (botPropsIn ? { ...botBar, r: 0 } : null);
 
   // --- 상부 (optional) -----------------------------------------------------
   const topActive = baseKind === 'db' ? !!topShape : topBarEnabled;
   const topPropsIn = useMemo(() => {
     if (!topActive) return null;
-    if (baseKind === 'db') return topShape ? tPropsFromDbShape(topShape) : null;
+    if (baseKind === 'db') return topShape ? tPropsFromDbShape(topShape, topHeightOverrideMm != null ? topHeightOverrideMm * MM_TO_IN : null) : null;
     const dims = { d: topBar.d * MM_TO_IN, bf: topBar.bf * MM_TO_IN, tw: topBar.tw * MM_TO_IN, tf: topBar.tf * MM_TO_IN };
     const valid = dims.d > dims.tf && dims.bf > dims.tw && dims.d > 0 && dims.bf > 0 && dims.tw > 0 && dims.tf > 0;
     return valid ? manualTProps(dims) : null;
-  }, [baseKind, topActive, topShape, topBar]);
+  }, [baseKind, topActive, topShape, topBar, topHeightOverrideMm]);
 
   const topDimsIn = topPropsIn
     ? { d: topPropsIn.d, bf: topPropsIn.bf, tw: topPropsIn.tw, tf: topPropsIn.tf, r: baseKind === 'db' ? filletR(topShape.us) : 0 }
     : null;
   const topDimsMm = baseKind === 'db'
-    ? (topActive && topShape ? { d: parseFloat(topShape.mt.d), bf: parseFloat(topShape.mt.bf), tw: parseFloat(topShape.mt.tw), tf: parseFloat(topShape.mt.tf), r: filletR(topShape.mt) } : null)
+    ? (topActive && topShape ? { d: topHeightOverrideMm ?? parseFloat(topShape.mt.d), bf: parseFloat(topShape.mt.bf), tw: parseFloat(topShape.mt.tw), tf: parseFloat(topShape.mt.tf), r: filletR(topShape.mt) } : null)
     : (topPropsIn ? { ...topBar, r: 0 } : null);
 
   // --- composite: any subset of 상부/중앙부/하부, stacked top-to-bottom -----
@@ -233,10 +250,21 @@ export default function HPlusTPanel({ baseKind }) {
               </label>
               <label>상부 T-BAR (검색)
                 <div className="combo-with-delete">
-                  <ShapeAutocomplete key={`${topType}-${topGen}`} type={topType} onSelect={setTopShape} initialName={topShape?.name} placeholder={`${topType} 검색… (선택 안 해도 됨)`} />
+                  <ShapeAutocomplete key={`${topType}-${topGen}`} type={topType} onSelect={onTopShapeSelect} initialName={topShape?.name} placeholder={`${topType} 검색… (선택 안 해도 됨)`} />
                   {topShape && <button type="button" className="combo-delete" title="상부 T-BAR 삭제" onClick={clearTopShape}>×</button>}
                 </div>
               </label>
+              {topShape && (
+                <label>T 높이 직접입력 (mm, 선택)
+                  <span className="unit-input">
+                    <input
+                      type="number" placeholder={topShape.mt.d} value={topHeightOverride}
+                      onChange={(e) => setTopHeightOverride(e.target.value)}
+                    />
+                    <span className="unit-suffix">mm</span>
+                  </span>
+                </label>
+              )}
             </div>
             <div className="field-row">
               <label>H Type (중앙부, 선택)
@@ -259,14 +287,26 @@ export default function HPlusTPanel({ baseKind }) {
               </label>
               <label>하부 T-BAR (검색)
                 <div className="combo-with-delete">
-                  <ShapeAutocomplete key={`${botType}-${botGen}`} type={botType} onSelect={setBotShape} initialName={botShape?.name} placeholder={`${botType} 검색… (선택 안 해도 됨)`} />
+                  <ShapeAutocomplete key={`${botType}-${botGen}`} type={botType} onSelect={onBotShapeSelect} initialName={botShape?.name} placeholder={`${botType} 검색… (선택 안 해도 됨)`} />
                   {botShape && <button type="button" className="combo-delete" title="하부 T-BAR 삭제" onClick={clearBotShape}>×</button>}
                 </div>
               </label>
+              {botShape && (
+                <label>T 높이 직접입력 (mm, 선택)
+                  <span className="unit-input">
+                    <input
+                      type="number" placeholder={botShape.mt.d} value={botHeightOverride}
+                      onChange={(e) => setBotHeightOverride(e.target.value)}
+                    />
+                    <span className="unit-suffix">mm</span>
+                  </span>
+                </label>
+              )}
             </div>
             <p className="note">
               상부·중앙부·하부 모두 선택하지 않아도 됩니다 — 선택한 부재만으로 합성 단면을 계산합니다 (하나 이상 필요).
               하부 T-BAR는 위쪽 부재의 하부 플랜지(또는 바로 위 부재)에, 상부 T-BAR는 아래쪽 부재의 상부 플랜지(또는 바로 아래 부재)에 스템을 맞대어 용접되는 것으로 가정합니다.
+              T 높이를 직접입력하면(현장 절단 등으로 스템이 카탈로그값과 다른 경우) 필렛(R)은 그대로 유지되고 단면적·관성모멘트는 절단된 형상 그대로 재계산됩니다.
             </p>
           </div>
 

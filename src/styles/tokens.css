@@ -128,6 +128,8 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
 .avail-legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;padding:8px 18px;
   font-size:11px;color:var(--tx-muted);border-bottom:1px solid var(--bd-subtle)}
 .avail-legend em{margin-right:6px}
+.avail-filter{display:inline-flex;align-items:center;gap:0;cursor:pointer;user-select:none}
+.avail-filter input{margin-right:8px;accent-color:var(--ac-main);cursor:pointer}
 
 /* Nucor-Yamato availability badge: solid fill in the spec's literal hex +
  * dark text, so it reads as a distinct flag on both themes — a light-gray
@@ -331,6 +333,15 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
 .dim-row-in-thickness{display:flex;gap:6px;align-items:center}
 .dim-row-in-thickness select{width:58px;flex:none;font-size:11px;padding:4px 3px}
 .dim-row-in-thickness input{width:70px;flex:none}
+
+/* Unit suffix shown inside a dimension input (e.g. "0.9 in") so the field's
+ * unit is visible without reading the column header — see BHDimTable.jsx. */
+.unit-input{position:relative;display:inline-block;width:100%}
+.unit-input input{padding-right:26px}
+.unit-input .unit-suffix{position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  font-size:11px;color:var(--tx-muted);pointer-events:none}
+.unit-input-compact{width:70px;flex:none}
+.unit-input-compact input{width:100%}
 @media (max-width:640px){
   .bh-dim-group{flex-direction:column}
   .bh-dim-piece{width:100%}

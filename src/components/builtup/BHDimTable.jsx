@@ -65,10 +65,13 @@ function InCell({ f, mm, onChangeMm }) {
         // thickness field's input, which sits below a real select.
         <select className="dim-select-spacer" disabled tabIndex={-1} aria-hidden="true"><option /></select>
       )}
-      <input
-        type="number" step={f.thickness ? 0.001 : 0.01}
-        value={inVal === '' ? '' : +inVal.toFixed(1)} onChange={onType}
-      />
+      <span className="unit-input">
+        <input
+          type="number" step={f.thickness ? 0.001 : 0.01}
+          value={inVal === '' ? '' : +inVal.toFixed(1)} onChange={onType}
+        />
+        <span className="unit-suffix">in</span>
+      </span>
       {f.thickness && inVal !== '' && <span className="grade-badge">{gradeLabel(inVal)}</span>}
     </>
   );
@@ -83,7 +86,12 @@ function MmCell({ f, mm, onChangeMm }) {
     const x = parseFloat(raw);
     if (Number.isFinite(x) && x > 0) onChangeMm(f.key)(x);
   };
-  return <input type="number" step={f.thickness ? 0.1 : 1} value={v == null ? '' : +v.toFixed(1)} onChange={onType} />;
+  return (
+    <span className="unit-input">
+      <input type="number" step={f.thickness ? 0.1 : 1} value={v == null ? '' : +v.toFixed(1)} onChange={onType} />
+      <span className="unit-suffix">mm</span>
+    </span>
+  );
 }
 
 /** IN-side cell for the field-per-row layout only: thickness dropdown and
@@ -100,7 +108,12 @@ function InRowCell({ f, mm, onChangeMm }) {
     if (Number.isFinite(x) && x > 0) onChangeMm(f.key)(x * IN_TO_MM);
   };
   if (!f.thickness) {
-    return <input type="number" step={0.01} value={inVal === '' ? '' : +inVal.toFixed(1)} onChange={onType} />;
+    return (
+      <span className="unit-input">
+        <input type="number" step={0.01} value={inVal === '' ? '' : +inVal.toFixed(1)} onChange={onType} />
+        <span className="unit-suffix">in</span>
+      </span>
+    );
   }
   const selId = v != null ? (thicknesses.find((t) => Math.abs(t.thickness_mm - v) < EPS)?.id ?? '') : '';
   const onSelect = (e) => {
@@ -113,7 +126,10 @@ function InRowCell({ f, mm, onChangeMm }) {
         <option value="">직접입력…</option>
         {thicknesses.map((t) => <option key={t.id} value={t.id}>{t.thickness_in}"</option>)}
       </select>
-      <input type="number" step={0.001} value={inVal === '' ? '' : +inVal.toFixed(1)} onChange={onType} />
+      <span className="unit-input unit-input-compact">
+        <input type="number" step={0.001} value={inVal === '' ? '' : +inVal.toFixed(1)} onChange={onType} />
+        <span className="unit-suffix">in</span>
+      </span>
     </div>
   );
 }
