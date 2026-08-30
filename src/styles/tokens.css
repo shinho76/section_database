@@ -274,10 +274,11 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
 .modal-body{padding:20px}
 .modal-shape-label{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .modal-shape-label .strong{font-size:16px;color:var(--tx-primary)}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 20px;row-gap:14px}
 .modal-foot{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;
   border-top:1px solid var(--bd-subtle)}
 @media (max-width:700px){
-  .modal-body .draw-grid{grid-template-columns:1fr}
+  .modal-body .draw-grid,.modal-body .compare-grid{grid-template-columns:1fr}
 }
 .bh-preview{display:flex;align-items:center;justify-content:center;
   min-height:260px;background:var(--bg-inset)}
