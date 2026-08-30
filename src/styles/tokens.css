@@ -288,11 +288,11 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
 
 .combo{position:relative}
 .combo input{width:100%}
-.combo-with-delete{display:flex;gap:6px;align-items:center}
-.combo-with-delete .combo{flex:1;min-width:0}
-.combo-delete{flex-shrink:0;width:26px;height:26px;border-radius:6px;cursor:pointer;
-  background:var(--bg-inset);border:1px solid var(--bd-subtle);color:var(--tx-muted);
-  font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center}
+.combo-with-delete{position:relative}
+.combo-with-delete .combo{width:100%}
+.combo-delete{position:absolute;top:-9px;right:-6px;z-index:5;width:20px;height:20px;
+  border-radius:50%;cursor:pointer;background:var(--bg-inset);border:1px solid var(--bd-subtle);
+  color:var(--tx-muted);font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center}
 .combo-delete:hover{border-color:var(--val-warn);color:var(--val-warn)}
 .combo-list{position:absolute;top:calc(100% + 2px);left:0;right:0;z-index:20;
   max-height:220px;overflow-y:auto;background:var(--bg-card);border:1px solid var(--bd-accent);
@@ -324,13 +324,14 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
 .bh-dim-piece-title{font-size:12px;font-weight:700;color:var(--tx-secondary);
   text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
 
-/* Rolled H+T-Bar panel: shrink the Type select so the search box and the
- * inline T-height override fit on the same row without overflowing. */
-.field-row .t-type-col{flex:0 0 72px;min-width:0}
-.field-row .t-search-col{flex:1 1 130px;min-width:100px}
-.field-row .t-height-col{flex:0 0 auto;min-width:0}
-.t-height-mini{display:flex;gap:4px}
-.t-height-mini .unit-input{width:58px}
+/* Rolled H+T-Bar panel: Type select sized to fit "WT", search box pinned to
+ * a fixed width, and the T-height override (when present) splits whatever
+ * width is left in the row evenly between its IN and MM inputs. */
+.field-row .t-type-col{flex:0 0 55px;min-width:0}
+.field-row .t-search-col{flex:0 0 150px;min-width:0}
+.field-row .t-height-col{flex:1 1 0%;min-width:0}
+.t-height-mini{display:flex;gap:6px}
+.t-height-mini .unit-input{flex:1 1 0%;width:auto;min-width:0}
 .t-height-mini input{width:100%;min-width:0;font-size:11px;padding:4px 20px 4px 6px}
 .t-height-mini .unit-suffix{right:5px;font-size:9px}
 .bh-dim-rows{width:auto}

@@ -296,12 +296,12 @@ export default function HPlusTPanel({ baseKind }) {
               )}
             </div>
             <div className="field-row">
-              <label>H Type (중앙부, 선택)
+              <label className="t-type-col">H Type (중앙부, 선택)
                 <select value={hType} onChange={(e) => onHTypeChange(e.target.value)}>
                   {H_TYPES.map((t) => <option key={t} value={t}>{displayType(t)}</option>)}
                 </select>
               </label>
-              <label>중앙부 H-SHAPE (검색)
+              <label className="t-search-col">중앙부 H-SHAPE (검색)
                 <div className="combo-with-delete">
                   <ShapeAutocomplete key={`${hType}-${hGen}`} type={hType} onSelect={setHShape} initialName={hShape?.name} placeholder={`${hType} 형강 검색… (선택 안 해도 됨)`} />
                   {hShape && <button type="button" className="combo-delete" title="중앙부 H-SHAPE 삭제" onClick={clearHShape}>×</button>}
