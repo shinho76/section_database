@@ -322,6 +322,7 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
   border-radius:10px;padding:10px 12px}
 .bh-dim-piece-title{font-size:12px;font-weight:700;color:var(--tx-secondary);
   text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.height-override{max-width:260px;margin:0 14px 12px}
 .bh-dim-rows{width:auto}
 .bh-dim-rows thead th{font-size:11px;font-weight:700;color:var(--tx-muted);padding:4px 8px;text-align:center}
 .bh-dim-rows thead th:first-child{width:0}

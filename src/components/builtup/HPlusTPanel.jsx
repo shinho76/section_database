@@ -28,6 +28,7 @@ const T_FIELDS = [
   { key: 'tw', label: 'T Tw (두께)', thickness: true },
   { key: 'tf', label: 'T Tf (두께)', thickness: true },
 ];
+const T_HEIGHT_OVERRIDE_FIELD = [{ key: 'h', label: 'T 높이 (직접입력, 선택)' }];
 
 /** Section properties for a T pulled straight from the database. AISC WT/MT/ST
  * rows carry real Ix/Iy/y (distance from flange face to centroid); KST rows
@@ -90,11 +91,15 @@ export default function HPlusTPanel({ baseKind }) {
   const [botBarEnabled, setBotBarEnabled] = useState(true);
 
   // Rolled T-bars (baseKind 'db') are field-trimmed from a catalog stem
-  // height, so let the user override it — '' means "use the catalog value".
-  const [botHeightOverride, setBotHeightOverride] = useState('');
-  const [topHeightOverride, setTopHeightOverride] = useState('');
-  const botHeightOverrideMm = botHeightOverride !== '' && parseFloat(botHeightOverride) > 0 ? parseFloat(botHeightOverride) : null;
-  const topHeightOverrideMm = topHeightOverride !== '' && parseFloat(topHeightOverride) > 0 ? parseFloat(topHeightOverride) : null;
+  // height, so let the user override it — `{ h: null }` means "use the
+  // catalog value". Uses the same mm-keyed-object shape as customH/botBar/
+  // topBar so it can go through BHDimTable's own IN/MM-synced inputs.
+  const [botHeightOverride, setBotHeightOverride] = useState({ h: null });
+  const [topHeightOverride, setTopHeightOverride] = useState({ h: null });
+  const setBotHeightField = (field) => (v) => setBotHeightOverride((m) => ({ ...m, [field]: v }));
+  const setTopHeightField = (field) => (v) => setTopHeightOverride((m) => ({ ...m, [field]: v }));
+  const botHeightOverrideMm = botHeightOverride.h;
+  const topHeightOverrideMm = topHeightOverride.h;
 
   const setCustomField = (field) => (v) => setCustomH((m) => ({ ...m, [field]: v }));
   const setBotBarField = (field) => (v) => setBotBar((m) => ({ ...m, [field]: v }));
@@ -107,11 +112,11 @@ export default function HPlusTPanel({ baseKind }) {
   // Delete buttons next to each selected shape: clear the selection and force
   // the search box to remount (via the gen key) so its displayed text resets.
   const clearHShape = () => { setHShape(null); setHGen((g) => g + 1); };
-  const clearBotShape = () => { setBotShape(null); setBotGen((g) => g + 1); setBotHeightOverride(''); };
-  const clearTopShape = () => { setTopShape(null); setTopGen((g) => g + 1); setTopHeightOverride(''); };
+  const clearBotShape = () => { setBotShape(null); setBotGen((g) => g + 1); setBotHeightOverride({ h: null }); };
+  const clearTopShape = () => { setTopShape(null); setTopGen((g) => g + 1); setTopHeightOverride({ h: null }); };
 
-  const onBotShapeSelect = (s) => { setBotShape(s); setBotHeightOverride(''); };
-  const onTopShapeSelect = (s) => { setTopShape(s); setTopHeightOverride(''); };
+  const onBotShapeSelect = (s) => { setBotShape(s); setBotHeightOverride({ h: null }); };
+  const onTopShapeSelect = (s) => { setTopShape(s); setTopHeightOverride({ h: null }); };
 
   // Pre-select a representative H+bottom-T pair on first load (baseKind='db')
   // so the panel shows a real section immediately instead of an empty state.
@@ -254,18 +259,12 @@ export default function HPlusTPanel({ baseKind }) {
                   {topShape && <button type="button" className="combo-delete" title="상부 T-BAR 삭제" onClick={clearTopShape}>×</button>}
                 </div>
               </label>
-              {topShape && (
-                <label>T 높이 직접입력 (mm, 선택)
-                  <span className="unit-input">
-                    <input
-                      type="number" placeholder={topShape.mt.d} value={topHeightOverride}
-                      onChange={(e) => setTopHeightOverride(e.target.value)}
-                    />
-                    <span className="unit-suffix">mm</span>
-                  </span>
-                </label>
-              )}
             </div>
+            {topShape && (
+              <div className="bh-dim-piece height-override">
+                <BHDimTable fields={T_HEIGHT_OVERRIDE_FIELD} mm={topHeightOverride} onChangeMm={setTopHeightField} />
+              </div>
+            )}
             <div className="field-row">
               <label>H Type (중앙부, 선택)
                 <select value={hType} onChange={(e) => onHTypeChange(e.target.value)}>
@@ -291,18 +290,12 @@ export default function HPlusTPanel({ baseKind }) {
                   {botShape && <button type="button" className="combo-delete" title="하부 T-BAR 삭제" onClick={clearBotShape}>×</button>}
                 </div>
               </label>
-              {botShape && (
-                <label>T 높이 직접입력 (mm, 선택)
-                  <span className="unit-input">
-                    <input
-                      type="number" placeholder={botShape.mt.d} value={botHeightOverride}
-                      onChange={(e) => setBotHeightOverride(e.target.value)}
-                    />
-                    <span className="unit-suffix">mm</span>
-                  </span>
-                </label>
-              )}
             </div>
+            {botShape && (
+              <div className="bh-dim-piece height-override">
+                <BHDimTable fields={T_HEIGHT_OVERRIDE_FIELD} mm={botHeightOverride} onChangeMm={setBotHeightField} />
+              </div>
+            )}
             <p className="note">
               상부·중앙부·하부 모두 선택하지 않아도 됩니다 — 선택한 부재만으로 합성 단면을 계산합니다 (하나 이상 필요).
               하부 T-BAR는 위쪽 부재의 하부 플랜지(또는 바로 위 부재)에, 상부 T-BAR는 아래쪽 부재의 상부 플랜지(또는 바로 아래 부재)에 스템을 맞대어 용접되는 것으로 가정합니다.
