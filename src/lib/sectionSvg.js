@@ -60,14 +60,25 @@ export function vDim(dim, id, y1, y2, x, extFromX, label) {
   dim.push(text(x, (y1 + y2) / 2, label));
 }
 
+// Thin plates/webs/flanges scale down proportionally with everything else
+// in the drawing, so a true-to-scale thickness callout can shrink to a
+// fraction of a pixel — the double-arrow span (and its arrowheads) simply
+// vanish even though the text label is still printed next to nothing. Both
+// micro* callouts below clamp their span to this minimum, expanded
+// symmetrically around the real midpoint so the label/leader position (and
+// the feature the callout points at) don't shift.
+const MICRO_MIN_SPAN = 9;
+
 /** Short thickness callout: a tight double-arrow span across the feature, with
  * the label offset to the side (there isn't room to center it on the line). */
 export function microV(dim, id, y1, y2, x, label, side = 1) {
   const mid = (y1 + y2) / 2;
+  const half = Math.max(Math.abs(y2 - y1) / 2, MICRO_MIN_SPAN / 2);
+  const yy1 = mid - half, yy2 = mid + half;
   const lx = x + side * 20;
   // halo behind the arrow line so it stays legible over the hatch fill
-  dim.push(`<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="var(--bg-card)" stroke-width="4" opacity=".85"/>`);
-  dim.push(`<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="currentColor" stroke-width="1.4"
+  dim.push(`<line x1="${x}" y1="${yy1}" x2="${x}" y2="${yy2}" stroke="var(--bg-card)" stroke-width="4" opacity=".85"/>`);
+  dim.push(`<line x1="${x}" y1="${yy1}" x2="${x}" y2="${yy2}" stroke="currentColor" stroke-width="1.4"
     marker-start="url(#arrs-${id})" marker-end="url(#ars-${id})"/>`);
   dim.push(`<line x1="${x}" y1="${mid}" x2="${lx - side * 4}" y2="${mid}" stroke="currentColor" stroke-width=".8" opacity=".8"/>`);
   dim.push(text(lx, mid, label, side > 0 ? 'start' : 'end'));
@@ -75,9 +86,11 @@ export function microV(dim, id, y1, y2, x, label, side = 1) {
 
 export function microH(dim, id, x1, x2, y, label, side = 1) {
   const mid = (x1 + x2) / 2;
+  const half = Math.max(Math.abs(x2 - x1) / 2, MICRO_MIN_SPAN / 2);
+  const xx1 = mid - half, xx2 = mid + half;
   const ly = y + side * 17;
-  dim.push(`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="var(--bg-card)" stroke-width="4" opacity=".85"/>`);
-  dim.push(`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="currentColor" stroke-width="1.4"
+  dim.push(`<line x1="${xx1}" y1="${y}" x2="${xx2}" y2="${y}" stroke="var(--bg-card)" stroke-width="4" opacity=".85"/>`);
+  dim.push(`<line x1="${xx1}" y1="${y}" x2="${xx2}" y2="${y}" stroke="currentColor" stroke-width="1.4"
     marker-start="url(#arrs-${id})" marker-end="url(#ars-${id})"/>`);
   dim.push(`<line x1="${mid}" y1="${y}" x2="${mid}" y2="${ly - side * 4}" stroke="currentColor" stroke-width=".8" opacity=".8"/>`);
   dim.push(text(mid, ly, label));
@@ -105,14 +118,13 @@ export function drawShapeSVG(s, u) {
   const id = `dw${uid++}`;
   const unit = u === 'us' ? '"' : 'mm';
 
-  // Flange/web (or leg) fillet radius, in the shape's own unit. KSH publishes
-  // a bare `r`; KSC (source: source/ks/C.txt) publishes `r1` (web/flange
-  // fillet, r2 is the flange-toe rounding and isn't modeled here). AISC
-  // W/M/S/HP/WT/MT/ST/C/L don't publish a bare radius, but `kdes` (design
-  // distance from the outer face to the web/leg toe) already includes the
-  // material thickness, so r = kdes - thickness recovers it. KST/KSL rows
-  // have none of these fields (verified against their source .txt tables,
-  // which only carry d/bf/tw/tf) - this returns 0 (sharp) for those.
+  // Flange/web (or leg) fillet radius, in the shape's own unit. KSH/KST
+  // publish a bare `r`; KSC and KSL publish `r1` (root/heel fillet; `r2` is
+  // the flange-toe / leg-tip rounding, drawn separately — see toeIn below).
+  // AISC W/M/S/HP/WT/MT/ST/C/L don't publish a bare radius, but `kdes`
+  // (design distance from the outer face to the web/leg toe) already
+  // includes the material thickness, so r = kdes - thickness recovers it.
+  // Returns 0 (sharp) when none of these are available.
   const filletIn = (thicknessKey) => {
     const rVal = g('r') ?? g('r1');
     if (rVal) return rVal;
@@ -122,8 +134,11 @@ export function drawShapeSVG(s, u) {
     const v = kdesVal - th;
     return v > 0 ? v : 0;
   };
+  // Toe/tip rounding (r2) — only tabulated for KSL angles. 0 (sharp) for
+  // every other type, including KSC (its r2 isn't in this dataset).
+  const toeIn = () => g('r2') || 0;
 
-  const isRound = t === 'PIPE' || t === 'KSP' || (t === 'HSS' && p.OD);
+  const isRound = t === 'PIPE' || t === 'KSP' || t === 'KSPP' || (t === 'HSS' && p.OD);
   const isBox = t === 'KSB' || (t === 'HSS' && !p.OD);
   const isAng = t === 'L' || t === '2L' || t === 'KSL';
   const isTee = t === 'WT' || t === 'MT' || t === 'ST' || t === 'KST';
@@ -178,18 +193,37 @@ export function drawShapeSVG(s, u) {
     const lw = sx(g('b')), lh = sx(g('d')), th = sx(g('t'));
     const totalW = t === '2L' ? lw * 2 + Math.max(6, sx(0.375)) : lw;
     const x0 = cx - totalW / 2, y0 = cy - lh / 2;
-    // Heel fillet at the inside corner where the two legs meet.
+    // Heel fillet (R1) at the inside corner where the two legs meet, and toe
+    // fillet (R2) rounding each leg's free-end outer corner — KSL only, per
+    // filletIn/toeIn above (AISC L has neither tabulated, so both are 0 and
+    // every corner stays sharp, same as before).
     const rc = Math.max(0, Math.min(sx(filletIn('t')), th - 1, Math.min(lh, lw) - th - 1));
+    const rc2 = Math.max(0, Math.min(sx(toeIn()), th - 1));
+    // 6-vertex L outline, absolute coordinates, walked clockwise from the
+    // vertical leg's outer tip corner: tip1(outer,R2) -> tip1(inner,sharp)
+    // -> heel(concave,R1) -> tip2(inner,sharp) -> tip2(outer,R2) -> outer
+    // corner(sharp) -> back to tip1(outer). R1v/R2v collapse to 0 when the
+    // radius doesn't render, which degenerates every arc below into a
+    // zero-length line — i.e. the plain sharp-cornered outline, unchanged
+    // from before this fillet support existed.
     const one = (ox, flip) => {
-      const x = ox, y = y0;
-      if (rc > 0.75) {
-        return flip
-          ? `M${x},${y} h${-th} v${lh - th - rc} a${rc},${rc} 0 0,1 ${-rc},${rc} h${-(lw - th - rc)} v${th} h${lw} Z`
-          : `M${x},${y} h${th} v${lh - th - rc} a${rc},${rc} 0 0,0 ${rc},${rc} h${lw - th - rc} v${th} h${-lw} Z`;
-      }
-      return flip
-        ? `M${x},${y} h${-th} v${lh - th} h${-(lw - th)} v${th} h${lw} Z`
-        : `M${x},${y} h${th} v${lh - th} h${lw - th} v${th} h${-lw} Z`;
+      const R1v = rc > 0.75 ? rc : 0, R2v = rc2 > 0.75 ? rc2 : 0;
+      const u = flip ? -1 : 1;
+      const X = (dx) => ox + u * dx;
+      const Y = (dy) => y0 + dy;
+      const sweepRoot = flip ? 1 : 0, sweepToe = flip ? 0 : 1;
+      const rootSeg = R1v > 0
+        ? `A${R1v},${R1v} 0 0,${sweepRoot} ${X(th + R1v)},${Y(lh - th)}`
+        : `L${X(th)},${Y(lh - th)}`;
+      const toeSeg1 = R2v > 0
+        ? `A${R2v},${R2v} 0 0,${sweepToe} ${X(lw - R2v)},${Y(lh)}`
+        : `L${X(lw)},${Y(lh)}`;
+      const toeSeg2 = R2v > 0
+        ? `A${R2v},${R2v} 0 0,${sweepToe} ${X(R2v)},${Y(0)}`
+        : `L${X(0)},${Y(0)}`;
+      return `M${X(R2v)},${Y(0)} L${X(th)},${Y(0)} L${X(th)},${Y(lh - th - R1v)} ${rootSeg}
+        L${X(lw)},${Y(lh - th)} L${X(lw)},${Y(lh - R2v)} ${toeSeg1}
+        L${X(0)},${Y(lh)} L${X(0)},${Y(R2v)} ${toeSeg2} Z`;
     };
     if (t === '2L') {
       const gap = Math.max(6, sx(0.375));
@@ -201,6 +235,8 @@ export function drawShapeSVG(s, u) {
     hDim(dim, id, x0, x0 + lw, y0 - 22, y0, `b=${p.b}${unit}`);
     vDim(dim, id, y0, y0 + lh, x0 - 24, x0, `d=${p.d}${unit}`);
     microH(dim, id, x0, x0 + th, y0 + lh + 40, `t=${p.t}${unit}`, 1);
+    if (g('r1')) dim.push(text(x0 + th * 1.6, y0 + lh - th * 1.6, `R1=${p.r1}${unit}`, 'start'));
+    if (g('r2')) dim.push(text(x0 + th * 0.5, y0 - 10, `R2=${p.r2}${unit}`, 'middle'));
     centerlines(dim, x0 + totalW / 2, y0 + lh / 2, totalW / 2, lh / 2);
   } else if (isTee) {
     const bw = sx(g('bf')), bh = sx(g('d')), twpx = sx(g('tw')), tfpx = sx(g('tf'));
@@ -215,6 +251,7 @@ export function drawShapeSVG(s, u) {
     vDim(dim, id, y0, y0 + bh, x0 - 24, x0, `d=${p.d}${unit}`);
     microV(dim, id, y0, y0 + tfpx, x0 + bw + 26, `tf=${p.tf}${unit}`);
     microH(dim, id, cx - twpx / 2, cx + twpx / 2, y0 + bh + 22, `tw=${p.tw}${unit}`, 1);
+    if (g('r')) dim.push(text(cx + twpx / 2 + 14, y0 + tfpx + 12, `R=${p.r}${unit}`, 'start'));
     centerlines(dim, cx, cy, bw / 2, bh / 2);
   } else if (isChan) {
     const bw = sx(g('bf')), bh = sx(g('d')), twpx = sx(g('tw')), tfpx = sx(g('tf'));
@@ -538,23 +575,28 @@ export function drawHBotTopTSVG(hDims, botDims, topDims, unit) {
   const xs = [hasH && x0H, hasBot && x0Bot, hasTop && x0Top].filter((v) => v !== false);
   const extX = Math.min(...xs);
   vDim(dim, id, topY, yBotEnd, extX - 26, extX, `D=${fmtDim(totalD, unit)}${unit}`);
+  // r(H)/r(bot)/r(top), when present, is folded into the tf label as one
+  // text node ("tf=…, r=…") instead of a separately-positioned label — a
+  // fixed pixel offset from tf still collided with the tw label whenever
+  // this piece rendered small next to a much larger neighbor (e.g. a small
+  // T-bar under a jumbo H-shape), since a small piece's tf/tw/bf labels are
+  // all packed into a short vertical span regardless of any fixed gap.
+  // One text node per feature can't collide with itself.
+  const rSuffix = (r) => (r ? `, r=${fmtDim(r, unit)}${unit}` : '');
   if (hasH) {
     hDim(dim, id, x0H, x0H + bwH, yHbot + 24, yHbot, `bf(H)=${fmtDim(hDims.bf, unit)}${unit}`);
-    microV(dim, id, yHtop, yHtop + tfH, x0H + bwH + 20, `tf(H)=${fmtDim(hDims.tf, unit)}${unit}`);
+    microV(dim, id, yHtop, yHtop + tfH, x0H + bwH + 20, `tf(H)=${fmtDim(hDims.tf, unit)}${unit}${rSuffix(hDims.r)}`);
     microH(dim, id, cx - twH / 2, cx + twH / 2, (yHtop + yHbot) / 2, `tw(H)=${fmtDim(hDims.tw, unit)}${unit}`, 1);
-    if (hDims.r) dim.push(text(x0H + (bwH - twH) / 4, yHtop + tfH + Math.max(rH, 10) * 0.6, `r(H)=${fmtDim(hDims.r, unit)}${unit}`));
   }
   if (hasBot) {
     hDim(dim, id, x0Bot, x0Bot + bwBot, yBotEnd + 24, yBotEnd, `bf(bot)=${fmtDim(botDims.bf, unit)}${unit}`);
-    microV(dim, id, yBotEnd - tfBot, yBotEnd, x0Bot + bwBot + 20, `tf(bot)=${fmtDim(botDims.tf, unit)}${unit}`, 1);
+    microV(dim, id, yBotEnd - tfBot, yBotEnd, x0Bot + bwBot + 20, `tf(bot)=${fmtDim(botDims.tf, unit)}${unit}${rSuffix(botDims.r)}`, 1);
     microH(dim, id, cx - twBot / 2, cx + twBot / 2, yHbot + (bhBot - tfBot) / 2, `tw(bot)=${fmtDim(botDims.tw, unit)}${unit}`, 1);
-    if (botDims.r) dim.push(text(x0Bot + (bwBot - twBot) / 4, yHbot + bhBot - tfBot - Math.max(rBot, 10) * 0.6, `r(bot)=${fmtDim(botDims.r, unit)}${unit}`));
   }
   if (hasTop) {
     hDim(dim, id, x0Top, x0Top + bwTop, topY - 22, topY, `bf(top)=${fmtDim(topDims.bf, unit)}${unit}`);
-    microV(dim, id, topY, topY + tfTop, x0Top - 20, `tf(top)=${fmtDim(topDims.tf, unit)}${unit}`, -1);
+    microV(dim, id, topY, topY + tfTop, x0Top - 20, `tf(top)=${fmtDim(topDims.tf, unit)}${unit}${rSuffix(topDims.r)}`, -1);
     microH(dim, id, cx - twTop / 2, cx + twTop / 2, topY + tfTop + (bhTop - tfTop) / 2, `tw(top)=${fmtDim(topDims.tw, unit)}${unit}`, -1);
-    if (topDims.r) dim.push(text(x0Top + (bwTop - twTop) / 4, topY + tfTop + Math.max(rTop, 10) * 0.6, `r(top)=${fmtDim(topDims.r, unit)}${unit}`));
   }
 
   return `<svg viewBox="0 0 ${W} ${H}" class="section-svg" role="img"
