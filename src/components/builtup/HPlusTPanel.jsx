@@ -278,30 +278,30 @@ export default function HPlusTPanel({ baseKind }) {
           <div className="panel panel-combo">
             <div className="panel-head"><h2>상부 · 중앙부 · 하부 형강 선택</h2></div>
             <div className="field-row">
-              <label className="t-type-col">T Type (상부, 선택)
+              <label className="t-type-col"><span className="field-label">T Type (상부, 선택)</span>
                 <select value={topType} onChange={(e) => onTopTypeChange(e.target.value)}>
                   {T_TYPES.map((t) => <option key={t} value={t}>{displayType(t)}</option>)}
                 </select>
               </label>
-              <label className="t-search-col">상부 T-BAR (검색)
+              <label className="t-search-col"><span className="field-label">상부 T-BAR (검색)</span>
                 <div className="combo-with-delete">
                   <ShapeAutocomplete key={`${topType}-${topGen}`} type={topType} onSelect={onTopShapeSelect} initialName={topShape?.name} placeholder={`${topType} 검색… (선택 안 해도 됨)`} />
                   {topShape && <button type="button" className="combo-delete" title="상부 T-BAR 삭제" onClick={clearTopShape}>×</button>}
                 </div>
               </label>
               {topShape && (
-                <label className="t-height-col">T 높이 (선택)
+                <label className="t-height-col"><span className="field-label">T 높이 (선택)</span>
                   <HeightOverrideMini mm={topHeightOverrideMm} onChange={setTopHeightOverrideMm} placeholderMm={parseFloat(topShape.mt.d)} />
                 </label>
               )}
             </div>
             <div className="field-row">
-              <label className="t-type-col">H Type (중앙부, 선택)
+              <label className="t-type-col"><span className="field-label">H Type (중앙부, 선택)</span>
                 <select value={hType} onChange={(e) => onHTypeChange(e.target.value)}>
                   {H_TYPES.map((t) => <option key={t} value={t}>{displayType(t)}</option>)}
                 </select>
               </label>
-              <label className="t-search-col">중앙부 H-SHAPE (검색)
+              <label className="t-search-col"><span className="field-label">중앙부 H-SHAPE (검색)</span>
                 <div className="combo-with-delete">
                   <ShapeAutocomplete key={`${hType}-${hGen}`} type={hType} onSelect={setHShape} initialName={hShape?.name} placeholder={`${hType} 형강 검색… (선택 안 해도 됨)`} />
                   {hShape && <button type="button" className="combo-delete" title="중앙부 H-SHAPE 삭제" onClick={clearHShape}>×</button>}
@@ -309,19 +309,19 @@ export default function HPlusTPanel({ baseKind }) {
               </label>
             </div>
             <div className="field-row">
-              <label className="t-type-col">T Type (하부, 선택)
+              <label className="t-type-col"><span className="field-label">T Type (하부, 선택)</span>
                 <select value={botType} onChange={(e) => onBotTypeChange(e.target.value)}>
                   {T_TYPES.map((t) => <option key={t} value={t}>{displayType(t)}</option>)}
                 </select>
               </label>
-              <label className="t-search-col">하부 T-BAR (검색)
+              <label className="t-search-col"><span className="field-label">하부 T-BAR (검색)</span>
                 <div className="combo-with-delete">
                   <ShapeAutocomplete key={`${botType}-${botGen}`} type={botType} onSelect={onBotShapeSelect} initialName={botShape?.name} placeholder={`${botType} 검색… (선택 안 해도 됨)`} />
                   {botShape && <button type="button" className="combo-delete" title="하부 T-BAR 삭제" onClick={clearBotShape}>×</button>}
                 </div>
               </label>
               {botShape && (
-                <label className="t-height-col">T 높이 (선택)
+                <label className="t-height-col"><span className="field-label">T 높이 (선택)</span>
                   <HeightOverrideMini mm={botHeightOverrideMm} onChange={setBotHeightOverrideMm} placeholderMm={parseFloat(botShape.mt.d)} />
                 </label>
               )}
