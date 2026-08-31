@@ -88,7 +88,7 @@ export const TYPE_DISPLAY = {
 };
 export const displayType = (t) => TYPE_DISPLAY[t] || t;
 
-export const useStore = create((set) => ({
+export const useStore = create((set, get) => ({
   activeKey: 'W',
   shape: null,
   theme: 'dark',
@@ -96,10 +96,12 @@ export const useStore = create((set) => ({
   setActiveKey: (key) => {
     document.getElementById('main')?.scrollTo(0, 0);
     set({ activeKey: key, shape: null });
+    history.pushState({ activeKey: key, shape: null }, '', location.href);
   },
   selectShape: (shape) => {
     document.getElementById('main')?.scrollTo(0, 0);
     set({ shape });
+    history.pushState({ activeKey: get().activeKey, shape }, '', location.href);
   },
   setQuery: (query) => set({ query }),
   toggleTheme: () => set((s) => {
@@ -108,3 +110,20 @@ export const useStore = create((set) => ({
     return { theme: next };
   }),
 }));
+
+// This is a single-page app with no router/URL changes — every navigation
+// (type switch, shape select) previously only updated in-memory Zustand
+// state, invisible to the browser's history stack. That made the browser's
+// own Back button skip straight past every in-app view and leave the site
+// entirely (to whatever page was open before this one), instead of
+// stepping back through what the user just did here. Establish a baseline
+// history entry for the initial view, and restore state on Back/Forward
+// from whatever was pushed above.
+if (typeof window !== 'undefined') {
+  history.replaceState({ activeKey: useStore.getState().activeKey, shape: null }, '', location.href);
+  window.addEventListener('popstate', (e) => {
+    if (!e.state) return;
+    document.getElementById('main')?.scrollTo(0, 0);
+    useStore.setState({ activeKey: e.state.activeKey, shape: e.state.shape });
+  });
+}

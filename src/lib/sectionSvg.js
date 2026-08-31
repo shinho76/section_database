@@ -125,13 +125,22 @@ export function drawShapeSVG(s, u) {
   // (design distance from the outer face to the web/leg toe) already
   // includes the material thickness, so r = kdes - thickness recovers it.
   // Returns 0 (sharp) when none of these are available.
-  const filletIn = (thicknessKey) => {
+  //
+  // `preferDetail` uses `kdet` (the detailing/max-fillet value) instead of
+  // `kdes` (the design/min-fillet value AISC uses so section properties
+  // never overestimate strength) — for AISC L/2L angles specifically, per
+  // SDS2's published detailing convention, the "k distance (detail)" *is*
+  // the angle's root-fillet-toe dimension used to draw the physical part,
+  // while kdes stays a conservative design-only figure never meant to
+  // depict the real fillet. Every other shape family keeps using kdes,
+  // matching this app's existing drawings.
+  const filletIn = (thicknessKey, preferDetail = false) => {
     const rVal = g('r') ?? g('r1');
     if (rVal) return rVal;
-    const kdesVal = g('kdes');
+    const kVal = preferDetail ? (g('kdet') ?? g('kdes')) : g('kdes');
     const th = g(thicknessKey);
-    if (!kdesVal || !th) return 0;
-    const v = kdesVal - th;
+    if (!kVal || !th) return 0;
+    const v = kVal - th;
     return v > 0 ? v : 0;
   };
   // Toe/tip rounding (r2) — only tabulated for KSL angles. 0 (sharp) for
@@ -195,12 +204,20 @@ export function drawShapeSVG(s, u) {
     const x0 = cx - totalW / 2, y0 = cy - lh / 2;
     // Heel fillet (R1) at the inside corner where the two legs meet, and toe
     // fillet (R2) rounding the INNER corner of each leg's free-end edge only
-    // (the corner adjacent to the root, one per leg — not the outer corner)
-    // — KSL only, per filletIn/toeIn above (AISC L has neither tabulated:
-    // there is no standardized imperial toe/fillet radius, mill tolerances
-    // vary run to run, so both stay 0 and every corner stays sharp rather
-    // than guessing).
-    const rc = Math.max(0, Math.min(sx(filletIn('t')), th - 1, Math.min(lh, lw) - th - 1));
+    // (the corner adjacent to the root, one per leg — not the outer corner).
+    // R1: KSL publishes a tabulated r1; AISC L/2L don't, but the v16.0
+    // Shapes Database does publish kdes/kdet for angles too (its Readme
+    // only spells out the W-shape meaning, but SDS2's published detailing
+    // docs confirm the angle "k distance" is the same root-fillet-toe
+    // dimension) — preferDetail=true picks kdet (the detailing/max-fillet
+    // value) since this is a physical-representation drawing, not a
+    // strength calculation.
+    // R2: no leg-tip toe radius is tabulated anywhere in the AISC database,
+    // and neither AISC's own documentation nor SDS2/Tekla's detailing
+    // conventions describe a distinct toe rounding for angles (only the one
+    // root fillet) — so R2 stays 0 (sharp) for AISC L/2L rather than
+    // guessing a number with no source. KSL keeps its tabulated r2.
+    const rc = Math.max(0, Math.min(sx(filletIn('t', true)), th - 1, Math.min(lh, lw) - th - 1));
     const rc2 = Math.max(0, Math.min(sx(toeIn()), th - 1));
     // 6-vertex L outline, absolute coordinates, walked clockwise from the
     // vertical leg's outer tip corner (sharp): tip1-outer(sharp) ->
