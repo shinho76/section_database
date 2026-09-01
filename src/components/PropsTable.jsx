@@ -1,4 +1,15 @@
+import { useState } from 'react';
 import { KS_STANDARD } from '../store.js';
+
+// Shown by default; everything else (warping constants, perimeter figures,
+// Design-Guide-9 statical moments, etc.) is real data but rarely needed, so
+// it's tucked behind "더 보기" instead of forcing a 30-50 row scroll on
+// every shape page.
+const CORE_KEYS = new Set([
+  'd', 'ddet', 'Ht', 'h', 'OD', 'ID', 'bf', 'bfdet', 'B', 'b',
+  'tw', 'twdet', 'tf', 'tfdet', 't', 't2', 'tnom', 'tdes', 'r', 'kdes',
+  'A', 'W', 'Ix', 'Iy', 'Sx', 'Sy', 'Zx', 'Zy', 'rx', 'ry',
+]);
 
 const UNITS = {
   W: ['lb/ft', 'kg/m'], A: ['in²', 'mm²'],
@@ -25,8 +36,23 @@ const UNITS = {
   PC: ['in', 'mm'], PD: ['in', 'mm'], T: ['in', 'mm'], WGi: ['in', 'mm'], WGo: ['in', 'mm'],
 };
 
+function PropRow({ k, shape, isKs, defs }) {
+  const [ui, um] = UNITS[k] || ['', ''];
+  return (
+    <tr>
+      <td className="sym mono">{k}</td>
+      <td className={`r mono${isKs ? ' val-conv' : ''}`}>{shape.us[k] ?? '—'} <em>{ui}</em></td>
+      <td className={`r mono${isKs ? '' : ' val-conv'}`}>{shape.mt[k] ?? '—'} <em>{um}</em></td>
+      <td className="desc">{defs[k]}</td>
+    </tr>
+  );
+}
+
 export default function PropsTable({ shape, defs }) {
+  const [expanded, setExpanded] = useState(false);
   const keys = Object.keys(defs).filter((k) => shape.us[k] !== undefined || shape.mt[k] !== undefined);
+  const coreKeys = keys.filter((k) => CORE_KEYS.has(k));
+  const moreKeys = keys.filter((k) => !CORE_KEYS.has(k));
   // Source files: KS shapes come from each type's own KS standard's SI-unit
   // text table (KS D 3502 for H/L/T/C, KS D 3568 for KSB, KS D 3566 for
   // KSP — see KS_STANDARD), so Metric is DB-native and Imperial is this
@@ -52,19 +78,15 @@ export default function PropsTable({ shape, defs }) {
           </tr>
         </thead>
         <tbody>
-          {keys.map((k) => {
-            const [ui, um] = UNITS[k] || ['', ''];
-            return (
-              <tr key={k}>
-                <td className="sym mono">{k}</td>
-                <td className={`r mono${isKs ? ' val-conv' : ''}`}>{shape.us[k] ?? '—'} <em>{ui}</em></td>
-                <td className={`r mono${isKs ? '' : ' val-conv'}`}>{shape.mt[k] ?? '—'} <em>{um}</em></td>
-                <td className="desc">{defs[k]}</td>
-              </tr>
-            );
-          })}
+          {coreKeys.map((k) => <PropRow key={k} k={k} shape={shape} isKs={isKs} defs={defs} />)}
+          {moreKeys.length > 0 && expanded && moreKeys.map((k) => <PropRow key={k} k={k} shape={shape} isKs={isKs} defs={defs} />)}
         </tbody>
       </table>
+      {moreKeys.length > 0 && (
+        <button type="button" className="props-more-btn" onClick={() => setExpanded((e) => !e)}>
+          {expanded ? '접기 ▲' : `추가 항목 더 보기 (${moreKeys.length}) ▼`}
+        </button>
+      )}
       <p className="note">
         {isKs
           ? `Metric 값은 ${ksStd} 규격표(SI 단위 원본)의 값을 그대로 사용합니다. Imperial 값은 이 앱이 계산한 단위 환산값입니다.`

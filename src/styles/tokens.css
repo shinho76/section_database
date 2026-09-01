@@ -2,7 +2,7 @@
   --bg-base:#0f1117; --bg-surface:#1a1d27; --bg-card:#21263a; --bg-inset:#161920;
   --bg-input:#1e2235; --bg-hover:#262c42; --bg-active:#1e3a5f;
   --bd-subtle:#2a2f45; --bd-accent:#1a6b8a; --bd-muted:#333a55;
-  --tx-primary:#e8eaf6; --tx-secondary:#9ba3c0; --tx-muted:#5a637a;
+  --tx-primary:#e8eaf6; --tx-secondary:#9ba3c0; --tx-muted:#878d9e;
   --ac-main:#26c6da; --ac-dark:#00838f; --ac-glow:rgba(38,198,218,.18);
   --val-pos:#4ade80; --val-warn:#fbbf24; --hd-bg:#13151f; --hd-text:#e8eaf6;
   --steel-fill:rgba(38,198,218,.14); --steel-line:#26c6da;
@@ -204,6 +204,10 @@ td em{font-style:normal;font-size:10px;color:var(--tx-muted);margin-left:2px}
 .props td.desc{white-space:normal}
 .props .desc{color:var(--tx-muted);font-size:12px;line-height:1.5;min-width:320px}
 .props tbody tr:hover{background:var(--bg-hover)}
+.props-more-btn{display:block;width:100%;padding:10px;border:0;
+  border-top:1px solid var(--bd-subtle);background:var(--bg-inset);color:var(--tx-secondary);
+  font:600 12px/1 Inter,sans-serif;cursor:pointer;text-align:center}
+.props-more-btn:hover{background:var(--bg-hover);color:var(--tx-primary)}
 .note{margin:0;padding:12px 18px;font-size:11px;color:var(--tx-muted);
   border-top:1px solid var(--bd-subtle)}
 .note a{color:var(--ac-main);text-decoration:none;word-break:break-all}
