@@ -9,8 +9,7 @@ function openCalculator() {
   window.location.href = 'calculator:';
 }
 
-// TODO: replace with the real Google Form URL once created.
-const FEEDBACK_FORM_URL = 'https://forms.gle/REPLACE_WITH_REAL_FORM_ID';
+const FEEDBACK_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdjALpAY7ClYKv0--W5LaIdXYk9d1VxI4NXmI12SEJlxRUATQ/viewform';
 
 export default function Header() {
   const { theme, toggleTheme } = useStore();
