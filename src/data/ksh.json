@@ -36,6 +36,9 @@
       "Zx": "38",
       "Zy": "6",
       "kdes": "15"
+    },
+    "dongkuk": {
+      "available": null
     }
   },
   {
@@ -75,6 +78,9 @@
       "Zx": "76.5",
       "Zy": "26.7",
       "kdes": "18"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -114,6 +120,9 @@
       "Zx": "66",
       "Zy": "10",
       "kdes": "17"
+    },
+    "dongkuk": {
+      "available": null
     }
   },
   {
@@ -153,6 +162,9 @@
       "Zx": "136",
       "Zy": "47",
       "kdes": "19"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -192,6 +204,9 @@
       "Zx": "88.8",
       "Zy": "13.2",
       "kdes": "15"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -231,6 +246,9 @@
       "Zx": "138",
       "Zy": "30.1",
       "kdes": "20"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -270,6 +288,9 @@
       "Zx": "219",
       "Zy": "75.1",
       "kdes": "21"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -309,6 +330,9 @@
       "Zx": "139",
       "Zy": "22",
       "kdes": "17"
+    },
+    "dongkuk": {
+      "available": null
     }
   },
   {
@@ -348,6 +372,9 @@
       "Zx": "330",
       "Zy": "112",
       "kdes": "23"
+    },
+    "dongkuk": {
+      "available": null
     }
   },
   {
@@ -387,6 +414,9 @@
       "Zx": "160",
       "Zy": "23",
       "kdes": "18"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -426,6 +456,9 @@
       "Zx": "184",
       "Zy": "26.8",
       "kdes": "19"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -465,6 +498,9 @@
       "Zx": "277",
       "Zy": "67.6",
       "kdes": "22"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -504,6 +540,9 @@
       "Zx": "472",
       "Zy": "160",
       "kdes": "25"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -543,6 +582,9 @@
       "Zx": "498",
       "Zy": "167",
       "kdes": "25"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -582,6 +624,9 @@
       "Zx": "628",
       "Zy": "218",
       "kdes": "29"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -621,6 +666,9 @@
       "Zx": "285",
       "Zy": "41.1",
       "kdes": "20"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -660,6 +708,9 @@
       "Zx": "324",
       "Zy": "47",
       "kdes": "21"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -699,6 +750,9 @@
       "Zx": "502",
       "Zy": "113",
       "kdes": "27"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -738,6 +792,9 @@
       "Zx": "720",
       "Zy": "233",
       "kdes": "27"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -777,6 +834,9 @@
       "Zx": "801",
       "Zy": "269",
       "kdes": "29"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -816,6 +876,9 @@
       "Zx": "867",
       "Zy": "292",
       "kdes": "30"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -855,6 +918,9 @@
       "Zx": "919",
       "Zy": "304",
       "kdes": "30"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -894,6 +960,9 @@
       "Zx": "424",
       "Zy": "59.3",
       "kdes": "21"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -933,6 +1002,9 @@
       "Zx": "481",
       "Zy": "67.7",
       "kdes": "22"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -972,6 +1044,9 @@
       "Zx": "771",
       "Zy": "160",
       "kdes": "30"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1011,6 +1086,9 @@
       "Zx": "893",
       "Zy": "189",
       "kdes": "32"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1050,6 +1128,9 @@
       "Zx": "1150",
       "Zy": "365",
       "kdes": "30"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1089,6 +1170,9 @@
       "Zx": "1270",
       "Zy": "417",
       "kdes": "32"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1128,6 +1212,9 @@
       "Zx": "1360",
       "Zy": "450",
       "kdes": "33"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1167,6 +1254,9 @@
       "Zx": "1440",
       "Zy": "466",
       "kdes": "33"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1206,6 +1296,9 @@
       "Zx": "1540",
       "Zy": "514",
       "kdes": "35"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1245,6 +1338,9 @@
       "Zx": "1810",
       "Zy": "620",
       "kdes": "38"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1284,6 +1380,9 @@
       "Zx": "1890",
       "Zy": "642",
       "kdes": "38"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1323,6 +1422,9 @@
       "Zx": "641",
       "Zy": "91",
       "kdes": "23"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1362,6 +1464,9 @@
       "Zx": "775",
       "Zy": "112",
       "kdes": "25"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1401,6 +1506,9 @@
       "Zx": "909",
       "Zy": "134",
       "kdes": "27"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1440,6 +1548,9 @@
       "Zx": "1100",
       "Zy": "248",
       "kdes": "32"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1479,6 +1590,9 @@
       "Zx": "1280",
       "Zy": "292",
       "kdes": "34"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1518,6 +1632,9 @@
       "Zx": "1670",
       "Zy": "534",
       "kdes": "33"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1557,6 +1674,9 @@
       "Zx": "1940",
       "Zy": "646",
       "kdes": "36"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1596,6 +1716,9 @@
       "Zx": "2050",
       "Zy": "669",
       "kdes": "36"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1635,6 +1758,9 @@
       "Zx": "2300",
       "Zy": "776",
       "kdes": "39"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1674,6 +1800,9 @@
       "Zx": "2450",
       "Zy": "809",
       "kdes": "39"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1713,6 +1842,9 @@
       "Zx": "1010",
       "Zy": "145",
       "kdes": "27"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1752,6 +1884,9 @@
       "Zx": "1190",
       "Zy": "174",
       "kdes": "29"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1791,6 +1926,9 @@
       "Zx": "1360",
       "Zy": "202",
       "kdes": "31"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1830,6 +1968,9 @@
       "Zx": "1980",
       "Zy": "481",
       "kdes": "38"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1869,6 +2010,9 @@
       "Zx": "1740",
       "Zy": "418",
       "kdes": "36"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1908,6 +2052,9 @@
       "Zx": "2520",
       "Zy": "809",
       "kdes": "37"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1947,6 +2094,9 @@
       "Zx": "2850",
       "Zy": "951",
       "kdes": "40"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -1986,6 +2136,9 @@
       "Zx": "3030",
       "Zy": "985",
       "kdes": "40"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -2025,6 +2178,9 @@
       "Zx": "3330",
       "Zy": "1120",
       "kdes": "43"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -2064,6 +2220,9 @@
       "Zx": "3540",
       "Zy": "1170",
       "kdes": "43"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -2103,6 +2262,9 @@
       "Zx": "3840",
       "Zy": "1300",
       "kdes": "46"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -2142,6 +2304,9 @@
       "Zx": "4480",
       "Zy": "1530",
       "kdes": "50"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -2181,6 +2346,9 @@
       "Zx": "5570",
       "Zy": "1930",
       "kdes": "57"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -2220,6 +2388,9 @@
       "Zx": "6810",
       "Zy": "2390",
       "kdes": "64"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -2259,6 +2430,9 @@
       "Zx": "7670",
       "Zy": "2720",
       "kdes": "69"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -2298,6 +2472,9 @@
       "Zx": "8170",
       "Zy": "2900",
       "kdes": "72"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -2337,6 +2514,9 @@
       "Zx": "8550",
       "Zy": "3050",
       "kdes": "74"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -2376,6 +2556,9 @@
       "Zx": "9450",
       "Zy": "3390",
       "kdes": "79"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -2415,6 +2598,9 @@
       "Zx": "10600",
       "Zy": "3820",
       "kdes": "85"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -2454,6 +2640,9 @@
       "Zx": "13000",
       "Zy": "4370",
       "kdes": "92"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -2493,6 +2682,9 @@
       "Zx": "1290",
       "Zy": "159",
       "kdes": "30"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -2532,6 +2724,9 @@
       "Zx": "1490",
       "Zy": "187",
       "kdes": "32"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -2571,6 +2766,9 @@
       "Zx": "2160",
       "Zy": "448",
       "kdes": "39"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -2610,6 +2808,9 @@
       "Zx": "2550",
       "Zy": "541",
       "kdes": "42"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -2649,6 +2850,9 @@
       "Zx": "1690",
       "Zy": "185",
       "kdes": "34"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -2688,6 +2892,9 @@
       "Zx": "1910",
       "Zy": "214",
       "kdes": "36"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -2727,6 +2934,9 @@
       "Zx": "2230",
       "Zy": "257",
       "kdes": "39"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -2766,6 +2976,9 @@
       "Zx": "2500",
       "Zy": "451",
       "kdes": "41"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -2805,6 +3018,9 @@
       "Zx": "2910",
       "Zy": "541",
       "kdes": "44"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -2844,6 +3060,9 @@
       "Zx": "2310",
       "Zy": "199",
       "kdes": "37"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -2883,6 +3102,9 @@
       "Zx": "2590",
       "Zy": "228",
       "kdes": "39"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -2922,6 +3144,9 @@
       "Zx": "2980",
       "Zy": "271",
       "kdes": "42"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -2961,6 +3186,9 @@
       "Zx": "3380",
       "Zy": "314",
       "kdes": "45"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -3000,6 +3228,9 @@
       "Zx": "3530",
       "Zy": "511",
       "kdes": "45"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -3039,6 +3270,9 @@
       "Zx": "4020",
       "Zy": "601",
       "kdes": "48"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -3078,6 +3312,9 @@
       "Zx": "4620",
       "Zy": "701",
       "kdes": "51"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -3117,6 +3354,9 @@
       "Zx": "4980",
       "Zy": "602",
       "kdes": "48"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -3156,6 +3396,9 @@
       "Zx": "5370",
       "Zy": "662",
       "kdes": "50"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -3195,6 +3438,9 @@
       "Zx": "5760",
       "Zy": "722",
       "kdes": "52"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -3234,6 +3480,9 @@
       "Zx": "6030",
       "Zy": "757",
       "kdes": "53"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -3273,6 +3522,9 @@
       "Zx": "6700",
       "Zy": "853",
       "kdes": "56"
+    },
+    "dongkuk": {
+      "available": true
     }
   },
   {
@@ -3312,6 +3564,9 @@
       "Zx": "7370",
       "Zy": "951",
       "kdes": "59"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -3351,6 +3606,9 @@
       "Zx": "6410",
       "Zy": "662",
       "kdes": "50"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -3390,6 +3648,9 @@
       "Zx": "6850",
       "Zy": "722",
       "kdes": "52"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -3429,6 +3690,9 @@
       "Zx": "7290",
       "Zy": "782",
       "kdes": "54"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -3468,6 +3732,9 @@
       "Zx": "7620",
       "Zy": "818",
       "kdes": "55"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -3507,6 +3774,9 @@
       "Zx": "8400",
       "Zy": "915",
       "kdes": "58"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -3546,6 +3816,9 @@
       "Zx": "9180",
       "Zy": "1010",
       "kdes": "61"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -3585,6 +3858,9 @@
       "Zx": "7760",
       "Zy": "688",
       "kdes": "51"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -3624,6 +3900,9 @@
       "Zx": "8260",
       "Zy": "748",
       "kdes": "53"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -3663,6 +3942,9 @@
       "Zx": "9140",
       "Zy": "843",
       "kdes": "56"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -3702,6 +3984,9 @@
       "Zx": "10000",
       "Zy": "940",
       "kdes": "59"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -3741,6 +4026,9 @@
       "Zx": "10900",
       "Zy": "1040",
       "kdes": "62"
+    },
+    "dongkuk": {
+      "available": false
     }
   },
   {
@@ -3780,6 +4068,9 @@
       "Zx": "11800",
       "Zy": "1140",
       "kdes": "65"
+    },
+    "dongkuk": {
+      "available": false
     }
   }
 ]
