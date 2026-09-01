@@ -12,7 +12,7 @@
   --bg-base:#f4f6fb; --bg-surface:#fff; --bg-card:#fff; --bg-inset:#eef2f9;
   --bg-input:#fff; --bg-hover:#e8eef8; --bg-active:#dbeafe;
   --bd-subtle:#d1d9ee; --bd-accent:#0ea5e9; --bd-muted:#c7d2e8;
-  --tx-primary:#1a1f36; --tx-secondary:#4a5580; --tx-muted:#6b7290;
+  --tx-primary:#1a1f36; --tx-secondary:#4a5580; --tx-muted:#606782;
   --ac-main:#0284c7; --ac-dark:#0369a1; --ac-glow:rgba(2,132,199,.12);
   --val-pos:#16a34a; --val-warn:#d97706; --hd-bg:#1a1f36; --hd-text:#f4f6fb;
   --steel-fill:rgba(2,132,199,.10); --steel-line:#0284c7;
@@ -21,7 +21,8 @@
 *,*::before,*::after{box-sizing:border-box}
 html,body,#root{height:100%}
 body{margin:0;background:var(--bg-base);color:var(--tx-primary);
-  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px}
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;
+  word-break:keep-all}
 .mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
   font-variant-numeric:tabular-nums}
 
@@ -230,6 +231,7 @@ td em{font-style:normal;font-size:11.5px;color:var(--tx-muted);margin-left:2px}
 
 /* drawings ----------------------------------------------------------- */
 .draw-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.draw-grid > *{min-width:0}
 .draw{margin:0;display:flex;flex-direction:column}
 .draw-cap{display:flex;align-items:baseline;gap:8px;padding:14px 18px;
   border-bottom:1px solid var(--bd-subtle);font-size:11px;font-weight:700;
@@ -248,6 +250,7 @@ td em{font-style:normal;font-size:11.5px;color:var(--tx-muted);margin-left:2px}
 
 /* built-up builder ----------------------------------------------------- */
 .bh-grid{display:grid;grid-template-columns:340px 1fr;gap:20px}
+.bh-grid > *{min-width:0}
 .layer-row{display:flex;align-items:center;gap:10px;padding:10px 14px;
   border-bottom:1px solid var(--bd-subtle)}
 .layer-row:last-child{border-bottom:0}
@@ -263,7 +266,7 @@ td em{font-style:normal;font-size:11.5px;color:var(--tx-muted);margin-left:2px}
   color:var(--tx-muted);flex:1;min-width:70px}
 select,input[type=text],input[type=number]{background:var(--bg-input);
   border:1.5px solid var(--bd-accent);border-radius:6px;color:var(--tx-primary);
-  padding:6px 8px;font:600 12px/1.2 Inter,sans-serif;box-shadow:0 0 0 3px var(--ac-glow)}
+  padding:6px 8px;font:600 12px/1.2 Inter,sans-serif}
 select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
   border-color:var(--ac-main);box-shadow:0 0 0 3px var(--ac-glow),0 0 16px var(--ac-glow)}
 .btn{height:34px;padding:0 14px;border-radius:8px;cursor:pointer;
@@ -397,6 +400,7 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
 }
 
 .rolled-row{display:grid;grid-template-columns:minmax(260px,1fr) 1fr 1fr;gap:16px;align-items:start}
+.rolled-row > *{min-width:0}
 @media (max-width:1100px){
   .rolled-row{grid-template-columns:1fr}
 }
@@ -404,7 +408,7 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
 @media (max-width:900px){
   .draw-grid{grid-template-columns:1fr}
   .bh-grid{grid-template-columns:1fr}
-  .props .desc{display:none}
+  .props .desc,.props thead th:last-child{display:none}
 
   /* Off-canvas sidebar: full-width drawer that slides in over the content
      instead of squeezing into a permanent narrow column (which left every
