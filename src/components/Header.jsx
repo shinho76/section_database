@@ -19,7 +19,7 @@ export default function Header() {
       <span className="brand">SECTION DATABASE</span>
       <span className="badge">AISC v16.0</span>
       <SearchBox />
-      <button id="calculator" title="계산기 열기" onClick={openCalculator}>🧮</button>
+      <button id="calculator" title="계산기 열기" onClick={openCalculator}>🔢</button>
       <a id="feedback" title="피드백 보내기" href={FEEDBACK_FORM_URL} target="_blank" rel="noopener noreferrer">💬</a>
       <button id="theme" onClick={toggleTheme}>
         {theme === 'dark' ? '☀ Light' : '☾ Dark'}
