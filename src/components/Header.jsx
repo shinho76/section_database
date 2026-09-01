@@ -9,6 +9,9 @@ function openCalculator() {
   window.location.href = 'calculator:';
 }
 
+// TODO: replace with the real Google Form URL once created.
+const FEEDBACK_FORM_URL = 'https://forms.gle/REPLACE_WITH_REAL_FORM_ID';
+
 export default function Header() {
   const { theme, toggleTheme } = useStore();
 
@@ -18,6 +21,7 @@ export default function Header() {
       <span className="badge">AISC v16.0</span>
       <SearchBox />
       <button id="calculator" title="계산기 열기" onClick={openCalculator}>🧮</button>
+      <a id="feedback" title="피드백 보내기" href={FEEDBACK_FORM_URL} target="_blank" rel="noopener noreferrer">💬</a>
       <button id="theme" onClick={toggleTheme}>
         {theme === 'dark' ? '☀ Light' : '☾ Dark'}
       </button>

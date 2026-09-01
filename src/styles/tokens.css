@@ -62,6 +62,10 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
   background:var(--bg-card);border:1px solid var(--bd-subtle);font-size:16px;
   display:flex;align-items:center;justify-content:center}
 #calculator:hover{border-color:var(--ac-main)}
+#feedback{height:32px;width:32px;padding:0;border-radius:8px;cursor:pointer;
+  background:var(--bg-card);border:1px solid var(--bd-subtle);font-size:16px;
+  display:flex;align-items:center;justify-content:center;text-decoration:none}
+#feedback:hover{border-color:var(--ac-main)}
 
 /* layout ------------------------------------------------------------- */
 .shell{display:flex;height:calc(100vh - 64px);margin-top:64px}
