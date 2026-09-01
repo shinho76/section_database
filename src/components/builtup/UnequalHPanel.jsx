@@ -1,17 +1,20 @@
 import { useMemo, useState } from 'react';
 import { manualHUnequalProps, IN2_TO_MM2, IN4_TO_MM4, LBFT_TO_KGM } from './compose.js';
 import { drawUnequalHSVG, fmtDim } from '../../lib/sectionSvg.js';
-import { BHDimCards } from './BHDimTable.jsx';
+import { BHDimCardsGrouped } from './BHDimTable.jsx';
 
 const MM_TO_IN = 1 / 25.4;
 
-const FIELDS = [
-  { key: 'd', label: 'D (높이)' },
-  { key: 'bfTop', label: 'Bf-top (폭)' },
-  { key: 'tfTop', label: 'Tf-top (두께)', thickness: true },
-  { key: 'bfBot', label: 'Bf-bot (폭)' },
-  { key: 'tfBot', label: 'Tf-bot (두께)', thickness: true },
-  { key: 'tw', label: 'Tw (두께)', thickness: true },
+// D / B / Tw / Tf column order (matches how these dimensions are
+// conventionally read/spoken) instead of a flat D/Bf-top/Tf-top/Bf-bot/
+// Tf-bot/Tw list — B and Tf each hold the top and bottom flange's value
+// stacked in one column (see BHDimCardsGrouped) so the two numbers that
+// actually get compared sit directly above/below each other.
+const GROUPED_FIELDS = [
+  { type: 'single', key: 'd', label: 'D (높이)' },
+  { type: 'group', label: 'B (폭)', top: { key: 'bfTop' }, bottom: { key: 'bfBot' } },
+  { type: 'single', key: 'tw', label: 'Tw (두께)', thickness: true },
+  { type: 'group', label: 'Tf (두께)', top: { key: 'tfTop', thickness: true }, bottom: { key: 'tfBot', thickness: true } },
 ];
 
 export default function UnequalHPanel() {
@@ -37,7 +40,7 @@ export default function UnequalHPanel() {
     <>
       <div className="detail-head"><div><h1 className="mono">Unequal Flange Built-up H-Section</h1></div></div>
 
-      <BHDimCards fields={FIELDS} mm={mm} onChangeMm={set} />
+      <BHDimCardsGrouped columns={GROUPED_FIELDS} mm={mm} onChangeMm={set} />
 
       <div className="panel">
         {!valid && <p className="note" style={{ borderTop: 'none' }}>치수가 유효하지 않습니다 (d &gt; tf-top+tf-bot, bf &gt; tw 필요).</p>}

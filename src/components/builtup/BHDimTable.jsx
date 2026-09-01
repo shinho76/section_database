@@ -197,3 +197,64 @@ export function BHDimCards({ fields, mm, onChangeMm }) {
     </div>
   );
 }
+
+/** Column spec for BHDimCardsGrouped: either a plain single-value column
+ * ({ type:'single', key, label, thickness? }) or a top/bottom pair sharing
+ * one column ({ type:'group', label, top:{key,thickness?}, bottom:{...} }). */
+
+/** Same two IN/MM cards as BHDimCards, but columns follow the conventional
+ * D / B / Tw / Tf reading order instead of a flat D/Bf-top/Tf-top/Bf-bot/
+ * Tf-bot/Tw list — for unequal-flange sections, the top and bottom flange's
+ * B (and Tf) values share one column, stacked as a "상부" row over a "하부"
+ * row, so the two numbers that matter to compare sit right on top of each
+ * other instead of being split apart by Tw. Single-value columns (D, Tw)
+ * span both rows via rowSpan so they stay vertically centered. */
+export function BHDimCardsGrouped({ columns, mm, onChangeMm }) {
+  const groupCols = columns.filter((c) => c.type === 'group');
+  const Cell = (unit) => (unit === 'IN' ? InCell : MmCell);
+
+  const renderCards = (unit) => {
+    const ValueCell = Cell(unit);
+    return (
+      <div className="panel dimcard" key={unit}>
+        <div className="panel-head"><h2>치수입력<span className="unit-tag">{unit}</span></h2></div>
+        <div style={{ padding: 14, overflowX: 'auto' }}>
+          <table className="bh-dim-table bh-dim-table-split bh-dim-grouped">
+            <thead>
+              <tr>{columns.map((c) => <HeaderCell key={c.label} f={c} />)}</tr>
+            </thead>
+            <tbody>
+              <tr>
+                {columns.map((c) => (
+                  c.type === 'single'
+                    ? <td key={c.key} rowSpan={2}><ValueCell f={c} mm={mm} onChangeMm={onChangeMm} /></td>
+                    : (
+                      <td key={`${c.label}-top`}>
+                        <span className="dim-subrow-label">상부</span>
+                        <ValueCell f={c.top} mm={mm} onChangeMm={onChangeMm} />
+                      </td>
+                    )
+                ))}
+              </tr>
+              <tr>
+                {groupCols.map((c) => (
+                  <td key={`${c.label}-bot`}>
+                    <span className="dim-subrow-label">하부</span>
+                    <ValueCell f={c.bottom} mm={mm} onChangeMm={onChangeMm} />
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="draw-grid">
+      {renderCards('IN')}
+      {renderCards('MM')}
+    </div>
+  );
+}
