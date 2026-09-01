@@ -128,7 +128,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
 
 /* panels ------------------------------------------------------------- */
 .panel{background:var(--bg-card);border:1px solid var(--bd-subtle);border-radius:12px;
-  margin-bottom:20px;overflow:hidden}
+  margin-bottom:20px}
 .panel-combo{overflow:visible}
 .panel-head{display:flex;align-items:center;gap:12px;padding:14px 18px;
   border-bottom:1px solid var(--bd-subtle)}
@@ -185,10 +185,11 @@ table{width:100%;border-collapse:collapse}
 th{padding:9px 18px;font-size:10px;font-weight:700;letter-spacing:.1em;
   text-transform:uppercase;color:var(--tx-muted);text-align:left;
   background:var(--bg-inset);border-bottom:1px solid var(--bd-subtle)}
+.list thead th,.props thead th{position:sticky;top:0;z-index:5}
 td{padding:9px 18px;border-bottom:1px solid var(--bd-subtle);color:var(--tx-secondary)}
 tbody tr:last-child td{border-bottom:0}
 .r{text-align:right}
-td em{font-style:normal;font-size:10px;color:var(--tx-muted);margin-left:2px}
+td em{font-style:normal;font-size:11.5px;color:var(--tx-muted);margin-left:2px}
 .list tbody tr{cursor:pointer}
 .list tbody tr:hover{background:var(--bg-hover)}
 .list tbody tr.series-band-1{background:var(--bg-inset)}
