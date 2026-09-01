@@ -12,7 +12,7 @@
   --bg-base:#f4f6fb; --bg-surface:#fff; --bg-card:#fff; --bg-inset:#eef2f9;
   --bg-input:#fff; --bg-hover:#e8eef8; --bg-active:#dbeafe;
   --bd-subtle:#d1d9ee; --bd-accent:#0ea5e9; --bd-muted:#c7d2e8;
-  --tx-primary:#1a1f36; --tx-secondary:#4a5580; --tx-muted:#8893b5;
+  --tx-primary:#1a1f36; --tx-secondary:#4a5580; --tx-muted:#6b7290;
   --ac-main:#0284c7; --ac-dark:#0369a1; --ac-glow:rgba(2,132,199,.12);
   --val-pos:#16a34a; --val-warn:#d97706; --hd-bg:#1a1f36; --hd-text:#f4f6fb;
   --steel-fill:rgba(2,132,199,.10); --steel-line:#0284c7;
@@ -66,11 +66,16 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
   background:var(--bg-card);border:1px solid var(--bd-subtle);font-size:16px;
   display:flex;align-items:center;justify-content:center;text-decoration:none}
 #feedback:hover{border-color:var(--ac-main)}
+#sidebar-toggle{display:none;height:32px;width:32px;padding:0;border-radius:8px;cursor:pointer;
+  background:var(--bg-card);border:1px solid var(--bd-subtle);color:var(--tx-secondary);
+  font-size:16px;align-items:center;justify-content:center;flex-shrink:0}
+#sidebar-toggle:hover{border-color:var(--ac-main);color:var(--ac-main)}
 
 /* layout ------------------------------------------------------------- */
 .shell{display:flex;height:calc(100vh - 64px);margin-top:64px}
 #sidebar{width:246px;flex-shrink:0;padding:0 0 14px;background:var(--bg-surface);
   border-right:1px solid var(--bd-subtle);overflow-y:auto;height:100%}
+#sidebar-backdrop{display:none}
 
 /* sidebar grid: category spine | AISC column | KS column, straight borders */
 .nav-grid{width:100%;border-collapse:collapse;table-layout:fixed;margin-bottom:10px;
@@ -394,9 +399,27 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
 @media (max-width:900px){
   .draw-grid{grid-template-columns:1fr}
   .bh-grid{grid-template-columns:1fr}
-  #sidebar{width:74px;overflow-x:auto}
-  .nav-grid{width:160px}
-  .nav-count,.nav-eyebrow,.nav-cell-btn em{display:none}
   .props .desc{display:none}
+
+  /* Off-canvas sidebar: full-width drawer that slides in over the content
+     instead of squeezing into a permanent narrow column (which left every
+     label wrapping/truncated and was unusable). Toggled via #sidebar-toggle
+     in the header, driven by store.sidebarOpen. */
+  #sidebar-toggle{display:flex}
+  #sidebar{position:fixed;top:64px;left:0;bottom:0;z-index:55;width:min(320px,85vw);
+    transform:translateX(-100%);transition:transform .2s ease;box-shadow:8px 0 24px rgba(0,0,0,.3)}
+  #sidebar.is-open{transform:translateX(0)}
+  #sidebar-backdrop.is-open{display:block;position:fixed;top:64px;left:0;right:0;bottom:0;
+    z-index:54;background:rgba(0,0,0,.4)}
+}
+
+@media (max-width:600px){
+  /* The header's fixed-width children (brand text, badge, icon buttons)
+     don't fit next to a usable search box below 600px - drop the brand
+     text and badge first since the hamburger + search + action buttons are
+     what's actually needed to use the app. */
+  header{gap:10px;padding:0 12px}
+  .brand,.badge{display:none}
+  .search-box{min-width:0}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}

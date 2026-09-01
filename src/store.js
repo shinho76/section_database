@@ -93,14 +93,17 @@ export const useStore = create((set, get) => ({
   shape: null,
   theme: 'dark',
   query: '',
+  // Off-canvas sidebar toggle, only relevant at the <=900px breakpoint (the
+  // sidebar is always in-flow and visible above that width, see tokens.css).
+  sidebarOpen: false,
   setActiveKey: (key) => {
     document.getElementById('main')?.scrollTo(0, 0);
-    set({ activeKey: key, shape: null });
+    set({ activeKey: key, shape: null, sidebarOpen: false });
     history.pushState({ activeKey: key, shape: null }, '', location.href);
   },
   selectShape: (shape) => {
     document.getElementById('main')?.scrollTo(0, 0);
-    set({ shape });
+    set({ shape, sidebarOpen: false });
     history.pushState({ activeKey: get().activeKey, shape }, '', location.href);
   },
   setQuery: (query) => set({ query }),
@@ -109,6 +112,8 @@ export const useStore = create((set, get) => ({
     document.documentElement.setAttribute('data-theme', next);
     return { theme: next };
   }),
+  toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
+  closeSidebar: () => set({ sidebarOpen: false }),
 }));
 
 // This is a single-page app with no router/URL changes — every navigation

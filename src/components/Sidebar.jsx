@@ -28,7 +28,7 @@ function GridCell({ typeKey, activeKey, setActiveKey, counts, rowSpan, onInfo })
 }
 
 export default function Sidebar() {
-  const { activeKey, setActiveKey } = useStore();
+  const { activeKey, setActiveKey, sidebarOpen, closeSidebar } = useStore();
   const [counts, setCounts] = useState({});
   const [showPipeInfo, setShowPipeInfo] = useState(false);
 
@@ -44,7 +44,15 @@ export default function Sidebar() {
   }, []);
 
   return (
-    <nav id="sidebar">
+    <>
+      {/* Only visible/clickable at the <=900px breakpoint, see tokens.css. */}
+      <div
+        id="sidebar-backdrop"
+        className={sidebarOpen ? 'is-open' : ''}
+        onClick={closeSidebar}
+        aria-hidden="true"
+      />
+      <nav id="sidebar" className={sidebarOpen ? 'is-open' : ''}>
       <button
         type="button"
         className={`nav-unit-conv-btn${activeKey === 'UNITCONV' ? ' is-active' : ''}`}
@@ -120,6 +128,7 @@ export default function Sidebar() {
       ))}
 
       {showPipeInfo && <PipeVsHssModal onClose={() => setShowPipeInfo(false)} />}
-    </nav>
+      </nav>
+    </>
   );
 }

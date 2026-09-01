@@ -12,10 +12,16 @@ function openCalculator() {
 const FEEDBACK_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdjALpAY7ClYKv0--W5LaIdXYk9d1VxI4NXmI12SEJlxRUATQ/viewform';
 
 export default function Header() {
-  const { theme, toggleTheme } = useStore();
+  const { theme, toggleTheme, sidebarOpen, toggleSidebar } = useStore();
 
   return (
     <header>
+      <button
+        id="sidebar-toggle" type="button" aria-label="메뉴 열기/닫기"
+        aria-expanded={sidebarOpen} onClick={toggleSidebar}
+      >
+        ☰
+      </button>
       <span className="brand">SECTION DATABASE</span>
       <span className="badge">AISC v16.0</span>
       <SearchBox />
