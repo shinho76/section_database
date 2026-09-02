@@ -22,6 +22,7 @@ export const BELOW_GROUPS = [
   { label: 'REINFORCEMENT', items: ['REBAR', 'WWR'] },
   { label: 'ROD BAR', items: ['RODBAR-KS', 'RODBAR-ASTM'] },
   { label: 'FASTENERS', items: ['BOLT-ASTM', 'BOLT-KS', 'ANCHORBOLT', 'STUD'] },
+  { label: 'MATERIALS', items: ['MATERIALS-ASTM', 'MATERIALS-KS'] },
 ];
 
 // Short sidebar labels for BELOW_GROUPS items whose key isn't already readable.
@@ -42,6 +43,8 @@ export const NAV_ITEM_LABEL = {
   'BOLT-KS': 'High-Strength Bolt (KS B 1010/2819)',
   ANCHORBOLT: 'Anchor Bolt (ASTM F1554)',
   STUD: 'Shear Stud (AWS D1.1)',
+  'MATERIALS-ASTM': 'Steel Grades (ASTM)',
+  'MATERIALS-KS': 'Steel Grades (KS)',
 };
 
 export const DB_TYPES = new Set([

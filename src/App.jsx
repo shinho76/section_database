@@ -18,6 +18,7 @@ import RodBarView from './components/RodBarView.jsx';
 import BoltView from './components/BoltView.jsx';
 import AnchorBoltView from './components/AnchorBoltView.jsx';
 import StudView from './components/StudView.jsx';
+import MaterialsView from './components/MaterialsView.jsx';
 import UnitConversionView from './components/UnitConversionView.jsx';
 
 export default function App() {
@@ -66,6 +67,10 @@ export default function App() {
     main = <AnchorBoltView />;
   } else if (activeKey === 'STUD') {
     main = <StudView />;
+  } else if (activeKey === 'MATERIALS-ASTM') {
+    main = <MaterialsView standard="astm" />;
+  } else if (activeKey === 'MATERIALS-KS') {
+    main = <MaterialsView standard="ks" />;
   } else if (activeKey === 'UNITCONV') {
     main = <UnitConversionView />;
   }

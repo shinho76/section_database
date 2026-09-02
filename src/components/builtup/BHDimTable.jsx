@@ -1,5 +1,5 @@
 import thicknesses from '../../data/plateThickness.json';
-import { gradeLabel } from './steelGrade.js';
+import { gradeLabel, gradeTitle } from './steelGrade.js';
 
 const IN_TO_MM = 25.4, MM_TO_IN = 1 / 25.4;
 const EPS = 0.01;
@@ -72,7 +72,7 @@ function InCell({ f, mm, onChangeMm }) {
         />
         <span className="unit-suffix">in</span>
       </span>
-      {f.thickness && inVal !== '' && <span className="grade-badge">{gradeLabel(inVal)}</span>}
+      {f.thickness && inVal !== '' && <span className="grade-badge" title={gradeTitle(inVal)}>{gradeLabel(inVal)}</span>}
     </>
   );
 }

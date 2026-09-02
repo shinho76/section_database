@@ -1,0 +1,39 @@
+{
+  "astm": {
+    "source": "AISC Steel Construction Manual, 15th/16th Ed. Table 2-4/2-5 (specified minimum Fy/Fu by ASTM designation)",
+    "note": "표의 Fy/Fu는 대표(최소 규정) 값입니다. 두께 구간에 따라 Fy가 달라지는 강종(A529, A588 등)은 최댓값 구간만 표시했으니, 실제 설계에는 해당 ASTM 규격 원문 및 제강사 성적서(mill cert)를 확인하십시오.",
+    "E_ksi": 29000,
+    "E_mpa": 200000,
+    "rows": [
+      { "grade": "A36", "product": "Plate / Shape / Bar", "fyKsi": 36, "fuKsi": 58, "fyMpa": 250, "fuMpa": 400 },
+      { "grade": "A529 Gr.50", "product": "Plate / Bar", "fyKsi": 50, "fuKsi": 70, "fyMpa": 345, "fuMpa": 485 },
+      { "grade": "A572 Gr.42", "product": "Plate / Shape", "fyKsi": 42, "fuKsi": 60, "fyMpa": 290, "fuMpa": 415 },
+      { "grade": "A572 Gr.50", "product": "Plate / Shape", "fyKsi": 50, "fuKsi": 65, "fyMpa": 345, "fuMpa": 450 },
+      { "grade": "A572 Gr.60", "product": "Plate / Shape", "fyKsi": 60, "fuKsi": 75, "fyMpa": 415, "fuMpa": 520 },
+      { "grade": "A572 Gr.65", "product": "Plate / Shape", "fyKsi": 65, "fuKsi": 80, "fyMpa": 450, "fuMpa": 550 },
+      { "grade": "A588 Gr.50", "product": "Plate / Shape (내후성)", "fyKsi": 50, "fuKsi": 70, "fyMpa": 345, "fuMpa": 485 },
+      { "grade": "A992", "product": "W-Shape (압연 H형강)", "fyKsi": 50, "fuKsi": 65, "fyMpa": 345, "fuMpa": 450 },
+      { "grade": "A500 Gr.B (Rnd)", "product": "HSS Round", "fyKsi": 42, "fuKsi": 58, "fyMpa": 290, "fuMpa": 400 },
+      { "grade": "A500 Gr.C (Rnd)", "product": "HSS Round", "fyKsi": 46, "fuKsi": 62, "fyMpa": 317, "fuMpa": 427 },
+      { "grade": "A500 Gr.B (Rect)", "product": "HSS Box/Rect", "fyKsi": 46, "fuKsi": 58, "fyMpa": 317, "fuMpa": 400 },
+      { "grade": "A500 Gr.C (Rect)", "product": "HSS Box/Rect", "fyKsi": 50, "fuKsi": 62, "fyMpa": 345, "fuMpa": 427 },
+      { "grade": "A53 Gr.B", "product": "Pipe", "fyKsi": 35, "fuKsi": 60, "fyMpa": 241, "fuMpa": 414 }
+    ]
+  },
+  "ks": {
+    "source": "KS D 3503:2018 (일반구조용 압연강재, SS), KS D 3515:2019 (용접구조용 압연강재, SM), KS D 3566 (일반구조용 탄소강관, STK), KS D 3568 (일반구조용 각형강관, STKR)",
+    "note": "SS/SM 계열은 두께가 두꺼워질수록 항복강도(Fy)가 계단식으로 낮아집니다(예: SM355 t≤16mm 355MPa → 16<t≤40mm 345MPa → 40<t≤75mm 335MPa → 75<t≤100mm 325MPa). 아래 표는 t≤16mm(가장 흔한 판두께 구간) 기준 값이며, 두꺼운 판재는 해당 KS 규격 원문을 확인하십시오. SS400은 2018년 개정으로 SS275로 명칭·규정값이 변경되었습니다.",
+    "E_mpa": 205000,
+    "E_ksi": 29700,
+    "rows": [
+      { "grade": "SS275", "product": "Plate / Shape (일반구조용)", "fyMpa": 275, "fuMpa": 410, "fyKsi": 40, "fuKsi": 59 },
+      { "grade": "SM275", "product": "Plate / Shape (용접구조용)", "fyMpa": 275, "fuMpa": 410, "fyKsi": 40, "fuKsi": 59 },
+      { "grade": "SM355", "product": "Plate / Shape (용접구조용)", "fyMpa": 355, "fuMpa": 490, "fyKsi": 51, "fuKsi": 71 },
+      { "grade": "SM420", "product": "Plate / Shape (용접구조용, 고장력)", "fyMpa": 420, "fuMpa": 520, "fyKsi": 61, "fuKsi": 75 },
+      { "grade": "STK400", "product": "일반구조용 탄소강관 (원형)", "fyMpa": 235, "fuMpa": 402, "fyKsi": 34, "fuKsi": 58 },
+      { "grade": "STK490", "product": "일반구조용 탄소강관 (원형, 고장력)", "fyMpa": 315, "fuMpa": 490, "fyKsi": 46, "fuKsi": 71 },
+      { "grade": "STKR400", "product": "일반구조용 각형강관", "fyMpa": 245, "fuMpa": 400, "fyKsi": 36, "fuKsi": 58 },
+      { "grade": "STKR490", "product": "일반구조용 각형강관 (고장력)", "fyMpa": 325, "fuMpa": 490, "fyKsi": 47, "fuKsi": 71 }
+    ]
+  }
+}
