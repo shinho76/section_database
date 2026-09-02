@@ -16,7 +16,52 @@
       { "label": "1-1/4\"", "diaIn": 1.25, "a325Kips": 81, "a490Kips": 102 },
       { "label": "1-3/8\"", "diaIn": 1.375, "a325Kips": 97, "a490Kips": 121 },
       { "label": "1-1/2\"", "diaIn": 1.5, "a325Kips": 118, "a490Kips": 148 }
-    ]
+    ],
+    "holeDia": {
+      "source": "AISC 360-16 Table J3.3 — Nominal Hole Dimensions",
+      "note": "1-1/8\" 이상은 표의 공식(표준=d+1/16, 과대=d+5/16, 단슬롯 길이=d+3/8, 장슬롯 길이=2.5d)으로 계산한 값입니다. 슬롯 폭은 표준 구멍경과 동일합니다.",
+      "rows": [
+        { "label": "1/2\"", "diaIn": 0.5, "stdIn": 0.5625, "overIn": 0.625, "shortSlotLIn": 0.6875, "longSlotLIn": 1.25 },
+        { "label": "5/8\"", "diaIn": 0.625, "stdIn": 0.6875, "overIn": 0.8125, "shortSlotLIn": 0.875, "longSlotLIn": 1.5625 },
+        { "label": "3/4\"", "diaIn": 0.75, "stdIn": 0.8125, "overIn": 0.9375, "shortSlotLIn": 1.0, "longSlotLIn": 1.875 },
+        { "label": "7/8\"", "diaIn": 0.875, "stdIn": 0.9375, "overIn": 1.0625, "shortSlotLIn": 1.125, "longSlotLIn": 2.1875 },
+        { "label": "1\"", "diaIn": 1, "stdIn": 1.0625, "overIn": 1.25, "shortSlotLIn": 1.3125, "longSlotLIn": 2.5 },
+        { "label": "1-1/8\"", "diaIn": 1.125, "stdIn": 1.1875, "overIn": 1.4375, "shortSlotLIn": 1.5, "longSlotLIn": 2.8125 },
+        { "label": "1-1/4\"", "diaIn": 1.25, "stdIn": 1.3125, "overIn": 1.5625, "shortSlotLIn": 1.625, "longSlotLIn": 3.125 },
+        { "label": "1-3/8\"", "diaIn": 1.375, "stdIn": 1.4375, "overIn": 1.6875, "shortSlotLIn": 1.75, "longSlotLIn": 3.4375 },
+        { "label": "1-1/2\"", "diaIn": 1.5, "stdIn": 1.5625, "overIn": 1.8125, "shortSlotLIn": 1.875, "longSlotLIn": 3.75 }
+      ]
+    },
+    "edgeDistance": {
+      "source": "AISC 360-16 Table J3.4 — Minimum Edge Distance from Center of Standard Hole to Edge of Connected Part",
+      "note": "1-1/4\" 초과는 표의 공식(전단절단면=1.75d, 압연/가스절단면=1.25d)으로 계산한 값입니다.",
+      "rows": [
+        { "label": "1/2\"", "diaIn": 0.5, "shearedIn": 0.875, "rolledIn": 0.75 },
+        { "label": "5/8\"", "diaIn": 0.625, "shearedIn": 1.125, "rolledIn": 0.875 },
+        { "label": "3/4\"", "diaIn": 0.75, "shearedIn": 1.25, "rolledIn": 1.0 },
+        { "label": "7/8\"", "diaIn": 0.875, "shearedIn": 1.5, "rolledIn": 1.125 },
+        { "label": "1\"", "diaIn": 1, "shearedIn": 1.75, "rolledIn": 1.25 },
+        { "label": "1-1/8\"", "diaIn": 1.125, "shearedIn": 2.0, "rolledIn": 1.5 },
+        { "label": "1-1/4\"", "diaIn": 1.25, "shearedIn": 2.25, "rolledIn": 1.625 },
+        { "label": "1-3/8\"", "diaIn": 1.375, "shearedIn": 2.40625, "rolledIn": 1.71875 },
+        { "label": "1-1/2\"", "diaIn": 1.5, "shearedIn": 2.625, "rolledIn": 1.875 }
+      ]
+    },
+    "spacing": {
+      "source": "AISC 360-16 Section J3.3 — Minimum Spacing",
+      "note": "표준 구멍 중심 간 최소간격 = 2⅔d, 권장(선호) 간격 = 3d (d = 볼트 공칭직경).",
+      "minFactor": 2.6667,
+      "preferredFactor": 3
+    },
+    "designStrength": {
+      "source": "AISC 360-16 Table J3.2 — Nominal Strength of Fasteners, φ=0.75 (LRFD)",
+      "note": "N = 전단면에 나사부 포함(threads included, 일반적인 경우) / X = 나사부 제외(threads excluded from shear plane). 순수 볼트 강도이며 지압강도(bearing/tear-out, 판재에 따라 달라짐)는 별도로 검토해야 합니다.",
+      "phi": 0.75,
+      "rows": [
+        { "grade": "A325 (Group A)", "fntKsi": 90, "fnvNKsi": 54, "fnvXKsi": 68, "phiFntKsi": 67.5, "phiFnvNKsi": 40.5, "phiFnvXKsi": 51 },
+        { "grade": "A490 (Group B)", "fntKsi": 113, "fnvNKsi": 68, "fnvXKsi": 84, "phiFntKsi": 84.75, "phiFnvNKsi": 51, "phiFnvXKsi": 63 }
+      ]
+    }
   },
   "ks": {
     "source": "KS B 1010 (마찰접합용 고장력 6각볼트) / KS B 2819 (토크-전단형 고장력볼트) — F8T·F10T 등급",
@@ -29,6 +74,7 @@
       { "label": "M24", "diaMm": 24, "pitchMm": 3.0 },
       { "label": "M27", "diaMm": 27, "pitchMm": 3.0 },
       { "label": "M30", "diaMm": 30, "pitchMm": 3.5 }
-    ]
+    ],
+    "designNote": "구멍경·최소연단거리·피치·게이지·설계강도 표는 KDS 14 31 25(강구조 연결 설계기준)에 별도로 규정되어 있으나, 이 앱에는 아직 반영되지 않았습니다 — 신뢰할 수 있는 원문 확인 전까지는 오기재를 피하기 위해 값을 임의로 채우지 않았습니다. 국내 프로젝트는 KDS 14 31 25 원문을 직접 확인하십시오."
   }
 }
