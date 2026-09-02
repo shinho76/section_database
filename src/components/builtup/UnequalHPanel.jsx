@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
-import { manualHUnequalProps, IN2_TO_MM2, IN4_TO_MM4, LBFT_TO_KGM } from './compose.js';
+import { manualHUnequalProps, IN2_TO_MM2, IN3_TO_MM3, IN4_TO_MM4, IN6_TO_MM6, IN_TO_MM, LBFT_TO_KGM } from './compose.js';
 import { drawUnequalHSVG, fmtDim } from '../../lib/sectionSvg.js';
 import { BHDimCardsGrouped } from './BHDimTable.jsx';
+import BuiltupExtras from './BuiltupExtras.jsx';
 
 const MM_TO_IN = 1 / 25.4;
 
@@ -78,11 +79,29 @@ export default function UnequalHPanel() {
               <tr><td className="sym mono">Ix</td><td className="r mono">{propsIn.Ix.toFixed(1)} <em>in⁴</em></td><td className="r mono val-conv">{(propsIn.Ix * IN4_TO_MM4 / 1e6).toFixed(1)} <em>×10⁶ mm⁴</em></td><td className="desc">x축 관성모멘트 (도심 기준)</td></tr>
               <tr><td className="sym mono">Iy</td><td className="r mono">{propsIn.Iy.toFixed(1)} <em>in⁴</em></td><td className="r mono val-conv">{(propsIn.Iy * IN4_TO_MM4 / 1e6).toFixed(1)} <em>×10⁶ mm⁴</em></td><td className="desc">y축 관성모멘트</td></tr>
               <tr><td className="sym mono">ȳ</td><td className="r mono">{propsIn.ybar.toFixed(2)} <em>in</em></td><td className="r mono val-conv">{fmtDim(mm.d * (propsIn.ybar / dimsIn.d), 'mm')} <em>mm</em></td><td className="desc">도심 위치 (하단 기준)</td></tr>
+              <tr><td className="sym mono">Zx</td><td className="r mono">{propsIn.Zx.toFixed(2)} <em>in³</em></td><td className="r mono val-conv">{(propsIn.Zx * IN3_TO_MM3 / 1e3).toFixed(1)} <em>×10³ mm³</em></td><td className="desc">x축 소성단면계수</td></tr>
+              <tr><td className="sym mono">Zy</td><td className="r mono">{propsIn.Zy.toFixed(2)} <em>in³</em></td><td className="r mono val-conv">{(propsIn.Zy * IN3_TO_MM3 / 1e3).toFixed(1)} <em>×10³ mm³</em></td><td className="desc">y축 소성단면계수</td></tr>
+              <tr><td className="sym mono">J</td><td className="r mono">{propsIn.J.toFixed(3)} <em>in⁴</em></td><td className="r mono val-conv">{(propsIn.J * IN4_TO_MM4 / 1e3).toFixed(1)} <em>×10³ mm⁴</em></td><td className="desc">비틀림상수 (근사, 필릿 무시)</td></tr>
+              <tr><td className="sym mono">Cw</td><td className="r mono">{propsIn.Cw?.toFixed(2) ?? '—'} <em>in⁶</em></td><td className="r mono val-conv">{propsIn.Cw != null ? (propsIn.Cw * IN6_TO_MM6 / 1e9).toFixed(2) : '—'} <em>×10⁹ mm⁶</em></td><td className="desc">뒤틀림상수 (근사)</td></tr>
+              <tr><td className="sym mono">ho</td><td className="r mono">{propsIn.ho.toFixed(2)} <em>in</em></td><td className="r mono val-conv">{(propsIn.ho * IN_TO_MM).toFixed(0)} <em>mm</em></td><td className="desc">플랜지 도심간 거리</td></tr>
+              <tr><td className="sym mono">rts</td><td className="r mono">{propsIn.rts?.toFixed(3) ?? '—'} <em>in</em></td><td className="r mono val-conv">{propsIn.rts != null ? (propsIn.rts * IN_TO_MM).toFixed(1) : '—'} <em>mm</em></td><td className="desc">횡좌굴 유효 회전반경 (근사)</td></tr>
               <tr><td className="sym mono">W</td><td className="r mono">{propsIn.W.toFixed(1)} <em>lb/ft</em></td><td className="r mono val-conv">{wMm.toFixed(1)} <em>kg/m</em></td><td className="desc">단위중량</td></tr>
             </tbody>
           </table>
-          <p className="note">⚠ 계산값입니다 (필렛·용접부 미고려). A572 GR50/A36 표기는 두께에 따른 일반적 유통 규격 안내이며, 실제 조달 가능 여부는 제작사에 확인하시기 바랍니다.</p>
+          <p className="note">⚠ 계산값입니다 (필렛 미고려). Zx/Zy/J/Cw/rts는 사각 모서리(필렛 없음) 가정의 근사 계산이며 실제 설계 검토를 대체하지 않습니다. A572 GR50/A36 표기는 두께에 따른 일반적 유통 규격 안내이며, 실제 조달 가능 여부는 제작사에 확인하시기 바랍니다.</p>
         </div>
+      )}
+
+      {svgUs && svgMm && (
+        <BuiltupExtras
+          plates={[
+            { name: '상부 플랜지', widthMm: mm.bfTop, thicknessMm: mm.tfTop },
+            { name: '웨브', widthMm: mm.d - mm.tfTop - mm.tfBot, thicknessMm: mm.tw },
+            { name: '하부 플랜지', widthMm: mm.bfBot, thicknessMm: mm.tfBot },
+          ]}
+          weldLines={4}
+          bomItem={{ name: 'Unequal H', type: 'BH-2', unitWeightKgM: wMm }}
+        />
       )}
     </>
   );

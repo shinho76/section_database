@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
-import { manualHProps, manualTProps, composeSection, IN_TO_MM, IN2_TO_MM2, IN4_TO_MM4, LBFT_TO_KGM } from './compose.js';
+import { manualHProps, manualTProps, composeSection, hPlates, tPlates, mirrorPlates, IN_TO_MM, IN2_TO_MM2, IN3_TO_MM3, IN4_TO_MM4, LBFT_TO_KGM } from './compose.js';
 import { displayType } from '../../store.js';
 import { loadType } from '../../lib/dataLoader.js';
 import { drawHBotTopTSVG } from '../../lib/sectionSvg.js';
 import BHDimTable from './BHDimTable.jsx';
 import ShapeAutocomplete from './ShapeAutocomplete.jsx';
 import NumUnit from '../NumUnit.jsx';
+import BuiltupExtras from './BuiltupExtras.jsx';
 
 const MM_TO_IN = 1 / 25.4;
 const H_TYPES = ['W', 'M', 'S', 'KSH'];
@@ -46,7 +47,17 @@ function tPropsFromDbShape(t, overrideDIn) {
   const d = overrideDIn != null ? overrideDIn : dCat;
   if (overrideDIn == null && t.us.Ix !== undefined && t.us.y !== undefined) {
     const y = parseFloat(t.us.y);
-    return { A, Ix: parseFloat(t.us.Ix), Iy: parseFloat(t.us.Iy), W, d, bf, tw, tf, yTopExtent: y, yBotExtent: d - y };
+    const yTopExtent = y, yBotExtent = d - y;
+    // Ix/Iy are the catalog's real tabulated values, but the plate geometry
+    // (and therefore Zx/Zy/J, which depend on shape, not on Ix/Iy) is exact
+    // either way since d/bf/tw/tf are the real dimensions regardless of
+    // where Ix/Iy came from.
+    const Zy = (bf ** 2 * tf) / 4 + (tw ** 2 * (d - tf)) / 4;
+    const J = (bf * tf ** 3 + (d - tf) * tw ** 3) / 3;
+    return {
+      A, Ix: parseFloat(t.us.Ix), Iy: parseFloat(t.us.Iy), W, d, bf, tw, tf, yTopExtent, yBotExtent,
+      Zy, J, plates: tPlates({ bf, tw, tf, yTopExtent, yBotExtent }),
+    };
   }
   const geo = manualTProps({ d, bf, tw, tf });
   return { ...geo, A: overrideDIn == null ? (A || geo.A) : geo.A, W: overrideDIn == null ? (W || geo.W) : geo.W, d, bf, tw, tf };
@@ -189,9 +200,14 @@ export default function HPlusTPanel({ baseKind }) {
   const hPropsIn = useMemo(() => {
     if (!hDimsIn) return null;
     if (baseKind === 'db') {
+      const { d, bf, tw, tf } = hDimsIn;
+      // Real catalog Ix/Iy, but Zy/J/plates only depend on d/bf/tw/tf (exact
+      // regardless of source) - same reasoning as the T-bar catalog branch.
+      const Zy = (bf ** 2 * tf) / 2 + (tw ** 2 * (d - 2 * tf)) / 4;
+      const J = (2 * bf * tf ** 3 + (d - 2 * tf) * tw ** 3) / 3;
       return {
         A: parseFloat(hShape.us.A), Ix: parseFloat(hShape.us.Ix), Iy: parseFloat(hShape.us.Iy),
-        W: parseFloat(hShape.us.W), d: hDimsIn.d, bf: hDimsIn.bf, tw: hDimsIn.tw, tf: hDimsIn.tf,
+        W: parseFloat(hShape.us.W), d, bf, tw, tf, Zy, J, plates: hPlates({ d, bf, tw, tf }),
       };
     }
     return manualHProps(hDimsIn);
@@ -256,7 +272,10 @@ export default function HPlusTPanel({ baseKind }) {
       const centroidY = cursor - botPropsIn.yBotExtent;
       layers.push({
         yOffset: centroidY,
-        props: { ...botPropsIn, yTopExtent: botPropsIn.yBotExtent, yBotExtent: botPropsIn.yTopExtent },
+        props: {
+          ...botPropsIn, yTopExtent: botPropsIn.yBotExtent, yBotExtent: botPropsIn.yTopExtent,
+          plates: botPropsIn.plates ? mirrorPlates(botPropsIn.plates) : undefined,
+        },
       });
       cursor = centroidY - botPropsIn.yTopExtent;
     }
@@ -265,6 +284,41 @@ export default function HPlusTPanel({ baseKind }) {
 
   const svgUs = hDimsIn || botDimsIn || topDimsIn ? drawHBotTopTSVG(hDimsIn, botDimsIn, topDimsIn, '"') : null;
   const svgMm = hDimsMm || botDimsMm || topDimsMm ? drawHBotTopTSVG(hDimsMm, botDimsMm, topDimsMm, 'mm') : null;
+
+  // Cut list / weld lines: a rolled H or a catalog T-bar (baseKind 'db') is
+  // mill stock, not something a shop cuts flat plate for, so only a custom
+  // (baseKind 'custom') H or T-bar contributes cut-list plates and its own
+  // flange-web weld. A T-bar welded onto an H's flange always adds 2 weld
+  // lines (both edges of the stem) regardless of where the T-bar itself
+  // came from - that joint is always field/shop-welded here either way.
+  const cutlistPlates = [];
+  let weldLines = 0;
+  if (baseKind === 'custom' && hDimsMm) {
+    cutlistPlates.push(
+      { name: '중앙부 H 상부 플랜지', widthMm: hDimsMm.bf, thicknessMm: hDimsMm.tf },
+      { name: '중앙부 H 웨브', widthMm: hDimsMm.d - 2 * hDimsMm.tf, thicknessMm: hDimsMm.tw },
+      { name: '중앙부 H 하부 플랜지', widthMm: hDimsMm.bf, thicknessMm: hDimsMm.tf },
+    );
+    weldLines += 4;
+  }
+  if (topActive && topDimsMm) {
+    if (baseKind === 'custom') {
+      cutlistPlates.push(
+        { name: '상부 T-BAR 플랜지', widthMm: topDimsMm.bf, thicknessMm: topDimsMm.tf },
+        { name: '상부 T-BAR 스템', widthMm: topDimsMm.d - topDimsMm.tf, thicknessMm: topDimsMm.tw },
+      );
+    }
+    weldLines += 2; // stem-to-flange joint, both sides
+  }
+  if (botPropsIn && botDimsMm) {
+    if (baseKind === 'custom') {
+      cutlistPlates.push(
+        { name: '하부 T-BAR 플랜지', widthMm: botDimsMm.bf, thicknessMm: botDimsMm.tf },
+        { name: '하부 T-BAR 스템', widthMm: botDimsMm.d - botDimsMm.tf, thicknessMm: botDimsMm.tw },
+      );
+    }
+    weldLines += 2;
+  }
 
   const title = baseKind === 'db' ? 'Rolled H-Section + T-Bar' : 'Built-up H-Shape + T-Bar';
   const emptyNote = '상부·중앙부·하부 중 하나 이상을 선택하면 단면도가 표시됩니다.';
@@ -449,10 +503,13 @@ export default function HPlusTPanel({ baseKind }) {
               <tr><td className="sym mono">ry</td><td className="r mono"><NumUnit value={composite.ry.toFixed(2)} unit="in" /></td><td className="r mono val-conv">{(composite.ry * IN_TO_MM).toFixed(0)} <em>mm</em></td><td className="desc">y축 회전반경</td></tr>
               {composite.Sx_top && <tr><td className="sym mono">Sx(top)</td><td className="r mono"><NumUnit value={composite.Sx_top.toFixed(1)} unit="in³" /></td><td className="r mono val-conv">{(composite.Sx_top * IN4_TO_MM4 / IN_TO_MM / 1e3).toFixed(1)} <em>×10³ mm³</em></td><td className="desc">상연 단면계수</td></tr>}
               {composite.Sx_bot && <tr><td className="sym mono">Sx(bot)</td><td className="r mono"><NumUnit value={composite.Sx_bot.toFixed(1)} unit="in³" /></td><td className="r mono val-conv">{(composite.Sx_bot * IN4_TO_MM4 / IN_TO_MM / 1e3).toFixed(1)} <em>×10³ mm³</em></td><td className="desc">하연 단면계수</td></tr>}
+              {composite.Zx != null && <tr><td className="sym mono">Zx</td><td className="r mono"><NumUnit value={composite.Zx.toFixed(2)} unit="in³" /></td><td className="r mono val-conv">{(composite.Zx * IN3_TO_MM3 / 1e3).toFixed(1)} <em>×10³ mm³</em></td><td className="desc">x축 소성단면계수 (근사)</td></tr>}
+              {composite.Zy != null && <tr><td className="sym mono">Zy</td><td className="r mono"><NumUnit value={composite.Zy.toFixed(2)} unit="in³" /></td><td className="r mono val-conv">{(composite.Zy * IN3_TO_MM3 / 1e3).toFixed(1)} <em>×10³ mm³</em></td><td className="desc">y축 소성단면계수 (근사)</td></tr>}
+              {composite.J != null && <tr><td className="sym mono">J</td><td className="r mono"><NumUnit value={composite.J.toFixed(3)} unit="in⁴" /></td><td className="r mono val-conv">{(composite.J * IN4_TO_MM4 / 1e3).toFixed(1)} <em>×10³ mm⁴</em></td><td className="desc">비틀림상수 (근사, 필릿 무시)</td></tr>}
               <tr><td className="sym mono">W</td><td className="r mono"><NumUnit value={composite.W.toFixed(1)} unit="lb/ft" /></td><td className="r mono val-conv">{(composite.W * LBFT_TO_KGM).toFixed(1)} <em>kg/m</em></td><td className="desc">단위중량</td></tr>
             </tbody>
           </table>
-          <p className="note">단위: Imperial은 실측/계산 기준값, <span className="val-conv" style={{ display: 'inline' }}>Metric(흐리게 표시)</span>은 이 앱이 단위 환산한 값입니다.</p>
+          <p className="note">단위: Imperial은 실측/계산 기준값, <span className="val-conv" style={{ display: 'inline' }}>Metric(흐리게 표시)</span>은 이 앱이 단위 환산한 값입니다. Zx/Zy/J는 복합단면 전체에 대한 근사 계산이며(Cw/rts는 단순 I단면이 아니므로 제공하지 않음) 실제 설계 검토를 대체하지 않습니다.</p>
           {baseKind === 'db' ? (
             <p className="note">✓ H·T-BAR 모두 AISC/KS 카탈로그의 실측 단면성능(A·Ix·Iy·W)을 그대로 사용하므로 필렛(R)이 계산에 포함되어 있습니다 (KST만 예외 — 도표에 Ix/Iy가 없어 사각형 근사; A·W는 실측값 유지). 단면도의 필렛도 각 형강의 실제 R(=r 또는 kdes−tf)로 그려집니다. T-BAR는 H의 플랜지 외측면에 스템을 맞대어 용접하는 것으로 가정합니다.</p>
           ) : (
@@ -460,6 +517,14 @@ export default function HPlusTPanel({ baseKind }) {
           )}
           <p className="note">A572 GR50/A36 표기는 두께에 따른 일반적 유통 규격 안내이며, 실제 조달 가능 여부는 제작사에 확인하시기 바랍니다.</p>
         </div>
+      )}
+
+      {composite && weldLines > 0 && (
+        <BuiltupExtras
+          plates={cutlistPlates}
+          weldLines={weldLines}
+          bomItem={{ name: title, type: baseKind === 'db' ? 'BH-3' : 'BH-4', unitWeightKgM: composite.W * LBFT_TO_KGM }}
+        />
       )}
     </>
   );
