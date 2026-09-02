@@ -9,6 +9,10 @@ const CORE_KEYS = new Set([
   'd', 'ddet', 'Ht', 'h', 'OD', 'ID', 'bf', 'bfdet', 'B', 'b',
   'tw', 'twdet', 'tf', 'tfdet', 't', 't2', 'tnom', 'tdes', 'r', 'kdes',
   'A', 'W', 'Ix', 'Iy', 'Sx', 'Sy', 'Zx', 'Zy', 'rx', 'ry',
+  // Practical values connection/structural designers look up on every
+  // shape page - previously stuck behind "더 보기" forcing an extra click
+  // every time (k1/kdet/T/WGi/WGo for gauge/clearance, J/Cw/rts/ho for LTB).
+  'k1', 'kdet', 'T', 'WGi', 'WGo', 'J', 'Cw', 'rts', 'ho',
 ]);
 
 const UNITS = {
