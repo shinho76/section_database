@@ -46,7 +46,7 @@ export default function PlatePanel() {
 
   return (
     <>
-      <div className="detail-head"><div><h1 className="mono">Plate</h1></div></div>
+      <div className="detail-head"><div><h1 className="mono">Plate Weight</h1></div></div>
 
       <BHDimCards fields={FIELDS} mm={mm} onChangeMm={setField} />
 

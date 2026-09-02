@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react';
 import data from '../data/checkedPlate.json';
 
 const KG_TO_LB = 1 / 0.453592;
@@ -60,6 +61,80 @@ function KsTable({ rows }) {
   );
 }
 
+/** Weight calculator for one checked-plate thickness row: unlike a plain
+ * flat plate (PlatePanel.jsx, thickness x STEEL_DENSITY), a checked/diamond
+ * plate's unit weight is a real catalog/standard value (its raised pattern
+ * makes it heavier than a flat plate of the same thickness) - so this uses
+ * each row's own `kgm2` directly rather than any density formula. Thickness
+ * is a dropdown restricted to the rows actually in the table (no
+ * catalog-thickness guessing); width/length follow the same
+ * none -> area load / one -> line load / both -> total weight steps as
+ * PlatePanel's calculator. */
+function WeightCalc({ rows, rowLabel }) {
+  const [rowIdx, setRowIdx] = useState(0);
+  const [wMm, setWMm] = useState('');
+  const [lMm, setLMm] = useState('');
+  const row = rows[rowIdx];
+
+  const result = useMemo(() => {
+    const kgm2 = row.kgm2;
+    const wM = wMm ? Number(wMm) / 1000 : null;
+    const lM = lMm ? Number(lMm) / 1000 : null;
+    if (wM && lM) {
+      const totalKg = kgm2 * wM * lM;
+      return { mode: 'weight', totalKg, totalLb: totalKg * KG_TO_LB, kgm2 };
+    }
+    if (wM || lM) {
+      const kgm = kgm2 * (wM || lM);
+      return { mode: 'lineLoad', kgm, plf: kgm / 1.48816, dimUsed: wM ? '가로' : '세로', kgm2 };
+    }
+    return { mode: 'areaLoad', kgm2, psf: kgm2 * KGM2_TO_PSF };
+  }, [row, wMm, lMm]);
+
+  return (
+    <div className="panel">
+      <div className="panel-head"><h2>무게 계산기</h2></div>
+      <div className="field-row">
+        <label><span className="field-label">두께</span>
+          <select value={rowIdx} onChange={(e) => setRowIdx(Number(e.target.value))}>
+            {rows.map((r, i) => <option key={rowLabel(r)} value={i}>{rowLabel(r)}</option>)}
+          </select>
+        </label>
+        <label><span className="field-label">가로 (mm)</span>
+          <input type="number" min={0} step={1} placeholder="선택" value={wMm} onChange={(e) => setWMm(e.target.value)} />
+        </label>
+        <label><span className="field-label">세로 (mm)</span>
+          <input type="number" min={0} step={1} placeholder="선택" value={lMm} onChange={(e) => setLMm(e.target.value)} />
+        </label>
+      </div>
+      <p className="note" style={{ borderTop: 'none' }}>
+        두께만 선택 → 면적당 하중(kg/m²/psf) · 가로 또는 세로 하나만 입력 → 길이당 하중(kg/m·plf) · 둘 다 입력 → 총 무게(kg/lb). {rowLabel(row)} 두께의 실측 단위중량({row.kgm2.toFixed(2)} kg/m²)을 그대로 사용합니다(평철판 밀도 계산이 아님).
+      </p>
+      <figure className="panel draw" style={{ borderTop: 'none' }}>
+        <figcaption className="draw-cap">단위중량<span>UNIT WEIGHT</span></figcaption>
+        <div className="weight">
+          <span className="wv mono">{result.kgm2.toFixed(2)}</span><span className="wu">kg/m²</span>
+          {result.mode === 'areaLoad' && (
+            <><span className="wv mono val-conv" style={{ marginLeft: 14 }}>{result.psf.toFixed(2)}</span><span className="wu val-conv">psf</span></>
+          )}
+          {result.mode === 'lineLoad' && (
+            <>
+              <span className="wv mono" style={{ marginLeft: 24 }}>{result.kgm.toFixed(1)}</span><span className="wu">kg/m (w')</span>
+              <span className="wv mono val-conv" style={{ marginLeft: 14 }}>{result.plf.toFixed(2)}</span><span className="wu val-conv">plf (w')</span>
+            </>
+          )}
+          {result.mode === 'weight' && (
+            <>
+              <span className="wv mono" style={{ marginLeft: 24 }}>{result.totalKg.toFixed(1)}</span><span className="wu">kg (W)</span>
+              <span className="wv mono val-conv" style={{ marginLeft: 14 }}>{result.totalLb.toFixed(1)}</span><span className="wu val-conv">lb (W)</span>
+            </>
+          )}
+        </div>
+      </figure>
+    </div>
+  );
+}
+
 /** Checked/diamond-plate unit-weight reference, per standard: `standard`
  * is 'astm' (ASTM A786, imperial-native) or 'ks' (KR manufacturer spec,
  * SI-native — the old KS D 3633 standard was abolished in 2013) — same
@@ -83,6 +158,8 @@ export default function CheckedPlateView({ standard }) {
         <p className="note">{d.source}</p>
         <p className="note">{d.note}</p>
       </div>
+
+      <WeightCalc rows={d.rows} rowLabel={isKs ? (r) => `${r.thicknessMm}mm` : (r) => r.gaugeLabel} />
     </>
   );
 }

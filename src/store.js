@@ -27,7 +27,7 @@ export const BELOW_GROUPS = [
 
 // Short sidebar labels for BELOW_GROUPS items whose key isn't already readable.
 export const NAV_ITEM_LABEL = {
-  PLATE: 'Plate',
+  PLATE: 'Plate Weight',
   'PLATE-AVAILABLE': 'Plate Stock Availability',
   'PLATE-CHECKED-ASTM': 'Checked Plate (ASTM A786)',
   'PLATE-CHECKED-KS': 'Checked Plate (KR 제조사 규격)',
@@ -60,7 +60,7 @@ export const TYPE_LABEL = {
   'HSS-ROUND': 'HSS — Round Hollow Section',
   PIPE: 'PIPE — Steel Pipe',
   L: 'L — Angle', '2L': '2L — Double Angle', C: 'C — Channel', MC: 'MC — Misc. Channel',
-  PLATE: 'Plate (강판)',
+  PLATE: 'Plate Weight (강판 중량)',
   'BH-1': 'Built-up H-Section', 'BH-2': 'Unequal Flange Built-up H-Section',
   'BH-3': 'Rolled H-Section + T-Bar', 'BH-4': 'Built-up H-Shape + T-Bar',
   'PURLIN-CEE': 'Purlin-CEE', 'PURLIN-ZEE': 'Purlin-ZEE',
