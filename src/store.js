@@ -88,6 +88,22 @@ export const TYPE_DISPLAY = {
 };
 export const displayType = (t) => TYPE_DISPLAY[t] || t;
 
+// BOM ("적산 바구니"): a cross-page basket of shapes the user is collecting
+// for a quantity takeoff. Persisted to localStorage so it survives reloads
+// (unlike the rest of this store, which is intentionally ephemeral) — the
+// whole point is to keep adding to it while browsing different shape pages.
+const BOM_STORAGE_KEY = 'section-db-bom-v1';
+function loadBom() {
+  try {
+    const raw = localStorage.getItem(BOM_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+function saveBom(bom) {
+  try { localStorage.setItem(BOM_STORAGE_KEY, JSON.stringify(bom)); } catch { /* storage unavailable */ }
+}
+let bomIdSeq = 1;
+
 export const useStore = create((set, get) => ({
   activeKey: 'W',
   shape: null,
@@ -96,6 +112,29 @@ export const useStore = create((set, get) => ({
   // Off-canvas sidebar toggle, only relevant at the <=900px breakpoint (the
   // sidebar is always in-flow and visible above that width, see tokens.css).
   sidebarOpen: false,
+  bom: loadBom(),
+  bomOpen: false,
+  toggleBom: () => set((s) => ({ bomOpen: !s.bomOpen })),
+  closeBom: () => set({ bomOpen: false }),
+  // `item` carries whatever the source page already computed: name/ks/type,
+  // unitWeightKgM (kg/m — length x this = weight), and optionally
+  // weldLengthMPerM/weldKgPerM for built-up sections (see compose.js).
+  addToBom: (item) => set((s) => {
+    const bom = [...s.bom, { id: bomIdSeq++, qty: 1, lengthM: '', ...item }];
+    saveBom(bom);
+    return { bom };
+  }),
+  removeFromBom: (id) => set((s) => {
+    const bom = s.bom.filter((b) => b.id !== id);
+    saveBom(bom);
+    return { bom };
+  }),
+  updateBomItem: (id, patch) => set((s) => {
+    const bom = s.bom.map((b) => (b.id === id ? { ...b, ...patch } : b));
+    saveBom(bom);
+    return { bom };
+  }),
+  clearBom: () => { saveBom([]); set({ bom: [] }); },
   setActiveKey: (key) => {
     document.getElementById('main')?.scrollTo(0, 0);
     set({ activeKey: key, shape: null, sidebarOpen: false });

@@ -9,7 +9,7 @@ import ShapeCompareModal from './ShapeCompareModal.jsx';
 const seriesKey = (name) => name.split(/[X×]/)[0];
 
 export default function ShapeList() {
-  const { activeKey, selectShape, setActiveKey } = useStore();
+  const { activeKey, selectShape, setActiveKey, addToBom } = useStore();
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [matches, setMatches] = useState(new Map()); // name -> { type, shape }
@@ -113,6 +113,15 @@ export default function ShapeList() {
             return (
               <tr key={`${s.name}-${i}`} onClick={() => selectShape(s)} className={`series-band-${band}`}>
                 <td className="mono strong">
+                  <button
+                    type="button" className="bom-add-btn" title="적산 바구니에 담기"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToBom({ name: s.name, ks: s.ks, type: activeKey, unitWeightKgM: parseFloat(s.mt.W) || 0 });
+                    }}
+                  >
+                    +
+                  </button>
                   {s.name}
                   {avail && (
                     <em className={`avail-badge avail-${avail}`} title={AVAIL_LABEL[avail]}>

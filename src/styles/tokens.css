@@ -166,6 +166,27 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
 .dongkuk-badge.is-no{background:rgba(251,191,36,.14);color:var(--val-warn)}
 .chip-dongkuk.is-yes{border-color:var(--val-pos);color:var(--val-pos)}
 .chip-dongkuk.is-no{border-color:var(--val-warn);color:var(--val-warn)}
+.chip-btn{cursor:pointer;font:inherit;letter-spacing:normal;text-transform:none}
+.chip-btn:hover{border-color:var(--ac-main);color:var(--ac-main)}
+
+/* BOM ("적산 바구니") ---------------------------------------------------- */
+#bom{position:relative;height:32px;width:32px;padding:0;border-radius:8px;cursor:pointer;
+  background:var(--bg-card);border:1px solid var(--bd-subtle);font-size:16px;
+  display:flex;align-items:center;justify-content:center}
+#bom:hover{border-color:var(--ac-main)}
+.bom-count{position:absolute;top:-6px;right:-6px;min-width:16px;height:16px;padding:0 3px;
+  border-radius:999px;background:var(--ac-main);color:#04222b;font-size:10px;font-weight:800;
+  line-height:16px;text-align:center}
+.bom-add-btn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;
+  margin-right:6px;border-radius:4px;border:1px solid var(--bd-accent);background:none;
+  color:var(--ac-main);font-size:13px;font-weight:700;line-height:1;cursor:pointer;vertical-align:middle}
+.bom-add-btn:hover{background:var(--ac-glow)}
+.bom-ks{color:var(--tx-muted);font-size:11px;font-weight:400}
+.bom-input-sm{width:64px;min-width:0;text-align:right;padding:4px 6px;font-size:12px}
+.bom-totals{display:flex;gap:20px;justify-content:flex-end;padding:12px 4px 4px;
+  font-size:13px;color:var(--tx-secondary)}
+.bom-totals b{color:var(--ac-main);font-size:16px}
+.bom-table td{vertical-align:middle}
 
 /* DB-native vs converted/calculated values: converted numbers use a muted
  * color and a slightly smaller size (no opacity fade, no tag) so the reader

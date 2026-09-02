@@ -6,7 +6,7 @@ import SectionSVG from './SectionSVG.jsx';
 import PropsTable from './PropsTable.jsx';
 
 export default function ShapeDetail({ shape }) {
-  const { activeKey, selectShape } = useStore();
+  const { activeKey, selectShape, addToBom } = useStore();
   const [defs, setDefs] = useState(null);
 
   useEffect(() => { loadDefs().then(setDefs); }, []);
@@ -32,6 +32,12 @@ export default function ShapeDetail({ shape }) {
                 {dongkukAvailable(shape) ? '✓ 동국제강 생산' : '✕ 동국제강 미생산'}
               </span>
             )}
+            <button
+              type="button" className="chip chip-btn"
+              onClick={() => addToBom({ name: shape.name, ks: shape.ks, type: activeKey, unitWeightKgM: parseFloat(shape.mt.W) || 0 })}
+            >
+              🧺 적산 바구니에 담기
+            </button>
           </div>
         </div>
       </div>
