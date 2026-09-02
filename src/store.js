@@ -105,7 +105,12 @@ function loadBom() {
 function saveBom(bom) {
   try { localStorage.setItem(BOM_STORAGE_KEY, JSON.stringify(bom)); } catch { /* storage unavailable */ }
 }
-let bomIdSeq = 1;
+const initialBom = loadBom();
+// Must continue from the highest id already in the restored BOM, not reset
+// to 1 - otherwise a new addToBom() after a reload reuses an id already
+// held by a restored row, and remove/update then hit whichever row (or
+// both) share that id instead of the intended one.
+let bomIdSeq = initialBom.reduce((max, b) => Math.max(max, b.id ?? 0), 0) + 1;
 
 export const useStore = create((set, get) => ({
   activeKey: 'W',
@@ -115,7 +120,7 @@ export const useStore = create((set, get) => ({
   // Off-canvas sidebar toggle, only relevant at the <=900px breakpoint (the
   // sidebar is always in-flow and visible above that width, see tokens.css).
   sidebarOpen: false,
-  bom: loadBom(),
+  bom: initialBom,
   bomOpen: false,
   toggleBom: () => set((s) => ({ bomOpen: !s.bomOpen })),
   closeBom: () => set({ bomOpen: false }),
