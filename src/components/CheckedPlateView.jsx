@@ -3,6 +3,7 @@ import data from '../data/checkedPlate.json';
 
 const KG_TO_LB = 1 / 0.453592;
 const KGM2_TO_PSF = 1 / 4.88243;
+const IN_TO_MM = 25.4;
 
 /** ASTM A786 floor/diamond plate table: thicknessIn/psf are the standard's
  * native values (US), thicknessMm/kgm2 are given alongside directly in the
@@ -69,17 +70,21 @@ function KsTable({ rows }) {
  * is a dropdown restricted to the rows actually in the table (no
  * catalog-thickness guessing); width/length follow the same
  * none -> area load / one -> line load / both -> total weight steps as
- * PlatePanel's calculator. */
-function WeightCalc({ rows, rowLabel }) {
+ * PlatePanel's calculator. `unit` matches the table's own native unit (in
+ * for ASTM, mm for KS) so the width/length inputs read the same way as
+ * every other dimension field on that page, not a unit switch of their own. */
+function WeightCalc({ rows, rowLabel, unit }) {
   const [rowIdx, setRowIdx] = useState(0);
-  const [wMm, setWMm] = useState('');
-  const [lMm, setLMm] = useState('');
+  const [wVal, setWVal] = useState('');
+  const [lVal, setLVal] = useState('');
   const row = rows[rowIdx];
+  const step = unit === 'in' ? 0.01 : 1;
+  const toMm = (v) => (unit === 'in' ? v * IN_TO_MM : v);
 
   const result = useMemo(() => {
     const kgm2 = row.kgm2;
-    const wM = wMm ? Number(wMm) / 1000 : null;
-    const lM = lMm ? Number(lMm) / 1000 : null;
+    const wM = wVal ? toMm(Number(wVal)) / 1000 : null;
+    const lM = lVal ? toMm(Number(lVal)) / 1000 : null;
     if (wM && lM) {
       const totalKg = kgm2 * wM * lM;
       return { mode: 'weight', totalKg, totalLb: totalKg * KG_TO_LB, kgm2 };
@@ -89,7 +94,7 @@ function WeightCalc({ rows, rowLabel }) {
       return { mode: 'lineLoad', kgm, plf: kgm / 1.48816, dimUsed: wM ? '가로' : '세로', kgm2 };
     }
     return { mode: 'areaLoad', kgm2, psf: kgm2 * KGM2_TO_PSF };
-  }, [row, wMm, lMm]);
+  }, [row, wVal, lVal, unit]);
 
   return (
     <div className="panel">
@@ -100,11 +105,17 @@ function WeightCalc({ rows, rowLabel }) {
             {rows.map((r, i) => <option key={rowLabel(r)} value={i}>{rowLabel(r)}</option>)}
           </select>
         </label>
-        <label><span className="field-label">가로 (mm)</span>
-          <input type="number" min={0} step={1} placeholder="선택" value={wMm} onChange={(e) => setWMm(e.target.value)} />
+        <label><span className="field-label">가로 (Width)</span>
+          <span className="unit-input">
+            <input type="number" min={0} step={step} placeholder="선택" value={wVal} onChange={(e) => setWVal(e.target.value)} />
+            <span className="unit-suffix">{unit}</span>
+          </span>
         </label>
-        <label><span className="field-label">세로 (mm)</span>
-          <input type="number" min={0} step={1} placeholder="선택" value={lMm} onChange={(e) => setLMm(e.target.value)} />
+        <label><span className="field-label">세로 (Length)</span>
+          <span className="unit-input">
+            <input type="number" min={0} step={step} placeholder="선택" value={lVal} onChange={(e) => setLVal(e.target.value)} />
+            <span className="unit-suffix">{unit}</span>
+          </span>
         </label>
       </div>
       <p className="note" style={{ borderTop: 'none' }}>
@@ -159,7 +170,7 @@ export default function CheckedPlateView({ standard }) {
         <p className="note">{d.note}</p>
       </div>
 
-      <WeightCalc rows={d.rows} rowLabel={isKs ? (r) => `${r.thicknessMm}mm` : (r) => r.gaugeLabel} />
+      <WeightCalc rows={d.rows} rowLabel={isKs ? (r) => `${r.thicknessMm}mm` : (r) => r.gaugeLabel} unit={isKs ? 'mm' : 'in'} />
     </>
   );
 }
