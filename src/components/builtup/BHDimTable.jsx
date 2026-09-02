@@ -1,9 +1,13 @@
 import thicknesses from '../../data/plateThickness.json';
-import { gradeLabel, gradeTitle } from './steelGrade.js';
+import { gradeLabel, gradeTitle, ksGradeLabel, ksGradeTitle } from './steelGrade.js';
 
 const IN_TO_MM = 25.4, MM_TO_IN = 1 / 25.4;
 const EPS = 0.01;
 const LABEL_RE = /^(.*?)\s*(\([^)]*\))$/;
+// Both unit lists share one <select> (grouped by optgroup) and one id
+// space (imperial: 1-24, ks: 101+, see plateThickness.json) so a single
+// lookup can resolve either kind of selection.
+const ALL_THICKNESSES = [...thicknesses.imperial, ...thicknesses.ks];
 
 /** Header cell: splits "Bf-top (폭)" into a main line and a parenthesized
  * unit line rendered on a second line, always — even for short labels like
@@ -46,11 +50,14 @@ function InCell({ f, mm, onChangeMm }) {
     const x = parseFloat(raw);
     if (Number.isFinite(x) && x > 0) onChangeMm(f.key)(x * IN_TO_MM);
   };
+  const matchedKs = f.thickness && v != null
+    ? thicknesses.ks.find((t) => Math.abs(t.thickness_mm - v) < EPS)
+    : null;
   const selId = f.thickness && v != null
-    ? (thicknesses.find((t) => Math.abs(t.thickness_mm - v) < EPS)?.id ?? '')
+    ? (ALL_THICKNESSES.find((t) => Math.abs(t.thickness_mm - v) < EPS)?.id ?? '')
     : '';
   const onSelect = (e) => {
-    const t = thicknesses.find((x) => String(x.id) === e.target.value);
+    const t = ALL_THICKNESSES.find((x) => String(x.id) === e.target.value);
     if (t) onChangeMm(f.key)(t.thickness_mm);
   };
   return (
@@ -58,7 +65,12 @@ function InCell({ f, mm, onChangeMm }) {
       {f.thickness ? (
         <select value={selId} onChange={onSelect}>
           <option value="">직접입력…</option>
-          {thicknesses.map((t) => <option key={t.id} value={t.id}>{t.thickness_in}"</option>)}
+          <optgroup label="Imperial (in)">
+            {thicknesses.imperial.map((t) => <option key={t.id} value={t.id}>{t.thickness_in}"</option>)}
+          </optgroup>
+          <optgroup label="KS (mm)">
+            {thicknesses.ks.map((t) => <option key={t.id} value={t.id}>{t.thickness_mm}mm</option>)}
+          </optgroup>
         </select>
       ) : (
         // Invisible placeholder so this input starts at the same y as a
@@ -72,7 +84,11 @@ function InCell({ f, mm, onChangeMm }) {
         />
         <span className="unit-suffix">in</span>
       </span>
-      {f.thickness && inVal !== '' && <span className="grade-badge" title={gradeTitle(inVal)}>{gradeLabel(inVal)}</span>}
+      {f.thickness && inVal !== '' && (
+        matchedKs
+          ? <span className="grade-badge" title={ksGradeTitle(matchedKs)}>{ksGradeLabel(matchedKs)}</span>
+          : <span className="grade-badge" title={gradeTitle(inVal)}>{gradeLabel(inVal)}</span>
+      )}
     </>
   );
 }
@@ -115,16 +131,21 @@ function InRowCell({ f, mm, onChangeMm }) {
       </span>
     );
   }
-  const selId = v != null ? (thicknesses.find((t) => Math.abs(t.thickness_mm - v) < EPS)?.id ?? '') : '';
+  const selId = v != null ? (ALL_THICKNESSES.find((t) => Math.abs(t.thickness_mm - v) < EPS)?.id ?? '') : '';
   const onSelect = (e) => {
-    const t = thicknesses.find((x) => String(x.id) === e.target.value);
+    const t = ALL_THICKNESSES.find((x) => String(x.id) === e.target.value);
     if (t) onChangeMm(f.key)(t.thickness_mm);
   };
   return (
     <div className="dim-row-in-thickness">
       <select value={selId} onChange={onSelect}>
         <option value="">직접입력…</option>
-        {thicknesses.map((t) => <option key={t.id} value={t.id}>{t.thickness_in}"</option>)}
+        <optgroup label="Imperial (in)">
+          {thicknesses.imperial.map((t) => <option key={t.id} value={t.id}>{t.thickness_in}"</option>)}
+        </optgroup>
+        <optgroup label="KS (mm)">
+          {thicknesses.ks.map((t) => <option key={t.id} value={t.id}>{t.thickness_mm}mm</option>)}
+        </optgroup>
       </select>
       <span className="unit-input unit-input-compact">
         <input type="number" step={0.001} value={inVal === '' ? '' : +inVal.toFixed(1)} onChange={onType} />

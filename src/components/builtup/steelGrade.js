@@ -33,3 +33,20 @@ export function gradeLabel(inches) {
 export function gradeTitle(inches) {
   return gradesForThicknessIn(inches).map((g) => `${g}: ${fyLabel(g)}`).join(' · ');
 }
+
+// KS-side equivalent of gradeLabel/gradeTitle above, for a plateThickness.json
+// 'ks' entry (which carries its own `grades` list directly, unlike the
+// imperial side's inch-threshold rule) — see BHDimTable.jsx's KS optgroup.
+export function ksGradeLabel(entry) {
+  const grades = entry?.grades || [];
+  if (grades.length === 2) return `${grades[0]} & ${grades[1]}`;
+  if (grades.length === 1) return `ONLY ${grades[0]}`;
+  return '';
+}
+
+export function ksGradeTitle(entry) {
+  return (entry?.grades || []).map((g) => {
+    const row = materials.ks.rows.find((r) => r.grade === g);
+    return row ? `${g}: Fy=${row.fyMpa}MPa/${row.fyKsi}ksi` : g;
+  }).join(' · ');
+}
