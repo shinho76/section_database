@@ -141,7 +141,7 @@
    "r2": "7.5"
   },
   "dongkuk": {
-   "available": null
+   "available": false
   }
  },
  {
@@ -170,7 +170,7 @@
    "r2": "5.5"
   },
   "dongkuk": {
-   "available": null
+   "available": false
   }
  },
  {
@@ -199,7 +199,7 @@
    "r2": "5.5"
   },
   "dongkuk": {
-   "available": null
+   "available": false
   }
  },
  {
@@ -315,7 +315,7 @@
    "r2": "8.5"
   },
   "dongkuk": {
-   "available": null
+   "available": false
   }
  },
  {
@@ -344,7 +344,7 @@
    "r2": "7"
   },
   "dongkuk": {
-   "available": false
+   "available": true
   }
  },
  {
@@ -373,7 +373,7 @@
    "r2": "9.5"
   },
   "dongkuk": {
-   "available": null
+   "available": false
   }
  },
  {
@@ -402,7 +402,7 @@
    "r2": "9.5"
   },
   "dongkuk": {
-   "available": null
+   "available": false
   }
  },
  {
@@ -431,7 +431,7 @@
    "r2": "9"
   },
   "dongkuk": {
-   "available": false
+   "available": true
   }
  },
  {
@@ -460,7 +460,7 @@
    "r2": "9"
   },
   "dongkuk": {
-   "available": null
+   "available": false
   }
  },
  {
@@ -489,7 +489,7 @@
    "r2": "12"
   },
   "dongkuk": {
-   "available": false
+   "available": true
   }
  }
 ]

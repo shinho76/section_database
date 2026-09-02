@@ -3,6 +3,7 @@ import { useStore, TYPE_LABEL } from '../store.js';
 import { loadType } from '../lib/dataLoader.js';
 import { hasMatchPair, matchTargetType, findNearestInRows, widthHeightSimilarity } from '../lib/nearestMatch.js';
 import { nucorAvailability, AVAIL_LABEL, AVAIL_MARK } from '../lib/nucorAvailability.js';
+import { dongkukAvailable, DONGKUK_LABEL } from '../lib/dongkukAvailability.js';
 import ShapeCompareModal from './ShapeCompareModal.jsx';
 
 const seriesKey = (name) => name.split(/[X×]/)[0];
@@ -116,6 +117,14 @@ export default function ShapeList() {
                   {avail && (
                     <em className={`avail-badge avail-${avail}`} title={AVAIL_LABEL[avail]}>
                       {AVAIL_MARK[avail]}
+                    </em>
+                  )}
+                  {isKs && dongkukAvailable(s) !== null && (
+                    <em
+                      className={`dongkuk-badge ${dongkukAvailable(s) ? 'is-yes' : 'is-no'}`}
+                      title={DONGKUK_LABEL[dongkukAvailable(s)]}
+                    >
+                      {dongkukAvailable(s) ? '동국 생산' : '동국 미생산'}
                     </em>
                   )}
                 </td>

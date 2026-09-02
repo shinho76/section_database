@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useStore, displayType, KS_STANDARD } from '../store.js';
 import { loadDefs } from '../lib/dataLoader.js';
+import { dongkukAvailable, DONGKUK_LABEL } from '../lib/dongkukAvailability.js';
 import SectionSVG from './SectionSVG.jsx';
 import PropsTable from './PropsTable.jsx';
 
@@ -23,6 +24,14 @@ export default function ShapeDetail({ shape }) {
             {shape.edi && <span className="chip">EDI 명칭 &nbsp;<b className="mono">{shape.edi}</b></span>}
             <span className="chip">Type &nbsp;<b className="mono">{displayType(shape.type)}</b></span>
             {KS_STANDARD[shape.type] && <span className="chip">{KS_STANDARD[shape.type]}</span>}
+            {dongkukAvailable(shape) !== null && (
+              <span
+                className={`chip chip-dongkuk ${dongkukAvailable(shape) ? 'is-yes' : 'is-no'}`}
+                title={DONGKUK_LABEL[dongkukAvailable(shape)]}
+              >
+                {dongkukAvailable(shape) ? '✓ 동국제강 생산' : '✕ 동국제강 미생산'}
+              </span>
+            )}
           </div>
         </div>
       </div>
