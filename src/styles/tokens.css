@@ -82,13 +82,13 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
 .nav-grid{width:100%;border-collapse:collapse;table-layout:fixed;margin-bottom:10px;
   border-bottom:1px solid var(--bd-subtle)}
 .nav-grid col.spine, .nav-grid th.nav-grid-spine, .nav-grid td.nav-grid-spine{width:24px}
-.nav-grid th{padding:7px 2px;font-size:11.5px;font-weight:800;letter-spacing:.08em;
+.nav-grid th{padding:7px 2px;font-size:12.5px;font-weight:800;letter-spacing:.08em;
   color:var(--ac-main);background:var(--bg-inset);border:1px solid var(--bd-subtle);
   text-align:center}
 .nav-grid th.nav-grid-spine{background:var(--bg-surface);border-top:0;border-left:0}
 .nav-grid-spine{border:1px solid var(--bd-subtle);background:var(--bg-inset);padding:0}
 .nav-grid-spine span{display:block;writing-mode:vertical-rl;text-orientation:mixed;
-  transform:rotate(180deg);font-size:14px;font-weight:800;letter-spacing:.09em;
+  transform:rotate(180deg);font-size:15px;font-weight:800;letter-spacing:.09em;
   color:var(--ac-main);text-align:center;padding:6px 0;white-space:nowrap}
 .nav-grid-cell{border:1px solid var(--bd-subtle);padding:0;vertical-align:middle;position:relative}
 .nav-cell-info{position:absolute;top:1px;right:1px;width:15px;height:15px;padding:0;
@@ -97,9 +97,9 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
 .nav-cell-info:hover{opacity:1}
 .nav-cell-btn{display:flex;flex-direction:row;align-items:center;justify-content:center;
   gap:5px;width:100%;height:100%;min-height:32px;padding:4px 3px;background:none;border:0;
-  cursor:pointer;color:var(--tx-secondary);font:700 13.5px/1 Inter,sans-serif;white-space:nowrap}
+  cursor:pointer;color:var(--tx-secondary);font:700 14.5px/1 Inter,sans-serif;white-space:nowrap}
 .nav-cell-btn span{letter-spacing:.02em}
-.nav-cell-btn em{font-style:normal;font-size:11px;font-weight:600;color:var(--tx-secondary);
+.nav-cell-btn em{font-style:normal;font-size:12px;font-weight:600;color:var(--tx-secondary);
   font-family:ui-monospace,monospace}
 .nav-cell-btn:hover{background:var(--bg-hover);color:var(--tx-primary)}
 .nav-cell-btn.is-active{background:var(--ac-select-glow);color:var(--ac-select)}
@@ -114,16 +114,16 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
 
 .nav-group{margin-bottom:10px;padding-top:10px;border-top:1px solid var(--bd-subtle)}
 .nav-group:first-child{padding-top:0;border-top:0}
-.nav-eyebrow{padding:2px 18px 8px;font-size:13px;font-weight:800;letter-spacing:.08em;
+.nav-eyebrow{padding:2px 18px 8px;font-size:14px;font-weight:800;letter-spacing:.08em;
   color:var(--ac-main);text-transform:uppercase}
 .nav-item{display:flex;align-items:center;gap:10px;width:100%;padding:9px 18px;
   background:none;border:0;border-left:3px solid transparent;cursor:pointer;
-  color:var(--tx-secondary);font:600 12.5px/1 Inter,sans-serif;text-align:left}
+  color:var(--tx-secondary);font:600 13.5px/1 Inter,sans-serif;text-align:left}
 .nav-item:hover{background:var(--bg-hover);color:var(--tx-primary)}
 .nav-item.is-active{background:var(--ac-select-glow);border-left-color:var(--ac-select);
   color:var(--ac-select)}
 .nav-name{flex:1;letter-spacing:.06em}
-.nav-count{font-size:10px;color:var(--tx-muted);font-family:ui-monospace,monospace}
+.nav-count{font-size:11px;color:var(--tx-muted);font-family:ui-monospace,monospace}
 .nav-divider{height:1px;background:var(--bd-subtle);margin:8px 0}
 #main{flex:1;padding:24px;overflow-x:auto;overflow-y:auto;height:100%}
 
@@ -362,7 +362,7 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
   padding-left:8px;white-space:nowrap;width:48px}
 .bh-dim-table td{vertical-align:top}
 .bh-dim-table input{width:100%;min-width:92px;text-align:center;font-size:17px}
-.bh-dim-table select{display:block;width:100%;margin-bottom:4px;font-size:16px;padding:5px 6px}
+.bh-dim-table select{display:block;width:100%;margin-bottom:4px;font-size:16px;padding:5px 6px;text-align:center}
 .bh-dim-table select.dim-select-spacer{visibility:hidden;box-shadow:none;border-color:transparent}
 .bh-dim-table + .bh-dim-table{margin-top:14px}
 .grade-badge{display:block;font-size:15px;color:var(--ac-main);margin-top:4px;white-space:nowrap}
@@ -374,6 +374,11 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
 .bh-dim-grouped tbody tr:last-child td{padding-top:4px;border-top:1px dashed var(--bd-subtle)}
 .dim-subrow-label{display:block;font-size:11px;font-weight:700;letter-spacing:.04em;
   color:var(--tx-muted);text-transform:uppercase;margin-bottom:3px}
+/* D/Tw span both the 상부/하부 rows (rowSpan=2) - center them across that
+ * full height instead of inheriting .bh-dim-table td's vertical-align:top,
+ * which pinned them ~18px above the 상부 row's actual input boxes (that
+ * row's own top offset comes from its "상부" label sitting above it). */
+.bh-dim-grouped td[rowspan]{vertical-align:middle}
 
 /* field-per-row compact card layout (BH-4 custom plate input) ---------- */
 .bh-dim-group{display:flex;gap:14px;flex-wrap:wrap;padding:4px 14px 12px}
@@ -388,7 +393,7 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
 .field-row .t-type-col{flex:0 0 55px;min-width:0}
 .field-row .t-search-col{flex:0 0 150px;min-width:0}
 .field-row .t-height-col{flex:1 1 0%;min-width:0}
-.field-row .field-label{display:block;min-height:2.6em;line-height:1.3}
+.field-row .field-label{display:block;min-height:3.9em;line-height:1.3}
 .t-height-mini{display:flex;gap:6px}
 .t-height-mini .unit-input{flex:1 1 0%;width:auto;min-width:0}
 .t-height-mini input{width:100%;min-width:0;font-size:11px;padding:6px 20px 6px 6px}
@@ -402,7 +407,7 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
 .bh-dim-rows td{padding:4px 6px}
 .bh-dim-rows input{width:84px;min-width:0;font-size:14px}
 .dim-row-in-thickness{display:flex;gap:6px;align-items:center}
-.dim-row-in-thickness select{width:58px;flex:none;font-size:11px;padding:4px 3px}
+.dim-row-in-thickness select{width:58px;flex:none;font-size:11px;padding:4px 3px;text-align:center}
 .dim-row-in-thickness input{width:70px;flex:none}
 
 /* Unit suffix shown inside a dimension input (e.g. "0.9 in") so the field's

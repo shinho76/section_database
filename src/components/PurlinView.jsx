@@ -43,7 +43,7 @@ function CeeTable({ rows, onSelect }) {
       <tbody>
         {rows.map((r, i) => (
           <tr key={i} onClick={() => onSelect(r, 'cee')} className={`series-band-${bands[i]}`}>
-            <td className="mono ks">C-{r.d}X{r.b}X{r.ga}GA</td>
+            <td className="mono ks">CEE-{r.d}X{r.b}X{r.ga}GA</td>
             <td className="r mono">{r.d}</td>
             <td className="r mono">{r.b}</td>
             <td className="r mono">{r.ga}</td>
@@ -72,7 +72,7 @@ function ZeeTable({ rows, onSelect }) {
       <tbody>
         {rows.map((r, i) => (
           <tr key={i} onClick={() => onSelect(r, 'zee')} className={`series-band-${bands[i]}`}>
-            <td className="mono ks">Z-{r.d}X{r.b}X{r.ga}GA</td>
+            <td className="mono ks">ZEE-{r.d}X{r.b}X{r.ga}GA</td>
             <td className="r mono">{r.d}</td>
             <td className="r mono">{r.b}</td>
             <td className="r mono">{r.ga}</td>
@@ -115,7 +115,7 @@ function EasyLapTable({ rows, onSelect }) {
 }
 
 const KIND_LABEL = { cee: 'Cee', zee: 'Zee', easyLap: 'Easy-Lap Zee' };
-const KIND_PREFIX = { cee: 'C', zee: 'Z', easyLap: 'ZEL' };
+const KIND_PREFIX = { cee: 'CEE', zee: 'ZEE', easyLap: 'ZEL' };
 
 function PurlinDetail({ row, kind, onBack, source }) {
   const label = kind === 'easyLap'

@@ -42,6 +42,54 @@ async function loadKsSearchIndex() {
 
 const norm = (s) => (s || '').toString().toUpperCase().replace(/\s/g, '');
 
+// Non-shape reference data (WWR, rebar, bolts, purlin, ...) each live in
+// their own oddly-shaped JSON file and their pages don't have a per-row
+// "shape" detail view the way sidebar-grid types do - searching one just
+// navigates to that page (see SearchBox.jsx's goto()), it doesn't select a
+// row. This index only needs a display `name` and the sidebar `type` key to
+// jump to, built lazily once and cached like the shape indexes above.
+let extraIndex = null;
+
+async function buildExtraIndex() {
+  const entries = [];
+  const add = (name, type) => entries.push({ name, ks: '', edi: '', type });
+
+  const [wwr, rebar, bolt, anchorbolt, stud, rodbar, purlin, metaldeck] = await Promise.all([
+    import('../data/wwr.json'), import('../data/rebar.json'), import('../data/bolt.json'),
+    import('../data/anchorbolt.json'), import('../data/stud.json'), import('../data/rodbar.json'),
+    import('../data/purlin.json'), import('../data/metaldeck.json'),
+  ].map((p) => p.then((m) => m.default).catch(() => null)));
+
+  if (wwr) {
+    for (const r of wwr.plainImperial || []) add(r.size, 'WWR');
+    for (const r of wwr.deformedImperial || []) add(r.size, 'WWR');
+  }
+  if (rebar) for (const r of rebar.bars || []) add(r.size, 'REBAR');
+  if (bolt) {
+    for (const r of bolt.astm?.rows || []) add(r.label, 'BOLT-ASTM');
+    for (const r of bolt.ks?.rows || []) add(r.label, 'BOLT-KS');
+  }
+  if (anchorbolt) for (const r of anchorbolt.sizes || []) add(r.label, 'ANCHORBOLT');
+  if (stud) for (const r of stud.rows || []) add(r.label, 'STUD');
+  if (rodbar) {
+    for (const r of rodbar.astm?.rows || []) add(r.label, 'RODBAR-ASTM');
+    for (const r of rodbar.ks?.rows || []) add(r.label ?? `D${r.diaMm}`, 'RODBAR-KS');
+  }
+  if (purlin) {
+    for (const r of purlin.cee || []) add(`CEE-${r.d}X${r.b}X${r.ga}GA`, 'PURLIN-CEE');
+    for (const r of purlin.zee || []) add(`ZEE-${r.d}X${r.b}X${r.ga}GA`, 'PURLIN-ZEE');
+    for (const r of purlin.easyLapZee || []) add(`ZEL-${r.d}X${r.b1}/${r.b2}X${r.ga}GA`, 'PURLIN-ZEE');
+  }
+  if (metaldeck) for (const fam of metaldeck.families || []) for (const p of fam.profiles || []) add(p.name, 'METALDECK');
+
+  return entries;
+}
+
+async function loadExtraIndex() {
+  if (!extraIndex) extraIndex = buildExtraIndex();
+  return extraIndex;
+}
+
 export async function searchType(type, query) {
   const rows = await loadType(type);
   const q = norm(query);
@@ -51,13 +99,16 @@ export async function searchType(type, query) {
   );
 }
 
-/** Search across every AISC + KS shape, regardless of the active sidebar
- * selection. Returns lightweight index entries {name, edi, ks, type}. */
+/** Search across every AISC + KS shape *and* every other reference table in
+ * the app (WWR, rebar, bolts, purlin, metal deck, ...), regardless of the
+ * active sidebar selection. Returns lightweight index entries
+ * {name, edi, ks, type}; entries whose `type` isn't a DB_TYPES shape type
+ * don't resolve to a "shape" - SearchBox just navigates to that page. */
 export async function searchAll(query) {
   const q = norm(query);
   if (!q) return [];
-  const [idx, ksIdx] = await Promise.all([loadSearchIndex(), loadKsSearchIndex()]);
-  return [...idx, ...ksIdx].filter(
+  const [idx, ksIdx, extraIdx] = await Promise.all([loadSearchIndex(), loadKsSearchIndex(), loadExtraIndex()]);
+  return [...idx, ...ksIdx, ...extraIdx].filter(
     (s) => norm(s.name).includes(q) || norm(s.edi).includes(q) || norm(s.ks).includes(q),
   );
 }

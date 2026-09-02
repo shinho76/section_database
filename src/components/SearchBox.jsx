@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useStore, TYPE_LABEL, displayType } from '../store.js';
+import { useStore, TYPE_LABEL, NAV_ITEM_LABEL, DB_TYPES, displayType } from '../store.js';
 import { searchAll, resolveShape } from '../lib/dataLoader.js';
 
 const HISTORY_KEY = 'aisc-search-history';
@@ -83,6 +83,16 @@ export default function SearchBox() {
   const groups = useMemo(() => groupResults(results), [results]);
 
   const goto = async (entry) => {
+    // Non-shape reference tables (WWR, rebar, bolts, purlin, ...) don't have
+    // a per-row detail view to select into - just jump to their page.
+    if (!DB_TYPES.has(entry.type)) {
+      setActiveKey(entry.type);
+      setQuery('');
+      setOpen(false);
+      pushHistory(entry);
+      setHistory(loadHistory());
+      return;
+    }
     const shape = await resolveShape(entry);
     if (!shape) return;
     setActiveKey(entry.type);
@@ -125,7 +135,7 @@ export default function SearchBox() {
           )}
           {showResults && groups.map((g) => (
             <div className="search-group" key={g.type}>
-              <div className="search-group-head">{TYPE_LABEL[g.type] || g.type}</div>
+              <div className="search-group-head">{TYPE_LABEL[g.type] || NAV_ITEM_LABEL[g.type] || g.type}</div>
               {g.items.map((s, i) => (
                 <button key={`${s.type}-${s.name}-${i}`} className="search-row" onClick={() => goto(s)}>
                   <span className="search-row-name mono">{s.name}</span>

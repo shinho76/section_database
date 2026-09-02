@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useStore, displayType } from '../store.js';
+import { useStore, displayType, DB_TYPES } from '../store.js';
 import { searchAll, resolveShape } from '../lib/dataLoader.js';
 
 export default function SearchResults() {
@@ -17,6 +17,13 @@ export default function SearchResults() {
   }, [query]);
 
   const onPick = async (entry) => {
+    // Non-shape reference tables (WWR, rebar, bolts, purlin, ...) don't have
+    // a per-row detail view - just jump to their page.
+    if (!DB_TYPES.has(entry.type)) {
+      setActiveKey(entry.type);
+      setQuery('');
+      return;
+    }
     const shape = await resolveShape(entry);
     if (!shape) return;
     // The search index still carries the combined "HSS" type; route to
