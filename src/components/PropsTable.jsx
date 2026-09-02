@@ -15,6 +15,21 @@ const CORE_KEYS = new Set([
   'k1', 'kdet', 'T', 'WGi', 'WGo', 'J', 'Cw', 'rts', 'ho',
 ]);
 
+// Which keys, for which KS types, are this app's own geometric calculation
+// (sharp-corner/no-fillet approximation from d/bf/tw/tf etc.) rather than a
+// transcribed KS D 3502/3566/3568 appendix value - only H's Ix/Iy/rx/ry/Zx/Zy
+// are a real published table (see tools/augment_ks_section_props.py). Drives
+// the extra disclaimer note below so users don't mistake a computed value
+// for an official one.
+const GEOMETRIC_KEYS = {
+  KSH: ['k1', 'kdet', 'T', 'J', 'Cw', 'rts', 'ho'],
+  KSC: ['Ix', 'Iy', 'Sx', 'Sy', 'Zx', 'Zy', 'rx', 'ry', 'x'],
+  KST: ['Ix', 'Iy', 'Sx', 'Zx', 'Zy', 'rx', 'ry', 'y', 'J'],
+  KSP: ['Ix', 'Iy', 'Sx', 'Sy', 'Zx', 'Zy', 'rx', 'ry', 'J', 'C'],
+  KSPP: ['Ix', 'Iy', 'Sx', 'Sy', 'Zx', 'Zy', 'rx', 'ry', 'J', 'C'],
+  KSB: ['Ix', 'Iy', 'Sx', 'Sy', 'Zx', 'Zy', 'rx', 'ry', 'J'],
+};
+
 const UNITS = {
   W: ['lb/ft', 'kg/m'], A: ['in²', 'mm²'],
   d: ['in', 'mm'], ddet: ['in', 'mm'], Ht: ['in', 'mm'], h: ['in', 'mm'], OD: ['in', 'mm'],
@@ -65,6 +80,7 @@ export default function PropsTable({ shape, defs }) {
   // the conversion - the reverse of KS.
   const isKs = shape.type.startsWith('KS');
   const ksStd = KS_STANDARD[shape.type] || 'KS';
+  const geometricKeys = (GEOMETRIC_KEYS[shape.type] || []).filter((k) => keys.includes(k));
 
   return (
     <div className="panel">
@@ -96,6 +112,13 @@ export default function PropsTable({ shape, defs }) {
           ? `Metric 값은 ${ksStd} 규격표(SI 단위 원본)의 값을 그대로 사용합니다. Imperial 값은 이 앱이 계산한 단위 환산값입니다.`
           : 'Imperial 값은 AISC Shapes Database v16.0 Excel 파일(imperial 단위 원본)의 값을 그대로 사용합니다. Metric 값은 이 앱이 계산한 단위 환산값입니다.'}
       </p>
+      {geometricKeys.length > 0 && (
+        <p className="note">
+          {geometricKeys.join(', ')}는(은) {ksStd} 부록표가 아니라 d/bf/tw/tf 등 치수로부터 이 앱이
+          기하학적으로 계산한 값입니다(필렛 반경 미반영 근사). 공식 발간표와 다를 수 있으니 최종 설계에는
+          원문을 확인하십시오.
+        </p>
+      )}
     </div>
   );
 }
