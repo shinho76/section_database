@@ -418,6 +418,12 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
   font-size:11px;color:var(--tx-muted);pointer-events:none}
 .unit-input-compact{width:70px;flex:none}
 .unit-input-compact input{width:100%}
+/* .field-row (CheckedPlateView's weight calculator etc.) doesn't otherwise
+ * force its <input> to fill .unit-input's width like .bh-dim-table does -
+ * without this the input stays at the browser's default ~20-char size and
+ * the absolutely-positioned unit-suffix ends up floating well past its
+ * right edge instead of sitting inside it. */
+.field-row .unit-input input{width:100%}
 @media (max-width:640px){
   .bh-dim-group{flex-direction:column}
   .bh-dim-piece{width:100%}
