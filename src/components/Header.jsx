@@ -24,7 +24,6 @@ export default function Header() {
         ☰
       </button>
       <span className="brand">SteelWeight</span>
-      <span className="badge">AISC v16.0</span>
       <SearchBox />
       <button id="calculator" title="계산기 열기" onClick={openCalculator}>🔢</button>
       <a id="feedback" title="피드백 보내기" href={FEEDBACK_FORM_URL} target="_blank" rel="noopener noreferrer">💬</a>
