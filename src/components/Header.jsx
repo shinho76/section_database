@@ -23,7 +23,7 @@ export default function Header() {
       >
         ☰
       </button>
-      <span className="brand">STEELWEIGHT</span>
+      <span className="brand">SteelWeight</span>
       <span className="badge">AISC v16.0</span>
       <SearchBox />
       <button id="calculator" title="계산기 열기" onClick={openCalculator}>🔢</button>
