@@ -128,7 +128,7 @@ export const useStore = create((set, get) => ({
   // unitWeightKgM (kg/m — length x this = weight), and optionally
   // weldLengthMPerM/weldKgPerM for built-up sections (see compose.js).
   addToBom: (item) => set((s) => {
-    const bom = [...s.bom, { id: bomIdSeq++, qty: 1, lengthM: '', ...item }];
+    const bom = [...s.bom, { id: bomIdSeq++, qty: 1, lengthM: 10, ...item }];
     saveBom(bom);
     return { bom };
   }),

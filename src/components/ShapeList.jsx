@@ -93,6 +93,9 @@ export default function ShapeList() {
           ))}
         </div>
       )}
+      {isKs && visibleRows.some((s) => dongkukAvailable(s) === false) && (
+        <p className="note" style={{ borderTop: 'none' }}>* 생산여부 확인 필요</p>
+      )}
       <table className="list">
         <thead>
           <tr>
@@ -128,13 +131,8 @@ export default function ShapeList() {
                       {AVAIL_MARK[avail]}
                     </em>
                   )}
-                  {isKs && dongkukAvailable(s) !== null && (
-                    <em
-                      className={`dongkuk-badge ${dongkukAvailable(s) ? 'is-yes' : 'is-no'}`}
-                      title={DONGKUK_LABEL[dongkukAvailable(s)]}
-                    >
-                      {dongkukAvailable(s) ? '동국 생산' : '동국 미생산'}
-                    </em>
+                  {isKs && dongkukAvailable(s) === false && (
+                    <em className="dongkuk-badge is-no" title={DONGKUK_LABEL[false]}>*</em>
                   )}
                 </td>
                 <td className="mono ks">{s.ks}</td>
