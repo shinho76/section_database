@@ -111,7 +111,7 @@ function leader(dim, id, x, y, tx, ty, label, anchor = 'start') {
   dim.push(text(tx + (anchor === 'end' ? -5 : 5), ty, label, anchor));
 }
 
-export function drawShapeSVG(s, u) {
+export function drawShapeSVG(s, u, editable = false) {
   const p = s[u];
   const g = (k) => num(p[k]);
   const t = s.type;
@@ -288,24 +288,59 @@ export function drawShapeSVG(s, u) {
     body = t === 'S'
       ? sShapeBodyPath(x0, y0, bw, bh, twpx, tfpx, r, fill, stroke)
       : iBodyPath(x0, y0, bw, bh, twpx, tfpx, r, fill, stroke);
-    hDim(dim, id, x0, x0 + bw, y0 - 22, y0, `bf=${p.bf}${unit}`);
-    vDim(dim, id, y0, y0 + bh, x0 - 24, x0, `d=${p.d}${unit}`);
+    // `editable` (BH-1's builder page only) suppresses just these 4 labels'
+    // text - the dimension lines/arrows stay, an overlay <input> from
+    // hShapeEditAnchors() below takes the label's spot instead. Every other
+    // caller passes editable=false (the default) and sees the normal label.
+    hDim(dim, id, x0, x0 + bw, y0 - 22, y0, editable ? '' : `bf=${p.bf}${unit}`);
+    vDim(dim, id, y0, y0 + bh, x0 - 24, x0, editable ? '' : `d=${p.d}${unit}`);
     // tf on the top flange, k mirrored onto the bottom flange — vertically
     // separated by the full web height so the two callouts never collide.
-    microV(dim, id, y0, y0 + tfpx, x0 + bw + 26, `tf=${p.tf}${unit}`);
+    microV(dim, id, y0, y0 + tfpx, x0 + bw + 26, editable ? '' : `tf=${p.tf}${unit}`);
     if (p.kdes) {
       const kpx = sx(g('kdes'));
       microV(dim, id, y0 + bh - kpx, y0 + bh, x0 + bw + 26, `k=${p.kdes}${unit}`);
     }
     // tw threaded through the web at mid-height (inside the shape, like the
     // reference drawing), k1 below the shape — different zones from tf/k.
-    microH(dim, id, cx - twpx / 2, cx + twpx / 2, cy, `tw=${p.tw}${unit}`, 1);
+    microH(dim, id, cx - twpx / 2, cx + twpx / 2, cy, editable ? '' : `tw=${p.tw}${unit}`, 1);
     if (p.k1) microH(dim, id, cx, cx + sx(g('k1')), y0 + bh + 24, `k1=${p.k1}${unit}`, 1);
     centerlines(dim, cx, cy, bw / 2, bh / 2);
   }
 
   return `<svg viewBox="0 0 ${W} ${H}" class="section-svg" role="img"
     aria-label="${s.name} cross section in ${unit}">${defsBlock(id)}${body}${dim.join('')}</svg>`;
+}
+
+/** Label-anchor points (as % of CANVAS_W/CANVAS_H, so callers don't need the
+ * 460x320 viewBox constants) for the bf/d/tw/tf dimension labels drawShapeSVG
+ * suppresses when called with editable=true — used to position an overlay
+ * <input> exactly where each label would have been drawn. `p` is a plain
+ * {bf,d,tw,tf} object (either unit works - see note below). MUST mirror the
+ * "I-shapes" branch's geometry above (gutter/bboxW/bboxH/k/cx/cy/x0/y0) or
+ * the overlay will drift off the actual drawing.
+ *
+ * The result is identical whether `p`'s values are inches or mm: k scales
+ * inversely with the unit (k_mm = k_in / 25.4), so every derived pixel
+ * position (bw, x0, cx, ...) comes out unit-invariant. Callers only need to
+ * compute this once and reuse it for both the Imperial and Metric figure. */
+export function hShapeEditAnchors(p) {
+  const bf = num(p.bf), d = num(p.d), tw = num(p.tw), tf = num(p.tf);
+  const gutter = { l: 56, t: 42, r: 150, b: 62 };
+  const bboxW = W - gutter.l - gutter.r;
+  const bboxH = H - gutter.t - gutter.b;
+  const k = Math.min(bboxW / bf, bboxH / d);
+  const sx = (v) => v * k;
+  const cx = gutter.l + bboxW / 2, cy = gutter.t + bboxH / 2;
+  const bw = sx(bf), bh = sx(d), tfpx = sx(tf);
+  const x0 = cx - bw / 2, y0 = cy - bh / 2;
+  const pct = (x, y) => ({ xPct: (x / W) * 100, yPct: (y / H) * 100 });
+  return {
+    bf: pct(cx, y0 - 31),
+    d: pct(x0 - 24, cy),
+    tf: pct(x0 + bw + 46, y0 + tfpx / 2),
+    tw: pct(cx, cy + 17),
+  };
 }
 
 /** Simple circular bar (Rebar): diameter dimension line only. */

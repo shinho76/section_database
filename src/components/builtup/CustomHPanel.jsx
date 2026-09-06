@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { manualHProps, IN2_TO_MM2, IN3_TO_MM3, IN4_TO_MM4, IN6_TO_MM6, IN_TO_MM, LBFT_TO_KGM } from './compose.js';
 import { ksLabel, usLabel } from './labels.js';
-import { drawShapeSVG } from '../../lib/sectionSvg.js';
+import { drawShapeSVG, hShapeEditAnchors } from '../../lib/sectionSvg.js';
 import { BHDimCards } from './BHDimTable.jsx';
 import BuiltupExtras from './BuiltupExtras.jsx';
 
@@ -13,6 +13,40 @@ const FIELDS = [
   { key: 'tw', label: 'Tw (두께)', thickness: true },
   { key: 'tf', label: 'Tf (두께)', thickness: true },
 ];
+
+// bf/d/tw/tf, in the order drawShapeSVG's I-shape branch draws their labels.
+const SVG_EDIT_KEYS = ['bf', 'd', 'tw', 'tf'];
+
+/** Overlay <input>s positioned over the (now-blanked, see drawShapeSVG's
+ * `editable` param) bf/d/tw/tf labels on the SVG drawing — an alternate
+ * entry point into the same `set()` state setter BHDimCards' own inputs use,
+ * so editing here is exactly equivalent (same validation, same downstream
+ * recompute). `unit` is 'us' (inches, needs mm conversion) or 'mt' (mm,
+ * already the state's native unit). */
+function SvgEditOverlay({ mm, set, unit }) {
+  const anchors = hShapeEditAnchors(unit === 'us'
+    ? { bf: mm.bf * MM_TO_IN, d: mm.d * MM_TO_IN, tw: mm.tw * MM_TO_IN, tf: mm.tf * MM_TO_IN }
+    : mm);
+  return SVG_EDIT_KEYS.map((key) => {
+    const displayVal = unit === 'us' ? mm[key] * MM_TO_IN : mm[key];
+    const onChange = (e) => {
+      const raw = e.target.value;
+      if (raw === '') return;
+      const x = parseFloat(raw);
+      if (!Number.isFinite(x) || x <= 0) return;
+      set(key)(unit === 'us' ? x * IN_TO_MM : x);
+    };
+    return (
+      <input
+        key={key} type="number" className="svg-edit-input"
+        style={{ left: `${anchors[key].xPct}%`, top: `${anchors[key].yPct}%` }}
+        step={unit === 'us' ? 0.01 : 0.1}
+        value={+displayVal.toFixed(1)}
+        onChange={onChange}
+      />
+    );
+  });
+}
 
 export default function CustomHPanel() {
   const [mm, setMm] = useState({ d: 400, bf: 200, tw: 7.9375, tf: 12.7 });
@@ -62,7 +96,10 @@ export default function CustomHPanel() {
         <div className="draw-grid">
           <figure className="panel draw">
             <figcaption className="draw-cap">Imperial<span>inch</span></figcaption>
-            <div dangerouslySetInnerHTML={{ __html: drawShapeSVG(shape, 'us') }} />
+            <div className="svg-edit-wrap">
+              <div dangerouslySetInnerHTML={{ __html: drawShapeSVG(shape, 'us', true) }} />
+              <SvgEditOverlay mm={mm} set={set} unit="us" />
+            </div>
             <div className="weight">
               <span className="wv mono">{shape.us.W}</span><span className="wu">lb/ft</span>
               <span className="wv mono" style={{ marginLeft: 14 }}>{shape.us.A}</span><span className="wu">in²</span>
@@ -70,7 +107,10 @@ export default function CustomHPanel() {
           </figure>
           <figure className="panel draw">
             <figcaption className="draw-cap">Metric<span>mm</span></figcaption>
-            <div dangerouslySetInnerHTML={{ __html: drawShapeSVG(shape, 'mt') }} />
+            <div className="svg-edit-wrap">
+              <div dangerouslySetInnerHTML={{ __html: drawShapeSVG(shape, 'mt', true) }} />
+              <SvgEditOverlay mm={mm} set={set} unit="mt" />
+            </div>
             <div className="weight val-conv">
               <span className="wv mono">{shape.mt.W}</span><span className="wu">kg/m</span>
               <span className="wv mono" style={{ marginLeft: 14 }}>{shape.mt.A}</span><span className="wu">mm²</span>
