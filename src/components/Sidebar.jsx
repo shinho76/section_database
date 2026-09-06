@@ -3,6 +3,23 @@ import { useStore, GRID_GROUPS, BELOW_GROUPS, DB_TYPES, NAV_ITEM_LABEL, GRID_CEL
 import { loadType } from '../lib/dataLoader.js';
 import PipeVsHssModal from './PipeVsHssModal.jsx';
 
+// Splits a NAV_ITEM_LABEL like "Checked Plate (ASTM A786)" into a main line
+// and a trailing "(...)" qualifier, rendered smaller on its own line below -
+// same idea as PropsTable/BHDimTable's main+unit header split, applied here
+// so a long standard/spec name in parens doesn't compete visually with the
+// item's actual name.
+const NAV_LABEL_RE = /^(.*?)\s*(\([^)]*\))$/;
+function NavItemLabel({ label }) {
+  const m = label.match(NAV_LABEL_RE);
+  if (!m) return <span className="nav-name">{label}</span>;
+  return (
+    <span className="nav-name">
+      <span className="nav-name-main">{m[1]}</span>
+      <span className="nav-name-sub">{m[2]}</span>
+    </span>
+  );
+}
+
 function GridCell({ typeKey, activeKey, setActiveKey, counts, rowSpan, onInfo }) {
   if (!typeKey) return <td className="nav-grid-cell" />;
   const label = GRID_CELL_LABEL[typeKey] ?? (typeKey.startsWith('KS') ? typeKey.slice(2) : typeKey);
@@ -118,7 +135,7 @@ export default function Sidebar() {
               className={`nav-item${key === activeKey ? ' is-active' : ''}`}
               onClick={() => setActiveKey(key)}
             >
-              <span className="nav-name">{NAV_ITEM_LABEL[key] ?? key}</span>
+              <NavItemLabel label={NAV_ITEM_LABEL[key] ?? key} />
               {DB_TYPES.has(key) && (
                 <span className="nav-count">{counts[key] ?? ''}</span>
               )}
