@@ -25,9 +25,9 @@ export default function Header() {
       </button>
       <span className="brand">SteelWeight</span>
       <SearchBox />
-      <button id="calculator" title="계산기 열기" onClick={openCalculator}>🔢</button>
-      <a id="feedback" title="피드백 보내기" href={FEEDBACK_FORM_URL} target="_blank" rel="noopener noreferrer">💬</a>
-      <button id="bom" title="적산 바구니" onClick={toggleBom}>
+      <button id="calculator" title="계산기 열기" aria-label="계산기 열기" onClick={openCalculator}>🔢</button>
+      <a id="feedback" title="피드백 보내기" aria-label="피드백 보내기" href={FEEDBACK_FORM_URL} target="_blank" rel="noopener noreferrer">💬</a>
+      <button id="bom" title="적산 바구니" aria-label={`적산 바구니${bom.length > 0 ? ` (${bom.length}개)` : ''}`} onClick={toggleBom}>
         🧺{bom.length > 0 && <span className="bom-count">{bom.length}</span>}
       </button>
       <button id="theme" onClick={toggleTheme}>

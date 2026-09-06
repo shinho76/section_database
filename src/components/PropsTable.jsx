@@ -1,19 +1,27 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { KS_STANDARD } from '../store.js';
 
 // Shown by default; everything else (warping constants, perimeter figures,
 // Design-Guide-9 statical moments, etc.) is real data but rarely needed, so
 // it's tucked behind "더 보기" instead of forcing a 30-50 row scroll on
 // every shape page.
-const CORE_KEYS = new Set([
-  'd', 'ddet', 'Ht', 'h', 'OD', 'ID', 'bf', 'bfdet', 'B', 'b',
-  'tw', 'twdet', 'tf', 'tfdet', 't', 't2', 'tnom', 'tdes', 'r', 'kdes',
-  'A', 'W', 'Ix', 'Iy', 'Sx', 'Sy', 'Zx', 'Zy', 'rx', 'ry',
+// Core (always-visible) keys, grouped into labeled clusters so scanning one
+// number doesn't mean reading past every other kind of value first - see
+// design review. Order here is render order; a group with no keys present
+// on the current shape is skipped entirely (no empty caption row).
+const CORE_GROUPS = [
+  { label: '치수 (Geometry)', keys: [
+    'd', 'ddet', 'Ht', 'h', 'OD', 'ID', 'bf', 'bfdet', 'B', 'b',
+    'tw', 'twdet', 'tf', 'tfdet', 't', 't2', 'tnom', 'tdes', 'r', 'kdes', 'A', 'W',
+  ] },
+  { label: '단면계수 (Section Moduli)', keys: ['Ix', 'Iy', 'Sx', 'Sy', 'Zx', 'Zy', 'rx', 'ry'] },
+  { label: '비틀림·횡좌굴 (Torsional / LTB)', keys: ['J', 'Cw', 'rts', 'ho'] },
   // Practical values connection/structural designers look up on every
   // shape page - previously stuck behind "더 보기" forcing an extra click
-  // every time (k1/kdet/T/WGi/WGo for gauge/clearance, J/Cw/rts/ho for LTB).
-  'k1', 'kdet', 'T', 'WGi', 'WGo', 'J', 'Cw', 'rts', 'ho',
-]);
+  // every time.
+  { label: '상세치수 (Detailing)', keys: ['k1', 'kdet', 'T', 'WGi', 'WGo'] },
+];
+const CORE_KEYS = new Set(CORE_GROUPS.flatMap((g) => g.keys));
 
 // Which keys, for which KS types, are this app's own geometric calculation
 // (sharp-corner/no-fillet approximation from d/bf/tw/tf etc.) rather than a
@@ -98,7 +106,16 @@ export default function PropsTable({ shape, defs }) {
           </tr>
         </thead>
         <tbody>
-          {coreKeys.map((k) => <PropRow key={k} k={k} shape={shape} isKs={isKs} defs={defs} />)}
+          {CORE_GROUPS.map((g) => {
+            const present = g.keys.filter((k) => coreKeys.includes(k));
+            if (!present.length) return null;
+            return (
+              <Fragment key={g.label}>
+                <tr className="props-group-row"><td colSpan={4}>{g.label}</td></tr>
+                {present.map((k) => <PropRow key={k} k={k} shape={shape} isKs={isKs} defs={defs} />)}
+              </Fragment>
+            );
+          })}
           {moreKeys.length > 0 && expanded && moreKeys.map((k) => <PropRow key={k} k={k} shape={shape} isKs={isKs} defs={defs} />)}
         </tbody>
       </table>

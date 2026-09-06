@@ -72,6 +72,14 @@ export default function BomModal({ onClose }) {
     } catch { /* clipboard unavailable (permissions, non-secure context) — silently no-op */ }
   };
 
+  // Destructive/irreversible - a stray click shouldn't silently wipe the
+  // basket, so this is the one action in the footer that asks first.
+  const onClearAll = () => {
+    if (window.confirm(`적산 바구니의 항목 ${bom.length}개를 전부 비울까요? 되돌릴 수 없습니다.`)) {
+      clearBom();
+    }
+  };
+
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal-panel" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 820 }}>
@@ -113,7 +121,7 @@ export default function BomModal({ onClose }) {
                       <td className="r mono">{r.unitWeightKgM.toFixed(1)} <em>kg/m</em></td>
                       <td className="r mono">{rowWeightKg(r).toFixed(1)}</td>
                       <td>
-                        <button type="button" className="layer-del" title="제거" onClick={() => removeFromBom(r.id)}>×</button>
+                        <button type="button" className="layer-del" title="제거" aria-label="제거" onClick={() => removeFromBom(r.id)}>×</button>
                       </td>
                     </tr>
                   ))}
@@ -134,7 +142,7 @@ export default function BomModal({ onClose }) {
             <>
               <button className="btn" onClick={copyTable}>{copied ? '복사됨 ✓' : '표 복사'}</button>
               <button className="btn" onClick={() => downloadCsv(bom)}>CSV 내보내기</button>
-              <button className="btn" onClick={clearBom}>전체 비우기</button>
+              <button className="btn btn-danger" onClick={onClearAll}>전체 비우기</button>
             </>
           )}
           <button className="back" onClick={onClose}>닫기</button>

@@ -34,7 +34,7 @@ function GridCell({ typeKey, activeKey, setActiveKey, counts, rowSpan, onInfo })
       </button>
       {onInfo && (
         <button
-          type="button" className="nav-cell-info" title="Pipe vs HSS(Round) 차이 보기"
+          type="button" className="nav-cell-info" title="Pipe vs HSS(Round) 차이 보기" aria-label="Pipe vs HSS(Round) 차이 보기"
           onClick={(e) => { e.stopPropagation(); onInfo(); }}
         >
           ℹ️
