@@ -6,6 +6,7 @@ import { drawPurlinSVG } from '../lib/sectionSvg.js';
 // catalog (purlin.json's rows only carry the bare gauge number).
 const GAUGE_THICKNESS_IN = { 18: 0.047, 16: 0.059, 14: 0.070, 12: 0.105, 10: 0.125 };
 const IN_TO_MM = 25.4;
+const LBFT_TO_KGM = 1.48816;
 
 function GaThicknessCells({ ga }) {
   const tIn = GAUGE_THICKNESS_IN[ga];
@@ -54,7 +55,7 @@ function CeeTable({ rows, onSelect }) {
           <th>KS</th><th className="r">D (in)</th><th className="r">B (in)</th>
           <th className="r">Ga.</th><th className="r">Thickness (in)</th><th className="r">Thickness (mm)</th>
           <th className="r">L (in)</th>
-          <th className="r">Weight (lb/ft)</th><th className="r">Area (in²)</th><th>Note</th>
+          <th className="r">Weight (lb/ft)</th><th className="r">Weight (kg/m)</th><th className="r">Area (in²)</th><th>Note</th>
         </tr>
       </thead>
       <tbody>
@@ -67,6 +68,7 @@ function CeeTable({ rows, onSelect }) {
             <GaThicknessCells ga={r.ga} />
             <td className="r mono">{r.l}</td>
             <td className="r mono">{r.weightLbFt}</td>
+            <td className="r mono val-conv">{(r.weightLbFt * LBFT_TO_KGM).toFixed(2)}</td>
             <td className="r mono">{r.areaIn2}</td>
             <td className="desc">{r.note}</td>
           </tr>
@@ -85,7 +87,7 @@ function ZeeTable({ rows, onSelect }) {
           <th>KS</th><th className="r">D (in)</th><th className="r">B (in)</th>
           <th className="r">Ga.</th><th className="r">Thickness (in)</th><th className="r">Thickness (mm)</th>
           <th className="r">L (in)</th>
-          <th className="r">Weight (lb/ft)</th><th className="r">Area (in²)</th><th>Note</th>
+          <th className="r">Weight (lb/ft)</th><th className="r">Weight (kg/m)</th><th className="r">Area (in²)</th><th>Note</th>
         </tr>
       </thead>
       <tbody>
@@ -98,6 +100,7 @@ function ZeeTable({ rows, onSelect }) {
             <GaThicknessCells ga={r.ga} />
             <td className="r mono">{r.l}</td>
             <td className="r mono">{r.weightLbFt}</td>
+            <td className="r mono val-conv">{(r.weightLbFt * LBFT_TO_KGM).toFixed(2)}</td>
             <td className="r mono">{r.areaIn2}</td>
             <td className="desc">{r.note}</td>
           </tr>
@@ -115,7 +118,7 @@ function EasyLapTable({ rows, onSelect }) {
         <tr>
           <th>KS</th><th className="r">D (in)</th><th className="r">B1 (in)</th><th className="r">B2 (in)</th>
           <th className="r">Ga.</th><th className="r">Thickness (in)</th><th className="r">Thickness (mm)</th>
-          <th className="r">L (in)</th><th className="r">Weight (lb/ft)</th>
+          <th className="r">L (in)</th><th className="r">Weight (lb/ft)</th><th className="r">Weight (kg/m)</th>
         </tr>
       </thead>
       <tbody>
@@ -129,6 +132,7 @@ function EasyLapTable({ rows, onSelect }) {
             <GaThicknessCells ga={r.ga} />
             <td className="r mono">{r.l}</td>
             <td className="r mono">{r.weightLbFt}</td>
+            <td className="r mono val-conv">{(r.weightLbFt * LBFT_TO_KGM).toFixed(2)}</td>
           </tr>
         ))}
       </tbody>
