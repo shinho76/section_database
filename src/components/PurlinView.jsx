@@ -1,6 +1,22 @@
 import { useEffect, useState } from 'react';
 import { drawPurlinSVG } from '../lib/sectionSvg.js';
 
+// Design base metal thickness per nominal gauge (in) - standard cold-formed
+// steel framing gauge table, independent of any one purlin manufacturer's
+// catalog (purlin.json's rows only carry the bare gauge number).
+const GAUGE_THICKNESS_IN = { 18: 0.047, 16: 0.059, 14: 0.070, 12: 0.105, 10: 0.125 };
+const IN_TO_MM = 25.4;
+
+function GaThicknessCells({ ga }) {
+  const tIn = GAUGE_THICKNESS_IN[ga];
+  return (
+    <>
+      <td className="r mono">{tIn != null ? tIn.toFixed(3) : '—'}</td>
+      <td className="r mono val-conv">{tIn != null ? (tIn * IN_TO_MM).toFixed(2) : '—'}</td>
+    </>
+  );
+}
+
 function CapabilityPanel({ cap }) {
   if (!cap) return null;
   const rows = Object.entries(cap).filter(([k]) => k !== 'title');
@@ -36,7 +52,8 @@ function CeeTable({ rows, onSelect }) {
       <thead>
         <tr>
           <th>KS</th><th className="r">D (in)</th><th className="r">B (in)</th>
-          <th className="r">Ga.</th><th className="r">L (in)</th>
+          <th className="r">Ga.</th><th className="r">Thickness (in)</th><th className="r">Thickness (mm)</th>
+          <th className="r">L (in)</th>
           <th className="r">Weight (lb/ft)</th><th className="r">Area (in²)</th><th>Note</th>
         </tr>
       </thead>
@@ -47,6 +64,7 @@ function CeeTable({ rows, onSelect }) {
             <td className="r mono">{r.d}</td>
             <td className="r mono">{r.b}</td>
             <td className="r mono">{r.ga}</td>
+            <GaThicknessCells ga={r.ga} />
             <td className="r mono">{r.l}</td>
             <td className="r mono">{r.weightLbFt}</td>
             <td className="r mono">{r.areaIn2}</td>
@@ -65,7 +83,8 @@ function ZeeTable({ rows, onSelect }) {
       <thead>
         <tr>
           <th>KS</th><th className="r">D (in)</th><th className="r">B (in)</th>
-          <th className="r">Ga.</th><th className="r">L (in)</th>
+          <th className="r">Ga.</th><th className="r">Thickness (in)</th><th className="r">Thickness (mm)</th>
+          <th className="r">L (in)</th>
           <th className="r">Weight (lb/ft)</th><th className="r">Area (in²)</th><th>Note</th>
         </tr>
       </thead>
@@ -76,6 +95,7 @@ function ZeeTable({ rows, onSelect }) {
             <td className="r mono">{r.d}</td>
             <td className="r mono">{r.b}</td>
             <td className="r mono">{r.ga}</td>
+            <GaThicknessCells ga={r.ga} />
             <td className="r mono">{r.l}</td>
             <td className="r mono">{r.weightLbFt}</td>
             <td className="r mono">{r.areaIn2}</td>
@@ -94,7 +114,8 @@ function EasyLapTable({ rows, onSelect }) {
       <thead>
         <tr>
           <th>KS</th><th className="r">D (in)</th><th className="r">B1 (in)</th><th className="r">B2 (in)</th>
-          <th className="r">Ga.</th><th className="r">L (in)</th><th className="r">Weight (lb/ft)</th>
+          <th className="r">Ga.</th><th className="r">Thickness (in)</th><th className="r">Thickness (mm)</th>
+          <th className="r">L (in)</th><th className="r">Weight (lb/ft)</th>
         </tr>
       </thead>
       <tbody>
@@ -105,6 +126,7 @@ function EasyLapTable({ rows, onSelect }) {
             <td className="r mono">{r.b1}</td>
             <td className="r mono">{r.b2}</td>
             <td className="r mono">{r.ga}</td>
+            <GaThicknessCells ga={r.ga} />
             <td className="r mono">{r.l}</td>
             <td className="r mono">{r.weightLbFt}</td>
           </tr>
