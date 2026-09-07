@@ -124,7 +124,7 @@ export default function ShapeList() {
               checked={excludeUnproduced}
               onChange={(e) => setExcludeUnproduced(e.target.checked)}
             />
-            동국 미생산 품목 제외
+            자재 수급여부 확인 품목 제외
           </label>
         </div>
       )}
@@ -154,7 +154,7 @@ export default function ShapeList() {
               <tr key={`${s.name}-${i}`} onClick={() => selectShape(s)} className={`series-band-${band}`}>
                 <td className="mono strong">
                   <button
-                    type="button" className="bom-add-btn" title="적산 바구니에 담기"
+                    type="button" className="bom-add-btn" title="물량 산정에 담기"
                     onClick={(e) => {
                       e.stopPropagation();
                       addToBom({ name: s.name, ks: s.ks, type: activeKey, unitWeightKgM: parseFloat(s.mt.W) || 0 });

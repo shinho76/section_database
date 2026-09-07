@@ -32,9 +32,12 @@ export default function Header() {
         UNIT CONVERSION
       </button>
       <button type="button" id="calculator" className="hdr-pill-btn" title="계산기 열기" onClick={openCalculator}>계산기</button>
-      <a id="feedback" title="피드백 보내기" aria-label="피드백 보내기" href={FEEDBACK_FORM_URL} target="_blank" rel="noopener noreferrer">💬</a>
-      <button id="bom" title="적산 바구니" aria-label={`적산 바구니${bom.length > 0 ? ` (${bom.length}개)` : ''}`} onClick={toggleBom}>
-        🧺{bom.length > 0 && <span className="bom-count">{bom.length}</span>}
+      <a id="feedback" className="hdr-pill-btn" title="피드백 보내기" href={FEEDBACK_FORM_URL} target="_blank" rel="noopener noreferrer">피드백</a>
+      <button
+        id="bom" type="button" className="hdr-pill-btn" title="물량 산정"
+        aria-label={`물량 산정${bom.length > 0 ? ` (${bom.length}개)` : ''}`} onClick={toggleBom}
+      >
+        물량 산정{bom.length > 0 && <span className="bom-count">{bom.length}</span>}
       </button>
       <button id="theme" onClick={toggleTheme}>
         {theme === 'dark' ? '☀ Light' : '☾ Dark'}

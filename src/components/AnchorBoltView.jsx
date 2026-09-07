@@ -66,7 +66,7 @@ export default function AnchorBoltView() {
                 <tr key={s.label}>
                   <td className="mono strong">
                     <button
-                      type="button" className="bom-add-btn" title="적산 바구니에 담기"
+                      type="button" className="bom-add-btn" title="물량 산정에 담기"
                       onClick={() => addToBom({ name: `Anchor Bolt ${s.label}`, type: 'ANCHORBOLT', unitWeightKgM: kgm })}
                     >
                       +

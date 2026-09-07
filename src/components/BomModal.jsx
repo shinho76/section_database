@@ -96,7 +96,7 @@ export default function BomModal({ onClose }) {
   // Destructive/irreversible - a stray click shouldn't silently wipe the
   // basket, so this is the one action in the footer that asks first.
   const onClearAll = () => {
-    if (window.confirm(`적산 바구니의 항목 ${bom.length}개를 전부 비울까요? 되돌릴 수 없습니다.`)) {
+    if (window.confirm(`물량 산정의 항목 ${bom.length}개를 전부 비울까요? 되돌릴 수 없습니다.`)) {
       clearBom();
     }
   };
@@ -105,7 +105,7 @@ export default function BomModal({ onClose }) {
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal-panel" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 820 }}>
         <div className="modal-head">
-          <h2>적산 바구니 <span className="tag">{bom.length}개</span></h2>
+          <h2>물량 산정 <span className="tag">{bom.length}개</span></h2>
           <button className="modal-close" onClick={onClose} aria-label="닫기">×</button>
         </div>
         <div className="modal-body">

@@ -48,6 +48,28 @@ export default function Sidebar() {
   const { activeKey, setActiveKey, sidebarOpen, closeSidebar } = useStore();
   const [counts, setCounts] = useState({});
   const [showPipeInfo, setShowPipeInfo] = useState(false);
+  // Accordion: which BELOW_GROUPS sections are expanded, by label. Starts
+  // with whichever group contains the current activeKey open (so a search
+  // result or reload lands somewhere visible) and everything else
+  // collapsed - the full list of ~21 items across 7 groups plus the grid
+  // above doesn't fit in one screen otherwise.
+  const [openGroups, setOpenGroups] = useState(() => {
+    const initial = BELOW_GROUPS.find((g) => g.items.includes(activeKey));
+    return new Set(initial ? [initial.label] : []);
+  });
+  const toggleGroup = (label) => setOpenGroups((cur) => {
+    const next = new Set(cur);
+    if (next.has(label)) next.delete(label); else next.add(label);
+    return next;
+  });
+
+  // If navigation lands on an item inside a currently-collapsed group
+  // (search result, back/forward, shape-compare "이동"), open that group
+  // automatically so the active item is actually visible.
+  useEffect(() => {
+    const group = BELOW_GROUPS.find((g) => g.items.includes(activeKey));
+    if (group) setOpenGroups((cur) => (cur.has(group.label) ? cur : new Set(cur).add(group.label)));
+  }, [activeKey]);
 
   useEffect(() => {
     let cancelled = false;
@@ -118,23 +140,32 @@ export default function Sidebar() {
         </tbody>
       </table>
 
-      {BELOW_GROUPS.map((group) => (
-        <div className="nav-group" key={group.label}>
-          <div className="nav-eyebrow">{group.label}</div>
-          {group.items.map((key) => (
+      {BELOW_GROUPS.map((group) => {
+        const isOpen = openGroups.has(group.label);
+        return (
+          <div className={`nav-group${isOpen ? ' is-open' : ''}`} key={group.label}>
             <button
-              key={key}
-              className={`nav-item${key === activeKey ? ' is-active' : ''}`}
-              onClick={() => setActiveKey(key)}
+              type="button" className="nav-eyebrow nav-eyebrow-toggle"
+              aria-expanded={isOpen} onClick={() => toggleGroup(group.label)}
             >
-              <NavItemLabel label={NAV_ITEM_LABEL[key] ?? key} />
-              {DB_TYPES.has(key) && (
-                <span className="nav-count">{counts[key] ?? ''}</span>
-              )}
+              <span>{group.label}</span>
+              <em className="nav-eyebrow-chevron">▾</em>
             </button>
-          ))}
-        </div>
-      ))}
+            {isOpen && group.items.map((key) => (
+              <button
+                key={key}
+                className={`nav-item${key === activeKey ? ' is-active' : ''}`}
+                onClick={() => setActiveKey(key)}
+              >
+                <NavItemLabel label={NAV_ITEM_LABEL[key] ?? key} />
+                {DB_TYPES.has(key) && (
+                  <span className="nav-count">{counts[key] ?? ''}</span>
+                )}
+              </button>
+            ))}
+          </div>
+        );
+      })}
 
       {showPipeInfo && <PipeVsHssModal onClose={() => setShowPipeInfo(false)} />}
       </nav>

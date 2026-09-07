@@ -90,7 +90,7 @@ export default function PlatePanel() {
                   }
                 }}
               >
-                🧺 적산 바구니에 담기{result.mode === 'weight' ? ' (1매 기준)' : ' (길이당 kg/m)'}
+                🧺 물량 산정에 담기{result.mode === 'weight' ? ' (1매 기준)' : ' (길이당 kg/m)'}
               </button>
             </div>
           )}

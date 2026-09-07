@@ -29,14 +29,14 @@ export default function ShapeDetail({ shape }) {
                 className={`chip chip-dongkuk ${dongkukAvailable(shape) ? 'is-yes' : 'is-no'}`}
                 title={DONGKUK_LABEL[dongkukAvailable(shape)]}
               >
-                {dongkukAvailable(shape) ? '✓ 동국제강 생산' : '✕ 동국제강 미생산'}
+                {dongkukAvailable(shape) ? '✓ 동국제강 생산' : '✕ 자재 수급여부 확인'}
               </span>
             )}
             <button
               type="button" className="chip chip-btn"
               onClick={() => addToBom({ name: shape.name, ks: shape.ks, type: activeKey, unitWeightKgM: parseFloat(shape.mt.W) || 0 })}
             >
-              🧺 적산 바구니에 담기
+              🧺 물량 산정에 담기
             </button>
           </div>
         </div>

@@ -81,10 +81,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
 .hdr-pill-btn:first-of-type{margin-left:auto}
 .hdr-pill-btn:hover{border-color:var(--ac-main);color:var(--ac-main)}
 .hdr-pill-btn.is-active{background:var(--ac-select-glow);border-color:var(--ac-select);color:var(--ac-select)}
-#feedback{height:32px;width:32px;padding:0;border-radius:var(--r-md);cursor:pointer;
-  background:var(--bg-card);border:1px solid var(--bd-subtle);font-size:16px;
-  display:flex;align-items:center;justify-content:center;text-decoration:none}
-#feedback:hover{border-color:var(--ac-main)}
+#feedback{text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
 #sidebar-toggle{display:none;height:32px;width:32px;padding:0;border-radius:var(--r-md);cursor:pointer;
   background:var(--bg-card);border:1px solid var(--bd-subtle);color:var(--tx-secondary);
   font-size:16px;align-items:center;justify-content:center;flex-shrink:0}
@@ -136,6 +133,11 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
 .nav-group:first-child{padding-top:0;border-top:0}
 .nav-eyebrow{padding:2px 18px 8px;font-size:var(--fs-base);font-weight:800;letter-spacing:.08em;
   color:var(--ac-main);text-transform:uppercase}
+.nav-eyebrow-toggle{display:flex;align-items:center;justify-content:space-between;width:100%;
+  background:none;border:0;cursor:pointer;font-family:inherit}
+.nav-eyebrow-toggle:hover{color:var(--ac-select)}
+.nav-eyebrow-chevron{font-style:normal;transition:transform .15s ease;flex-shrink:0}
+.nav-group.is-open .nav-eyebrow-chevron{transform:rotate(180deg)}
 .nav-item{display:flex;align-items:center;gap:10px;width:100%;padding:9px 18px;
   background:none;border:0;border-left:3px solid transparent;cursor:pointer;
   color:var(--tx-secondary);font:600 var(--fs-base)/1 Inter,sans-serif;text-align:left}
@@ -201,11 +203,8 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
 .chip-btn:hover{background:var(--ac-dark);border-color:var(--ac-dark);color:var(--on-accent)}
 
 /* BOM ("적산 바구니") ---------------------------------------------------- */
-#bom{position:relative;height:32px;width:32px;padding:0;border-radius:var(--r-md);cursor:pointer;
-  background:var(--bg-card);border:1px solid var(--bd-subtle);font-size:16px;
-  display:flex;align-items:center;justify-content:center}
-#bom:hover{border-color:var(--ac-main)}
-.bom-count{position:absolute;top:-6px;right:-6px;min-width:16px;height:16px;padding:0 3px;
+#bom{display:inline-flex;align-items:center;gap:6px}
+.bom-count{min-width:16px;height:16px;padding:0 5px;
   border-radius:var(--r-pill);background:var(--ac-main);color:var(--on-accent);font-size:var(--fs-2xs);font-weight:800;
   line-height:16px;text-align:center}
 .bom-add-btn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;
@@ -251,7 +250,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
 
 /* tables ------------------------------------------------------------- */
 table{width:100%;border-collapse:collapse}
-th{padding:9px 18px;font-size:var(--fs-2xs);font-weight:700;letter-spacing:.1em;
+th{padding:9px 18px;font-size:var(--fs-base);font-weight:700;letter-spacing:.04em;
   text-transform:uppercase;color:var(--tx-muted);text-align:left;
   background:var(--bg-inset);border-bottom:1px solid var(--bd-subtle)}
 .list thead th,.props thead th{position:sticky;top:0;z-index:5}

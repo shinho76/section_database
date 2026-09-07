@@ -80,7 +80,7 @@ export default function BuiltupExtras({ plates, weldLines, bomItem }) {
           type="button" className="btn"
           onClick={() => addToBom({ ...bomItem, weldKgPerM: weldKgPerM || undefined, lengthM })}
         >
-          🧺 적산 바구니에 담기{len > 0 ? ` (길이 ${len}m 반영)` : ''}
+          🧺 물량 산정에 담기{len > 0 ? ` (길이 ${len}m 반영)` : ''}
         </button>
       </div>
     </div>
