@@ -12,6 +12,13 @@ function openCalculator() {
 
 const FEEDBACK_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdjALpAY7ClYKv0--W5LaIdXYk9d1VxI4NXmI12SEJlxRUATQ/viewform';
 
+// A plain `target="_blank"` link opens a new browser TAB in most modern
+// browsers/settings, not a separate window. Passing window-feature dims to
+// window.open forces an actual popup window instead.
+function openFeedback() {
+  window.open(FEEDBACK_FORM_URL, '_blank', 'noopener,noreferrer,width=640,height=800');
+}
+
 export default function Header() {
   const { theme, toggleTheme, sidebarOpen, toggleSidebar, bom, bomOpen, toggleBom, activeKey, setActiveKey } = useStore();
 
@@ -25,7 +32,7 @@ export default function Header() {
       </button>
       <span className="brand">Steel Weight</span>
       <SearchBox />
-      <a id="feedback" className="hdr-pill-btn" title="피드백 보내기" href={FEEDBACK_FORM_URL} target="_blank" rel="noopener noreferrer">피드백</a>
+      <button type="button" id="feedback" className="hdr-pill-btn" title="피드백 보내기" onClick={openFeedback}>피드백</button>
       <button
         type="button" className={`hdr-pill-btn${activeKey === 'UNITCONV' ? ' is-active' : ''}`}
         onClick={() => setActiveKey('UNITCONV')}
