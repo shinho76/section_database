@@ -124,7 +124,7 @@ export default function ShapeList() {
               checked={excludeUnproduced}
               onChange={(e) => setExcludeUnproduced(e.target.checked)}
             />
-            자재 수급여부 확인 품목 제외
+            자재수급확인 품목 제외
           </label>
         </div>
       )}

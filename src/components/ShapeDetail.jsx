@@ -29,7 +29,7 @@ export default function ShapeDetail({ shape }) {
                 className={`chip chip-dongkuk ${dongkukAvailable(shape) ? 'is-yes' : 'is-no'}`}
                 title={DONGKUK_LABEL[dongkukAvailable(shape)]}
               >
-                {dongkukAvailable(shape) ? '✓ 동국제강 생산' : '✕ 자재 수급여부 확인'}
+                {dongkukAvailable(shape) ? '✓ 동국제강 생산' : '✕ 자재수급확인'}
               </span>
             )}
             <button
