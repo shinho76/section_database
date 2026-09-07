@@ -1,6 +1,7 @@
 import { useStore, DB_TYPES } from './store.js';
 import Header from './components/Header.jsx';
 import Sidebar from './components/Sidebar.jsx';
+import ErrorBoundary from './components/ErrorBoundary.jsx';
 import ShapeList from './components/ShapeList.jsx';
 import ShapeDetail from './components/ShapeDetail.jsx';
 import SearchResults from './components/SearchResults.jsx';
@@ -80,7 +81,14 @@ export default function App() {
       <Header />
       <div className="shell">
         <Sidebar />
-        <main id="main">{main}</main>
+        <main id="main">
+          {/* Resets automatically when the active page/shape changes, so a
+              crash on one shape's calculation doesn't strand the user -
+              navigating away (sidebar, search, back) recovers on its own. */}
+          <ErrorBoundary resetKeys={[activeKey, shape?.name, shape?.ks, query]}>
+            {main}
+          </ErrorBoundary>
+        </main>
       </div>
     </>
   );
