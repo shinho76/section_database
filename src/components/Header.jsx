@@ -32,9 +32,8 @@ export default function Header() {
       </button>
       <span className="brand">Steel Weight</span>
       <SearchBox />
-      <button type="button" id="feedback" className="hdr-pill-btn" title="피드백 보내기" onClick={openFeedback}>피드백</button>
       <button
-        type="button" className={`hdr-pill-btn${activeKey === 'UNITCONV' ? ' is-active' : ''}`}
+        type="button" id="unitconv" className={`hdr-pill-btn${activeKey === 'UNITCONV' ? ' is-active' : ''}`}
         onClick={() => setActiveKey('UNITCONV')}
       >
         UNIT CONVERSION
@@ -49,6 +48,7 @@ export default function Header() {
       <button id="theme" onClick={toggleTheme}>
         {theme === 'dark' ? '☀ Light' : '☾ Dark'}
       </button>
+      <button type="button" id="feedback" className="hdr-pill-btn" title="피드백 보내기" onClick={openFeedback}>피드백</button>
       {bomOpen && <BomModal onClose={toggleBom} />}
     </header>
   );

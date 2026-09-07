@@ -80,7 +80,8 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
   font:700 var(--fs-xs)/1 Inter,sans-serif;letter-spacing:.04em;white-space:nowrap}
 .hdr-pill-btn:hover{border-color:var(--ac-main);color:var(--ac-main)}
 .hdr-pill-btn.is-active{background:var(--ac-select-glow);border-color:var(--ac-select);color:var(--ac-select)}
-#feedback{margin-left:auto;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+#unitconv{margin-left:auto}
+#feedback{text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
 #sidebar-toggle{display:none;height:32px;width:32px;padding:0;border-radius:var(--r-md);cursor:pointer;
   background:var(--bg-card);border:1px solid var(--bd-subtle);color:var(--tx-secondary);
   font-size:16px;align-items:center;justify-content:center;flex-shrink:0}
