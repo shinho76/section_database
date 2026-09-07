@@ -18,6 +18,7 @@ export default function ShapeList() {
   // so W-shapes with any availability caveat are hidden until the user
   // opts back in to that tier.
   const [availFilter, setAvailFilter] = useState({ longlead: false, impact: false, unlisted: false });
+  const [sort, setSort] = useState(null); // { key, dir: 1|-1 }
 
   useEffect(() => {
     let cancelled = false;
@@ -59,12 +60,24 @@ export default function ShapeList() {
 
   const isKs = activeKey.startsWith('KS');
   const showMatch = hasMatchPair(activeKey);
-  const visibleRows = activeKey === 'W'
+  const filteredRows = activeKey === 'W'
     ? rows.filter((s) => {
         const avail = nucorAvailability(activeKey, s.name);
         return !avail || availFilter[avail];
       })
     : rows;
+  const SORT_VAL = {
+    W: (s) => parseFloat(s.mt.W),
+    A: (s) => parseFloat(s.mt.A),
+    d: (s) => parseFloat(s.us.d || s.us.Ht || s.us.OD),
+  };
+  const visibleRows = sort
+    ? [...filteredRows].sort((a, b) => (SORT_VAL[sort.key](a) - SORT_VAL[sort.key](b)) * sort.dir)
+    : filteredRows;
+  const toggleSort = (key) => setSort((cur) => (cur?.key === key ? (cur.dir === 1 ? { key, dir: -1 } : null) : { key, dir: 1 }));
+  const sortArrow = (key) => (sort?.key === key ? (sort.dir === 1 ? ' ▲' : ' ▼') : '');
+  // series-band coloring only makes visual sense grouped by series - once
+  // sorted by a performance column, fall back to plain rows.
   let lastSeries = null;
   let band = 0;
 
@@ -99,11 +112,13 @@ export default function ShapeList() {
       <table className="list">
         <thead>
           <tr>
-            <th>{isKs ? 'KS label' : 'AISC label'}</th><th>KS designation</th>
+            {isKs ? <><th>KS designation</th><th>공칭</th></> : <><th>AISC label</th><th>KS designation</th></>}
             {showMatch && <th>{isKs ? '유사 AISC 단면' : '유사 KS 단면'}</th>}
-            <th className="r">W (lb/ft)</th><th className="r">W (kg/m)</th>
-            <th className="r">A (in²)</th><th className="r">A (cm²)</th>
-            <th className="r">d / OD</th>
+            <th className="r sortable" onClick={() => toggleSort('W')}>W (lb/ft)</th>
+            <th className="r sortable" onClick={() => toggleSort('W')}>W (kg/m){sortArrow('W')}</th>
+            <th className="r sortable" onClick={() => toggleSort('A')}>A (in²)</th>
+            <th className="r sortable" onClick={() => toggleSort('A')}>A (cm²){sortArrow('A')}</th>
+            <th className="r sortable" onClick={() => toggleSort('d')}>d / OD{sortArrow('d')}</th>
           </tr>
         </thead>
         <tbody>
@@ -125,7 +140,7 @@ export default function ShapeList() {
                   >
                     +
                   </button>
-                  {s.name}
+                  {isKs ? (s.ks || s.name) : s.name}
                   {avail && (
                     <em className={`avail-badge avail-${avail}`} title={AVAIL_LABEL[avail]}>
                       {AVAIL_MARK[avail]}
@@ -135,7 +150,7 @@ export default function ShapeList() {
                     <em className="dongkuk-badge is-no" title={DONGKUK_LABEL[false]}>*</em>
                   )}
                 </td>
-                <td className="mono ks">{s.ks}</td>
+                <td className="mono ks">{isKs ? s.name : s.ks}</td>
                 {showMatch && (
                   <td className="mono ks">
                     {m ? (

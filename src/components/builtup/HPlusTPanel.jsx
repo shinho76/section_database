@@ -519,13 +519,25 @@ export default function HPlusTPanel({ baseKind }) {
         </div>
       )}
 
-      {composite && weldLines > 0 && (
-        <BuiltupExtras
-          plates={cutlistPlates}
-          weldLines={weldLines}
-          bomItem={{ name: title, type: baseKind === 'db' ? 'BH-3' : 'BH-4', unitWeightKgM: composite.W * LBFT_TO_KGM }}
-        />
-      )}
+      {composite && weldLines > 0 && (() => {
+        // BOM/CSV rows are only useful if distinct combinations produce
+        // distinct names - a fixed title string here made every BH-3/4
+        // entry in a takeoff read identically regardless of which H and
+        // T-bar were actually combined (see fabrication review).
+        const hLabel = baseKind === 'db' ? (hShape?.name ?? '?') : `Custom H ${customH.d}×${customH.bf}×${customH.tw.toFixed(1)}×${customH.tf.toFixed(1)}`;
+        const topLabel = topActive ? (baseKind === 'db' ? (topShape?.name ?? '?') : `Top-T ${topBar.d}×${topBar.bf}`) : null;
+        const botLabel = botPropsIn ? (baseKind === 'db' ? (botShape?.name ?? '?') : `Bot-T ${botBar.d}×${botBar.bf}`) : null;
+        const parts = [topLabel && `${topLabel}(상)`, hLabel, botLabel && `${botLabel}(하)`].filter(Boolean);
+        const combinedName = `${title}: ${parts.join(' + ')}`;
+        const combinedKs = baseKind === 'db' ? [topShape?.ks, hShape?.ks, botShape?.ks].filter(Boolean).join(' + ') : '';
+        return (
+          <BuiltupExtras
+            plates={cutlistPlates}
+            weldLines={weldLines}
+            bomItem={{ name: combinedName, ks: combinedKs, type: baseKind === 'db' ? 'BH-3' : 'BH-4', unitWeightKgM: composite.W * LBFT_TO_KGM }}
+          />
+        );
+      })()}
     </>
   );
 }

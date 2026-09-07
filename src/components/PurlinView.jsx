@@ -229,16 +229,27 @@ export default function PurlinView({ variant }) {
 
   const onSelect = (row, kind) => setSelected({ row, kind });
 
+  const propNote = (
+    <p className="note" style={{ borderTop: 'none' }}>
+      ⚠ 이 표는 중량·치수 참고용이며 Ix/Iy/Se(유효단면계수)·Ma·Va 등 해석용 단면성능은 원본 자료에 없어
+      수록하지 않았습니다. 스팬·하중 검토는 제조사 승인도서(submittal) 또는 AISI S100 유효단면 계산을
+      별도로 확인하십시오. 두께(in/mm) 칸은 표준 게이지-두께 환산표(공칭두께 기준) 값이며, 위 "적용범위"
+      패널의 두께 범위 문구는 원본 벤더 자료를 그대로 인용한 것으로 게이지-두께 환산표와 소수점 단위에서
+      다를 수 있습니다(둘 다 근사·참고치).
+    </p>
+  );
+
   if (variant === 'PURLIN-CEE') {
     return (
       <>
         <CapabilityPanel cap={data.capabilities.cee} />
         <div className="panel">
           <div className="panel-head">
-            <h2>PURLIN-CEE — Cee Purlins Section Properties</h2>
+            <h2>PURLIN-CEE — Cee Purlins 중량·치수</h2>
             <span className="tag">{data.cee.length} sizes</span>
           </div>
           <CeeTable rows={data.cee} onSelect={onSelect} />
+          {propNote}
           <p className="note">{data.source} ({data.sourceUrl})</p>
         </div>
       </>
@@ -251,7 +262,7 @@ export default function PurlinView({ variant }) {
       <CapabilityPanel cap={data.capabilities.zee} />
       <div className="panel">
         <div className="panel-head">
-          <h2>PURLIN-ZEE — Zee Purlins Section Properties</h2>
+          <h2>PURLIN-ZEE — Zee Purlins 중량·치수</h2>
           <span className="tag">{(tab === 'zee' ? data.zee : data.easyLapZee).length} sizes</span>
         </div>
         <div className="deck-tabs">
@@ -259,6 +270,7 @@ export default function PurlinView({ variant }) {
           <span className={`deck-tab${tab === 'easyLap' ? ' is-active' : ''}`} onClick={() => setTab('easyLap')}>Easy-Lap Zee</span>
         </div>
         {tab === 'zee' ? <ZeeTable rows={data.zee} onSelect={onSelect} /> : <EasyLapTable rows={data.easyLapZee} onSelect={onSelect} />}
+        {propNote}
         <p className="note">{data.source} ({data.sourceUrl})</p>
       </div>
     </>

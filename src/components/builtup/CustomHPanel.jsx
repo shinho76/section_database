@@ -34,7 +34,7 @@ export default function CustomHPanel() {
         A: propsIn.A.toFixed(2), W: propsIn.W.toFixed(1),
       },
       mt: {
-        d: mm.d.toFixed(0), bf: mm.bf.toFixed(0), tw: mm.tw.toFixed(0), tf: mm.tf.toFixed(0),
+        d: mm.d.toFixed(0), bf: mm.bf.toFixed(0), tw: mm.tw.toFixed(1), tf: mm.tf.toFixed(1),
         A: (propsIn.A * IN2_TO_MM2).toFixed(0), W: (propsIn.W * LBFT_TO_KGM).toFixed(1),
       },
     };

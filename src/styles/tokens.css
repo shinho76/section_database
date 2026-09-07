@@ -218,6 +218,10 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
 .bom-add-btn:hover{background:var(--ac-glow)}
 .bom-ks{color:var(--tx-muted);font-size:var(--fs-xs);font-weight:400}
 .bom-input-sm{width:64px;min-width:0;text-align:right;padding:4px 6px;font-size:var(--fs-sm)}
+.bom-input-mark{width:72px;text-align:left}
+.bom-input-grade{width:96px;text-align:left}
+.bom-input-sm.is-warn{border-color:var(--val-danger);color:var(--val-danger)}
+.bom-row-warn td{background:var(--val-danger-glow)}
 .bom-totals{display:flex;gap:20px;justify-content:flex-end;padding:12px 4px 4px;
   font-size:var(--fs-sm);color:var(--tx-secondary)}
 .bom-totals b{color:var(--ac-main);font-size:var(--fs-lg)}
@@ -255,6 +259,8 @@ th{padding:9px 18px;font-size:var(--fs-2xs);font-weight:700;letter-spacing:.1em;
   text-transform:uppercase;color:var(--tx-muted);text-align:left;
   background:var(--bg-inset);border-bottom:1px solid var(--bd-subtle)}
 .list thead th,.props thead th{position:sticky;top:0;z-index:5}
+.list thead th.sortable{cursor:pointer;user-select:none}
+.list thead th.sortable:hover{color:var(--ac-main)}
 td{padding:9px 18px;border-bottom:1px solid var(--bd-subtle);color:var(--tx-secondary)}
 tbody tr:last-child td{border-bottom:0}
 .r{text-align:right}
@@ -416,6 +422,12 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
 .bh-dim-table select.dim-select-spacer{visibility:hidden;box-shadow:none;border-color:transparent}
 .bh-dim-table + .bh-dim-table{margin-top:14px}
 .grade-badge{display:block;font-size:var(--fs-sm);color:var(--ac-main);margin-top:4px;white-space:nowrap}
+.nonstd-badge{display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:var(--fs-2xs);
+  color:var(--val-danger);margin-top:4px}
+.nonstd-snap{display:inline-flex;gap:4px}
+.nonstd-snap button{font-size:var(--fs-2xs);padding:1px 5px;border-radius:var(--r-sm);
+  border:1px solid var(--val-danger);background:none;color:var(--val-danger);cursor:pointer}
+.nonstd-snap button:hover{background:var(--val-danger-glow)}
 
 /* D/B/Tw/Tf grouped columns (Unequal Flange page): B and Tf each stack a
  * 상부/하부 row pair in one column, so give the pair row a touch more

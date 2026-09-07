@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { BHDimCards } from './builtup/BHDimTable.jsx';
 import { STEEL_DENSITY_LB_FT3 } from './builtup/compose.js';
+import { useStore } from '../store.js';
 
 const MM_TO_FT = 1 / 304.8;
 const PSF_TO_KGM2 = 4.88243;
@@ -14,6 +15,7 @@ const FIELDS = [
 ];
 
 export default function PlatePanel() {
+  const addToBom = useStore((s) => s.addToBom);
   const [tMm, setTMm] = useState(9.525); // 3/8"
   const [wMm, setWMm] = useState(null); // 가로 (width)
   const [lMm, setLMm] = useState(null); // 세로 (length)
@@ -75,6 +77,23 @@ export default function PlatePanel() {
               </>
             )}
           </div>
+          {(result.mode === 'weight' || result.mode === 'lineLoad') && (
+            <div className="modal-foot" style={{ justifyContent: 'flex-start', borderTop: '1px solid var(--bd-subtle)' }}>
+              <button
+                type="button" className="btn"
+                onClick={() => {
+                  const label = `PL-${tMm}t${wMm ? ` × ${wMm}W` : ''}${lMm ? ` × ${lMm}L` : ''}`;
+                  if (result.mode === 'weight') {
+                    addToBom({ name: label, type: 'PLATE', unitWeightKgM: result.totalKg, perEach: true });
+                  } else {
+                    addToBom({ name: label, type: 'PLATE', unitWeightKgM: result.kgm });
+                  }
+                }}
+              >
+                🧺 적산 바구니에 담기{result.mode === 'weight' ? ' (1매 기준)' : ' (길이당 kg/m)'}
+              </button>
+            </div>
+          )}
         </figure>
       )}
 

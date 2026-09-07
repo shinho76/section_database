@@ -1,10 +1,12 @@
 import data from '../data/anchorbolt.json';
+import { useStore } from '../store.js';
 
 const MM_PER_IN = 25.4;
 const LBFT_PER_IN2 = 2.6729;
 const KG_PER_LB = 0.453592, M_PER_FT = 0.3048;
 
 export default function AnchorBoltView() {
+  const addToBom = useStore((s) => s.addToBom);
   return (
     <>
       <div className="detail-head"><div><h1 className="mono">Anchor Bolt — ASTM F1554</h1></div></div>
@@ -62,7 +64,15 @@ export default function AnchorBoltView() {
               const has105 = s.diaIn <= 3;
               return (
                 <tr key={s.label}>
-                  <td className="mono strong">{s.label}</td>
+                  <td className="mono strong">
+                    <button
+                      type="button" className="bom-add-btn" title="적산 바구니에 담기"
+                      onClick={() => addToBom({ name: `Anchor Bolt ${s.label}`, type: 'ANCHORBOLT', unitWeightKgM: kgm })}
+                    >
+                      +
+                    </button>
+                    {s.label}
+                  </td>
                   <td className="r mono val-conv">{(s.diaIn * MM_PER_IN).toFixed(1)}</td>
                   <td className="r mono">✓</td>
                   <td className="r mono">✓</td>

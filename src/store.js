@@ -127,8 +127,12 @@ export const useStore = create((set, get) => ({
   // `item` carries whatever the source page already computed: name/ks/type,
   // unitWeightKgM (kg/m — length x this = weight), and optionally
   // weldLengthMPerM/weldKgPerM for built-up sections (see compose.js).
+  // Length defaults to blank (not a silent guess like 10m) regardless of
+  // which page adds the item - a blank length reads as "needs input" in
+  // BomModal (0kg + red highlight) instead of quietly assuming a wrong
+  // number that then flows into a CSV export unnoticed.
   addToBom: (item) => set((s) => {
-    const bom = [...s.bom, { id: bomIdSeq++, qty: 1, lengthM: 10, ...item }];
+    const bom = [...s.bom, { id: bomIdSeq++, qty: 1, ...item, lengthM: item.lengthM ?? '' }];
     saveBom(bom);
     return { bom };
   }),

@@ -8,6 +8,39 @@ const LABEL_RE = /^(.*?)\s*(\([^)]*\))$/;
 // space (imperial: 1-24, ks: 101+, see plateThickness.json) so a single
 // lookup can resolve either kind of selection.
 const ALL_THICKNESSES = [...thicknesses.imperial, ...thicknesses.ks];
+const SORTED_MM = [...ALL_THICKNESSES].map((t) => t.thickness_mm).sort((a, b) => a - b);
+
+/** Nearest standard thickness(es) (mm) bracketing `v`, for the "비표준 두께"
+ * warning — null if `v` already matches a standard size within EPS. */
+function nearestStandardMm(v) {
+  if (v == null || SORTED_MM.some((t) => Math.abs(t - v) < EPS)) return null;
+  let below = null, above = null;
+  for (const t of SORTED_MM) {
+    if (t < v) below = t;
+    else if (t > v && above == null) above = t;
+  }
+  return { below, above };
+}
+
+/** Small warning badge shown when a thickness field's value doesn't match
+ * any entry in plateThickness.json (imperial or KS) - a silently-accepted
+ * odd thickness (e.g. 13.7mm) is the most common source of "can't source
+ * this plate" surprises at order time, per fabrication review. */
+function NonStandardBadge({ v, onSnap }) {
+  const near = nearestStandardMm(v);
+  if (!near) return null;
+  return (
+    <span className="nonstd-badge" title="이 두께는 표준 판두께 목록에 없습니다 (조달 어려울 수 있음)">
+      ⚠ 비표준
+      {(near.below != null || near.above != null) && (
+        <span className="nonstd-snap">
+          {near.below != null && <button type="button" onClick={() => onSnap(near.below)}>{near.below}mm</button>}
+          {near.above != null && <button type="button" onClick={() => onSnap(near.above)}>{near.above}mm</button>}
+        </span>
+      )}
+    </span>
+  );
+}
 
 /** Header cell: splits "Bf-top (폭)" into a main line and a parenthesized
  * unit line rendered on a second line, always — even for short labels like
@@ -80,7 +113,7 @@ function InCell({ f, mm, onChangeMm }) {
       <span className="unit-input">
         <input
           type="number" step={f.thickness ? 0.001 : 0.01}
-          value={inVal === '' ? '' : +inVal.toFixed(1)} onChange={onType}
+          value={inVal === '' ? '' : +inVal.toFixed(f.thickness ? 4 : 2)} onChange={onType}
         />
         <span className="unit-suffix">in</span>
       </span>
@@ -89,6 +122,7 @@ function InCell({ f, mm, onChangeMm }) {
           ? <span className="grade-badge" title={ksGradeTitle(matchedKs)}>{ksGradeLabel(matchedKs)}</span>
           : <span className="grade-badge" title={gradeTitle(inVal)}>{gradeLabel(inVal)}</span>
       )}
+      {f.thickness && v != null && <NonStandardBadge v={v} onSnap={(mmVal) => onChangeMm(f.key)(mmVal)} />}
     </>
   );
 }
@@ -104,7 +138,7 @@ function MmCell({ f, mm, onChangeMm }) {
   };
   return (
     <span className="unit-input">
-      <input type="number" step={f.thickness ? 0.1 : 1} value={v == null ? '' : +v.toFixed(1)} onChange={onType} />
+      <input type="number" step={f.thickness ? 0.1 : 1} value={v == null ? '' : +v.toFixed(f.thickness ? 3 : 1)} onChange={onType} />
       <span className="unit-suffix">mm</span>
     </span>
   );
@@ -126,7 +160,7 @@ function InRowCell({ f, mm, onChangeMm }) {
   if (!f.thickness) {
     return (
       <span className="unit-input">
-        <input type="number" step={0.01} value={inVal === '' ? '' : +inVal.toFixed(1)} onChange={onType} />
+        <input type="number" step={0.01} value={inVal === '' ? '' : +inVal.toFixed(2)} onChange={onType} />
         <span className="unit-suffix">in</span>
       </span>
     );
@@ -148,9 +182,10 @@ function InRowCell({ f, mm, onChangeMm }) {
         </optgroup>
       </select>
       <span className="unit-input unit-input-compact">
-        <input type="number" step={0.001} value={inVal === '' ? '' : +inVal.toFixed(1)} onChange={onType} />
+        <input type="number" step={0.001} value={inVal === '' ? '' : +inVal.toFixed(4)} onChange={onType} />
         <span className="unit-suffix">in</span>
       </span>
+      {v != null && <NonStandardBadge v={v} onSnap={(mmVal) => onChangeMm(f.key)(mmVal)} />}
     </div>
   );
 }

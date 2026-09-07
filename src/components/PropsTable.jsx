@@ -12,9 +12,10 @@ import { KS_STANDARD } from '../store.js';
 const CORE_GROUPS = [
   { label: '치수 (Geometry)', keys: [
     'd', 'ddet', 'Ht', 'h', 'OD', 'ID', 'bf', 'bfdet', 'B', 'b',
-    'tw', 'twdet', 'tf', 'tfdet', 't', 't2', 'tnom', 'tdes', 'r', 'kdes', 'A', 'W',
+    'tw', 'twdet', 'tf', 'tfdet', 't', 't2', 'tnom', 'tdes', 'r', 'r1', 'r2', 'kdes', 'A', 'W',
   ] },
   { label: '단면계수 (Section Moduli)', keys: ['Ix', 'Iy', 'Sx', 'Sy', 'Zx', 'Zy', 'rx', 'ry'] },
+  { label: '단면분류 (Slenderness)', keys: ['bf/2tf', 'h/tw', 'b/tdes', 'h/tdes', 'b/t', 'D/t'] },
   { label: '비틀림·횡좌굴 (Torsional / LTB)', keys: ['J', 'Cw', 'rts', 'ho'] },
   // Practical values connection/structural designers look up on every
   // shape page - previously stuck behind "더 보기" forcing an extra click
@@ -30,7 +31,7 @@ const CORE_KEYS = new Set(CORE_GROUPS.flatMap((g) => g.keys));
 // the extra disclaimer note below so users don't mistake a computed value
 // for an official one.
 const GEOMETRIC_KEYS = {
-  KSH: ['k1', 'kdet', 'T', 'J', 'Cw', 'rts', 'ho'],
+  KSH: ['kdes', 'k1', 'kdet', 'T', 'J', 'Cw', 'rts', 'ho'],
   KSC: ['Ix', 'Iy', 'Sx', 'Sy', 'Zx', 'Zy', 'rx', 'ry', 'x'],
   KST: ['Ix', 'Iy', 'Sx', 'Zx', 'Zy', 'rx', 'ry', 'y', 'J'],
   KSP: ['Ix', 'Iy', 'Sx', 'Sy', 'Zx', 'Zy', 'rx', 'ry', 'J', 'C'],
@@ -43,7 +44,8 @@ const UNITS = {
   d: ['in', 'mm'], ddet: ['in', 'mm'], Ht: ['in', 'mm'], h: ['in', 'mm'], OD: ['in', 'mm'],
   bf: ['in', 'mm'], bfdet: ['in', 'mm'], B: ['in', 'mm'], b: ['in', 'mm'], ID: ['in', 'mm'],
   tw: ['in', 'mm'], twdet: ['in', 'mm'], 'twdet/2': ['in', 'mm'], tf: ['in', 'mm'],
-  tfdet: ['in', 'mm'], t: ['in', 'mm'], t2: ['in', 'mm'], r: ['in', 'mm'],
+  tfdet: ['in', 'mm'], t: ['in', 'mm'], t2: ['in', 'mm'], r: ['in', 'mm'], r1: ['in', 'mm'], r2: ['in', 'mm'],
+  'bf/2tf': ['', ''], 'h/tw': ['', ''], 'b/tdes': ['', ''], 'h/tdes': ['', ''], 'b/t': ['', ''], 'D/t': ['', ''],
   tnom: ['in', 'mm'], tdes: ['in', 'mm'],
   kdes: ['in', 'mm'], kdet: ['in', 'mm'], k1: ['in', 'mm'],
   x: ['in', 'mm'], y: ['in', 'mm'], eo: ['in', 'mm'], xp: ['in', 'mm'], yp: ['in', 'mm'],
@@ -134,6 +136,19 @@ export default function PropsTable({ shape, defs }) {
           {geometricKeys.join(', ')}는(은) {ksStd} 부록표가 아니라 d/bf/tw/tf 등 치수로부터 이 앱이
           기하학적으로 계산한 값입니다(필렛 반경 미반영 근사). 공식 발간표와 다를 수 있으니 최종 설계에는
           원문을 확인하십시오.
+        </p>
+      )}
+      {isKs && keys.includes('tdes') && (
+        <p className="note">
+          KS 각형·원형강관의 tdes(설계두께)는 공칭두께(tnom)와 동일한 값입니다. AISC HSS의 tdes는 제조공법에
+          따라 공칭두께의 0.93배(ERW)로 저감된 값이므로, 두 규격의 tdes를 같은 의미로 비교하지 마십시오.
+        </p>
+      )}
+      {shape.type === 'KSH' && (
+        <p className="note">
+          KS D 3502에는 AISC의 kdet(압연 여유를 반영한 시공용 올림값) 개념이 없어, 이 표의 kdet은 kdes와
+          동일한 계산값을 그대로 표기합니다 — 코프·클립 등 시공 여유가 필요한 상세에는 별도 여유를 더해
+          사용하십시오.
         </p>
       )}
     </div>

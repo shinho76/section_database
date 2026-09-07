@@ -40,7 +40,12 @@ async function loadKsSearchIndex() {
   return ksSearchIndex;
 }
 
-const norm = (s) => (s || '').toString().toUpperCase().replace(/\s/g, '');
+// "×" (multiplication sign, used in stored names like "H400×200") and a
+// plain "x"/"X" (what anyone actually types on a keyboard) must compare
+// equal, and separator hyphens in `ks` designations ("H-400X200X8X13")
+// shouldn't block a match either - without this, typing the most natural
+// query for a KS shape ("H400X200") returns zero results.
+const norm = (s) => (s || '').toString().toUpperCase().replace(/\s/g, '').replace(/×/g, 'X').replace(/-/g, '');
 
 // Non-shape reference data (WWR, rebar, bolts, purlin, ...) each live in
 // their own oddly-shaped JSON file and their pages don't have a per-row
