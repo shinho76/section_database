@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { drawBarSVG } from '../lib/sectionSvg.js';
+import { useStore } from '../store.js';
 
 export default function RebarView() {
+  const addToBom = useStore((s) => s.addToBom);
   const [data, setData] = useState(null);
   const [sel, setSel] = useState(null);
 
@@ -22,6 +24,12 @@ export default function RebarView() {
             <div className="alias">
               <span className="chip chip-ks">KS &nbsp;<b className="mono">{sel.size} (D{mm})</b></span>
               <span className="chip">Type &nbsp;<b className="mono">REBAR</b></span>
+              <button
+                type="button" className="chip chip-btn"
+                onClick={() => addToBom({ name: sel.size, type: 'REBAR', unitWeightKgM: sel.weightLbFt * 1.48816 })}
+              >
+                🧺 물량 산정에 담기
+              </button>
             </div>
           </div>
         </div>
@@ -70,7 +78,15 @@ export default function RebarView() {
         <tbody>
           {data.bars.map((b) => (
             <tr key={b.size} onClick={() => setSel(b)}>
-              <td className="mono strong">{b.size}</td>
+              <td className="mono strong">
+                <button
+                  type="button" className="bom-add-btn" title="물량 산정에 담기"
+                  onClick={(e) => { e.stopPropagation(); addToBom({ name: b.size, type: 'REBAR', unitWeightKgM: b.weightLbFt * 1.48816 }); }}
+                >
+                  +
+                </button>
+                {b.size}
+              </td>
               <td className="mono ks">{b.size} (D{(b.diaIn * 25.4).toFixed(1)})</td>
               <td className="r mono">{b.diaIn}</td>
               <td className="r mono">{b.areaIn2}</td>

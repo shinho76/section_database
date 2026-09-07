@@ -18,7 +18,7 @@ export default function BuiltupExtras({ plates, weldLines, bomItem }) {
   const addToBom = useStore((s) => s.addToBom);
   const thinnest = plates.length ? Math.min(...plates.map((p) => p.thicknessMm)) : 6;
   const [filletMm, setFilletMm] = useState(() => minFilletWeldMm(thinnest));
-  const [lengthM, setLengthM] = useState('');
+  const [lengthM, setLengthM] = useState(10);
 
   const weldKgPerM = weldLines > 0 ? weldLines * filletWeldKgPerM(filletMm) : 0;
   const len = parseFloat(lengthM) || 0;

@@ -78,10 +78,9 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
 .hdr-pill-btn{height:32px;padding:0 14px;border-radius:var(--r-md);cursor:pointer;
   background:var(--bg-card);border:1px solid var(--bd-subtle);color:var(--tx-secondary);
   font:700 var(--fs-xs)/1 Inter,sans-serif;letter-spacing:.04em;white-space:nowrap}
-.hdr-pill-btn:first-of-type{margin-left:auto}
 .hdr-pill-btn:hover{border-color:var(--ac-main);color:var(--ac-main)}
 .hdr-pill-btn.is-active{background:var(--ac-select-glow);border-color:var(--ac-select);color:var(--ac-select)}
-#feedback{text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+#feedback{margin-left:auto;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
 #sidebar-toggle{display:none;height:32px;width:32px;padding:0;border-radius:var(--r-md);cursor:pointer;
   background:var(--bg-card);border:1px solid var(--bd-subtle);color:var(--tx-secondary);
   font-size:16px;align-items:center;justify-content:center;flex-shrink:0}
@@ -213,8 +212,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
 .bom-add-btn:hover{background:var(--ac-glow)}
 .bom-ks{color:var(--tx-muted);font-size:var(--fs-xs);font-weight:400}
 .bom-input-sm{width:64px;min-width:0;text-align:right;padding:4px 6px;font-size:var(--fs-sm)}
-.bom-input-mark{width:72px;text-align:left}
-.bom-input-grade{width:96px;text-align:left}
+.bom-input-grade{width:110px;text-align:left}
 .bom-input-sm.is-warn{border-color:var(--val-danger);color:var(--val-danger)}
 .bom-row-warn td{background:var(--val-danger-glow)}
 .bom-totals{display:flex;gap:20px;justify-content:flex-end;padding:12px 4px 4px;

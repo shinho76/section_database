@@ -2,9 +2,10 @@ import { useMemo, useState } from 'react';
 import { useStore } from '../store.js';
 import materials from '../data/materials.json';
 
-// Every grade from both material tables, for the BOM row grade dropdown -
-// takeoffs need to subtotal by grade, and freehand grade text can't be
-// grouped reliably.
+// Every grade from both material tables, offered as <datalist> autocomplete
+// suggestions on the (free-text) grade field below - the field itself isn't
+// restricted to these, since a project may use a grade this app doesn't
+// have a reference table for.
 const GRADE_OPTIONS = [...materials.astm.rows.map((r) => r.grade), ...materials.ks.rows.map((r) => r.grade)];
 
 /** kg for one BOM row. `perEach` rows (e.g. a plate sized by W×L, added as
@@ -27,14 +28,14 @@ function toCsvField(v) {
   return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
-const HEADERS = ['name', 'ks', 'type', 'mark', 'grade', 'qty', 'lengthM', 'unitWeightKgM', 'weldKgPerM', 'totalWeightKg', 'totalWeldKg', 'remark'];
-const HEADER_LABELS = ['단면', 'KS 호칭', 'Type', '부재마크', '강종', '수량', '길이(m)', '단위중량(kg/m)', '용접량(kg/m)', '총중량(kg)', '총용접량(kg)', '비고'];
+const HEADERS = ['name', 'ks', 'type', 'grade', 'qty', 'lengthM', 'unitWeightKgM', 'weldKgPerM', 'totalWeightKg', 'totalWeldKg', 'remark'];
+const HEADER_LABELS = ['단면', 'KS 호칭', 'Type', '강종', '수량', '길이(m)', '단위중량(kg/m)', '용접량(kg/m)', '총중량(kg)', '총용접량(kg)', '비고'];
 
 function bomRowFields(r) {
   const totalKg = rowWeightKg(r);
   const totalWeld = r.weldKgPerM && !r.perEach ? (parseFloat(r.lengthM) || 0) * r.weldKgPerM * r.qty : '';
   return [
-    r.name, r.ks ?? '', r.type, r.mark ?? '', r.grade ?? '', r.qty, r.perEach ? 'EA' : r.lengthM,
+    r.name, r.ks ?? '', r.type, r.grade ?? '', r.qty, r.perEach ? 'EA' : r.lengthM,
     r.unitWeightKgM.toFixed(2), r.weldKgPerM ? r.weldKgPerM.toFixed(3) : '',
     totalKg.toFixed(1), totalWeld === '' ? '' : totalWeld.toFixed(2), r.remark ?? '',
   ];
@@ -113,10 +114,13 @@ export default function BomModal({ onClose }) {
             <p className="empty">담긴 단면이 없습니다. 목록·상세 페이지의 "+" 버튼으로 담아보세요.</p>
           ) : (
             <>
+              <datalist id="bom-grade-options">
+                {GRADE_OPTIONS.map((g) => <option key={g} value={g} />)}
+              </datalist>
               <table className="list bom-table">
                 <thead>
                   <tr>
-                    <th>단면</th><th>부재마크</th><th>강종</th><th className="r">수량</th><th className="r">길이(m)</th>
+                    <th>단면</th><th>강종</th><th className="r">수량</th><th className="r">길이(m)</th>
                     <th className="r">단위중량</th><th className="r">중량(kg)</th><th />
                   </tr>
                 </thead>
@@ -131,18 +135,9 @@ export default function BomModal({ onClose }) {
                       </td>
                       <td>
                         <input
-                          type="text" className="bom-input-sm bom-input-mark" placeholder="마크"
-                          value={r.mark ?? ''} onChange={(e) => updateBomItem(r.id, { mark: e.target.value })}
-                        />
-                      </td>
-                      <td>
-                        <select
-                          className="bom-input-sm bom-input-grade"
+                          type="text" list="bom-grade-options" className="bom-input-sm bom-input-grade" placeholder="강종"
                           value={r.grade ?? ''} onChange={(e) => updateBomItem(r.id, { grade: e.target.value })}
-                        >
-                          <option value="">—</option>
-                          {GRADE_OPTIONS.map((g) => <option key={g} value={g}>{g}</option>)}
-                        </select>
+                        />
                       </td>
                       <td className="r">
                         <input

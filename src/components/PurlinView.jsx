@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { drawPurlinSVG } from '../lib/sectionSvg.js';
+import { useStore } from '../store.js';
 
 // Design base metal thickness per nominal gauge (in) - standard cold-formed
 // steel framing gauge table, independent of any one purlin manufacturer's
@@ -46,7 +47,7 @@ function useSeriesBand(rows, keyFn) {
   });
 }
 
-function CeeTable({ rows, onSelect }) {
+function CeeTable({ rows, onSelect, addToBom }) {
   const bands = useSeriesBand(rows, (r) => r.d);
   return (
     <table className="list">
@@ -59,9 +60,19 @@ function CeeTable({ rows, onSelect }) {
         </tr>
       </thead>
       <tbody>
-        {rows.map((r, i) => (
+        {rows.map((r, i) => {
+          const label = `CEE-${r.d}X${r.b}X${r.ga}GA`;
+          return (
           <tr key={i} onClick={() => onSelect(r, 'cee')} className={`series-band-${bands[i]}`}>
-            <td className="mono ks">CEE-{r.d}X{r.b}X{r.ga}GA</td>
+            <td className="mono ks">
+              <button
+                type="button" className="bom-add-btn" title="물량 산정에 담기"
+                onClick={(e) => { e.stopPropagation(); addToBom({ name: label, type: 'PURLIN-CEE', unitWeightKgM: r.weightLbFt * LBFT_TO_KGM }); }}
+              >
+                +
+              </button>
+              {label}
+            </td>
             <td className="r mono">{r.d}</td>
             <td className="r mono">{r.b}</td>
             <td className="r mono">{r.ga}</td>
@@ -72,13 +83,14 @@ function CeeTable({ rows, onSelect }) {
             <td className="r mono">{r.areaIn2}</td>
             <td className="desc">{r.note}</td>
           </tr>
-        ))}
+          );
+        })}
       </tbody>
     </table>
   );
 }
 
-function ZeeTable({ rows, onSelect }) {
+function ZeeTable({ rows, onSelect, addToBom }) {
   const bands = useSeriesBand(rows, (r) => r.d);
   return (
     <table className="list">
@@ -91,9 +103,19 @@ function ZeeTable({ rows, onSelect }) {
         </tr>
       </thead>
       <tbody>
-        {rows.map((r, i) => (
+        {rows.map((r, i) => {
+          const label = `ZEE-${r.d}X${r.b}X${r.ga}GA`;
+          return (
           <tr key={i} onClick={() => onSelect(r, 'zee')} className={`series-band-${bands[i]}`}>
-            <td className="mono ks">ZEE-{r.d}X{r.b}X{r.ga}GA</td>
+            <td className="mono ks">
+              <button
+                type="button" className="bom-add-btn" title="물량 산정에 담기"
+                onClick={(e) => { e.stopPropagation(); addToBom({ name: label, type: 'PURLIN-ZEE', unitWeightKgM: r.weightLbFt * LBFT_TO_KGM }); }}
+              >
+                +
+              </button>
+              {label}
+            </td>
             <td className="r mono">{r.d}</td>
             <td className="r mono">{r.b}</td>
             <td className="r mono">{r.ga}</td>
@@ -104,13 +126,14 @@ function ZeeTable({ rows, onSelect }) {
             <td className="r mono">{r.areaIn2}</td>
             <td className="desc">{r.note}</td>
           </tr>
-        ))}
+          );
+        })}
       </tbody>
     </table>
   );
 }
 
-function EasyLapTable({ rows, onSelect }) {
+function EasyLapTable({ rows, onSelect, addToBom }) {
   const bands = useSeriesBand(rows, (r) => r.d);
   return (
     <table className="list">
@@ -122,9 +145,19 @@ function EasyLapTable({ rows, onSelect }) {
         </tr>
       </thead>
       <tbody>
-        {rows.map((r, i) => (
+        {rows.map((r, i) => {
+          const label = `ZEL-${r.d}X${r.b1}/${r.b2}X${r.ga}GA`;
+          return (
           <tr key={i} onClick={() => onSelect(r, 'easyLap')} className={`series-band-${bands[i]}`}>
-            <td className="mono ks">ZEL-{r.d}X{r.b1}/{r.b2}X{r.ga}GA</td>
+            <td className="mono ks">
+              <button
+                type="button" className="bom-add-btn" title="물량 산정에 담기"
+                onClick={(e) => { e.stopPropagation(); addToBom({ name: label, type: 'PURLIN-ZEE', unitWeightKgM: r.weightLbFt * LBFT_TO_KGM }); }}
+              >
+                +
+              </button>
+              {label}
+            </td>
             <td className="r mono">{r.d}</td>
             <td className="r mono">{r.b1}</td>
             <td className="r mono">{r.b2}</td>
@@ -134,7 +167,8 @@ function EasyLapTable({ rows, onSelect }) {
             <td className="r mono">{r.weightLbFt}</td>
             <td className="r mono val-conv">{(r.weightLbFt * LBFT_TO_KGM).toFixed(2)}</td>
           </tr>
-        ))}
+          );
+        })}
       </tbody>
     </table>
   );
@@ -205,6 +239,7 @@ function PurlinDetail({ row, kind, onBack, source }) {
 }
 
 export default function PurlinView({ variant }) {
+  const addToBom = useStore((s) => s.addToBom);
   const [data, setData] = useState(null);
   const [tab, setTab] = useState('zee');
   const [selected, setSelected] = useState(null); // { row, kind }
@@ -248,7 +283,7 @@ export default function PurlinView({ variant }) {
             <h2>PURLIN-CEE — Cee Purlins 중량·치수</h2>
             <span className="tag">{data.cee.length} sizes</span>
           </div>
-          <CeeTable rows={data.cee} onSelect={onSelect} />
+          <CeeTable rows={data.cee} onSelect={onSelect} addToBom={addToBom} />
           {propNote}
           <p className="note">{data.source} ({data.sourceUrl})</p>
         </div>
@@ -269,7 +304,7 @@ export default function PurlinView({ variant }) {
           <span className={`deck-tab${tab === 'zee' ? ' is-active' : ''}`} onClick={() => setTab('zee')}>Zee</span>
           <span className={`deck-tab${tab === 'easyLap' ? ' is-active' : ''}`} onClick={() => setTab('easyLap')}>Easy-Lap Zee</span>
         </div>
-        {tab === 'zee' ? <ZeeTable rows={data.zee} onSelect={onSelect} /> : <EasyLapTable rows={data.easyLapZee} onSelect={onSelect} />}
+        {tab === 'zee' ? <ZeeTable rows={data.zee} onSelect={onSelect} addToBom={addToBom} /> : <EasyLapTable rows={data.easyLapZee} onSelect={onSelect} addToBom={addToBom} />}
         {propNote}
         <p className="note">{data.source} ({data.sourceUrl})</p>
       </div>

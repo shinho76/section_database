@@ -25,6 +25,7 @@ export default function Header() {
       </button>
       <span className="brand">Steel Weight</span>
       <SearchBox />
+      <a id="feedback" className="hdr-pill-btn" title="피드백 보내기" href={FEEDBACK_FORM_URL} target="_blank" rel="noopener noreferrer">피드백</a>
       <button
         type="button" className={`hdr-pill-btn${activeKey === 'UNITCONV' ? ' is-active' : ''}`}
         onClick={() => setActiveKey('UNITCONV')}
@@ -32,7 +33,6 @@ export default function Header() {
         UNIT CONVERSION
       </button>
       <button type="button" id="calculator" className="hdr-pill-btn" title="계산기 열기" onClick={openCalculator}>계산기</button>
-      <a id="feedback" className="hdr-pill-btn" title="피드백 보내기" href={FEEDBACK_FORM_URL} target="_blank" rel="noopener noreferrer">피드백</a>
       <button
         id="bom" type="button" className="hdr-pill-btn" title="물량 산정"
         aria-label={`물량 산정${bom.length > 0 ? ` (${bom.length}개)` : ''}`} onClick={toggleBom}
