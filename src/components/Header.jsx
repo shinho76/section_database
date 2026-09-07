@@ -13,7 +13,7 @@ function openCalculator() {
 const FEEDBACK_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdjALpAY7ClYKv0--W5LaIdXYk9d1VxI4NXmI12SEJlxRUATQ/viewform';
 
 export default function Header() {
-  const { theme, toggleTheme, sidebarOpen, toggleSidebar, bom, bomOpen, toggleBom } = useStore();
+  const { theme, toggleTheme, sidebarOpen, toggleSidebar, bom, bomOpen, toggleBom, activeKey, setActiveKey } = useStore();
 
   return (
     <header>
@@ -23,9 +23,15 @@ export default function Header() {
       >
         ☰
       </button>
-      <span className="brand">SteelWeight</span>
+      <span className="brand">Steel Weight</span>
       <SearchBox />
-      <button id="calculator" title="계산기 열기" aria-label="계산기 열기" onClick={openCalculator}>🔢</button>
+      <button
+        type="button" className={`hdr-pill-btn${activeKey === 'UNITCONV' ? ' is-active' : ''}`}
+        onClick={() => setActiveKey('UNITCONV')}
+      >
+        UNIT CONVERSION
+      </button>
+      <button type="button" id="calculator" className="hdr-pill-btn" title="계산기 열기" onClick={openCalculator}>계산기</button>
       <a id="feedback" title="피드백 보내기" aria-label="피드백 보내기" href={FEEDBACK_FORM_URL} target="_blank" rel="noopener noreferrer">💬</a>
       <button id="bom" title="적산 바구니" aria-label={`적산 바구니${bom.length > 0 ? ` (${bom.length}개)` : ''}`} onClick={toggleBom}>
         🧺{bom.length > 0 && <span className="bom-count">{bom.length}</span>}

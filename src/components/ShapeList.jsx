@@ -7,6 +7,7 @@ import { dongkukAvailable, DONGKUK_LABEL } from '../lib/dongkukAvailability.js';
 import ShapeCompareModal from './ShapeCompareModal.jsx';
 
 const seriesKey = (name) => name.split(/[X×]/)[0];
+const DONGKUK_FILTER_TYPES = new Set(['KSH', 'KSL', 'KSC']);
 
 export default function ShapeList() {
   const { activeKey, selectShape, setActiveKey, addToBom } = useStore();
@@ -18,6 +19,12 @@ export default function ShapeList() {
   // so W-shapes with any availability caveat are hidden until the user
   // opts back in to that tier.
   const [availFilter, setAvailFilter] = useState({ longlead: false, impact: false, unlisted: false });
+  // Dongkuk-catalog exclusion filter for KSH/KSL/KSC (the only KS types with
+  // a `dongkuk.available` flag - see dongkukAvailability.js). Unlike the W
+  // filter above, this defaults to OFF (show everything, current behavior)
+  // since the ask here is "let me opt IN to hiding" rather than "hidden
+  // until I opt back in".
+  const [excludeUnproduced, setExcludeUnproduced] = useState(false);
   const [sort, setSort] = useState(null); // { key, dir: 1|-1 }
 
   useEffect(() => {
@@ -60,12 +67,15 @@ export default function ShapeList() {
 
   const isKs = activeKey.startsWith('KS');
   const showMatch = hasMatchPair(activeKey);
+  const hasDongkukFilter = DONGKUK_FILTER_TYPES.has(activeKey);
   const filteredRows = activeKey === 'W'
     ? rows.filter((s) => {
         const avail = nucorAvailability(activeKey, s.name);
         return !avail || availFilter[avail];
       })
-    : rows;
+    : hasDongkukFilter && excludeUnproduced
+      ? rows.filter((s) => dongkukAvailable(s) !== false)
+      : rows;
   const SORT_VAL = {
     W: (s) => parseFloat(s.mt.W),
     A: (s) => parseFloat(s.mt.A),
@@ -104,6 +114,18 @@ export default function ShapeList() {
               <em className={`avail-badge avail-${key}`}>{AVAIL_MARK[key]}</em> {text}
             </label>
           ))}
+        </div>
+      )}
+      {hasDongkukFilter && (
+        <div className="avail-legend">
+          <label className="avail-filter" title={DONGKUK_LABEL[false]}>
+            <input
+              type="checkbox"
+              checked={excludeUnproduced}
+              onChange={(e) => setExcludeUnproduced(e.target.checked)}
+            />
+            동국 미생산 품목 제외
+          </label>
         </div>
       )}
       {isKs && visibleRows.some((s) => dongkukAvailable(s) === false) && (

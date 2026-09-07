@@ -72,12 +72,15 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
   background:var(--bg-card);border:1px solid var(--bd-subtle);color:var(--tx-secondary);
   font:600 var(--fs-sm)/1 Inter,sans-serif}
 #theme:hover{border-color:var(--ac-main);color:var(--ac-main)}
-/* Icon-glyph buttons (emoji, not typographic text) keep a literal size -
-   they're sized for icon proportion, not part of the type scale. */
-#calculator{margin-left:auto;height:32px;width:32px;padding:0;border-radius:var(--r-md);cursor:pointer;
-  background:var(--bg-card);border:1px solid var(--bd-subtle);font-size:16px;
-  display:flex;align-items:center;justify-content:center}
-#calculator:hover{border-color:var(--ac-main)}
+/* Shared text-pill style for header nav/utility buttons (Unit Conversion,
+   Calculator) - a plain typographic label reads faster than an emoji glyph
+   at a glance, and keeps every header button on one consistent shape. */
+.hdr-pill-btn{height:32px;padding:0 14px;border-radius:var(--r-md);cursor:pointer;
+  background:var(--bg-card);border:1px solid var(--bd-subtle);color:var(--tx-secondary);
+  font:700 var(--fs-xs)/1 Inter,sans-serif;letter-spacing:.04em;white-space:nowrap}
+.hdr-pill-btn:first-of-type{margin-left:auto}
+.hdr-pill-btn:hover{border-color:var(--ac-main);color:var(--ac-main)}
+.hdr-pill-btn.is-active{background:var(--ac-select-glow);border-color:var(--ac-select);color:var(--ac-select)}
 #feedback{height:32px;width:32px;padding:0;border-radius:var(--r-md);cursor:pointer;
   background:var(--bg-card);border:1px solid var(--bd-subtle);font-size:16px;
   display:flex;align-items:center;justify-content:center;text-decoration:none}
@@ -128,13 +131,6 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
 .nav-cell-btn:hover{background:var(--bg-hover);color:var(--tx-primary)}
 .nav-cell-btn.is-active{background:var(--ac-select-glow);color:var(--ac-select)}
 .nav-cell-btn.is-active em{color:var(--ac-select)}
-
-.nav-unit-conv-btn{display:flex;align-items:center;justify-content:center;gap:6px;
-  width:calc(100% - 24px);margin:12px 12px 10px;padding:9px 4px;border-radius:var(--r-md);cursor:pointer;
-  background:var(--ac-glow);border:1px solid var(--bd-accent);color:var(--ac-main);
-  font:800 var(--fs-sm)/1 Inter,sans-serif;letter-spacing:.05em;box-sizing:border-box}
-.nav-unit-conv-btn:hover{background:var(--ac-select-glow);border-color:var(--ac-main)}
-.nav-unit-conv-btn.is-active{background:var(--ac-select-glow);border-color:var(--ac-select);color:var(--ac-select)}
 
 .nav-group{margin-bottom:10px;padding-top:10px;border-top:1px solid var(--bd-subtle)}
 .nav-group:first-child{padding-top:0;border-top:0}
@@ -259,6 +255,15 @@ th{padding:9px 18px;font-size:var(--fs-2xs);font-weight:700;letter-spacing:.1em;
   text-transform:uppercase;color:var(--tx-muted);text-align:left;
   background:var(--bg-inset);border-bottom:1px solid var(--bd-subtle)}
 .list thead th,.props thead th{position:sticky;top:0;z-index:5}
+/* #main has 24px top padding, so a plain `top:0` sticky header docks 24px
+   below the fixed app header - leaving a gap the scrolling row underneath
+   peeks through as it passes, which reads as "not actually fixed". Offset
+   by -24px so it docks flush against the app header instead (sticky's
+   `top` is measured from the scroll container's padding box, so this
+   exactly cancels that padding). Scoped to #main only - modal tables
+   scroll inside .modal-panel, which has no such padding, so top:0 is
+   already correct there. */
+#main .list thead th,#main .props thead th{top:-24px}
 .list thead th.sortable{cursor:pointer;user-select:none}
 .list thead th.sortable:hover{color:var(--ac-main)}
 td{padding:9px 18px;border-bottom:1px solid var(--bd-subtle);color:var(--tx-secondary)}
@@ -539,5 +544,10 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
   header{gap:10px;padding:0 12px}
   .brand,.badge{display:none}
   .search-box{min-width:0}
+  /* The calculator button launches Windows' calculator: URI, which only
+     resolves on a Windows desktop browser - it's a no-op on mobile, so it's
+     dropped rather than fighting Unit Conversion for the remaining space. */
+  #calculator{display:none}
+  .hdr-pill-btn{padding:0 8px;font-size:10px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}

@@ -70,14 +70,6 @@ export default function Sidebar() {
         aria-hidden="true"
       />
       <nav id="sidebar" className={sidebarOpen ? 'is-open' : ''}>
-      <button
-        type="button"
-        className={`nav-unit-conv-btn${activeKey === 'UNITCONV' ? ' is-active' : ''}`}
-        onClick={() => setActiveKey('UNITCONV')}
-      >
-        UNIT CONVERSION
-      </button>
-
       <table className="nav-grid">
         <thead>
           <tr>
