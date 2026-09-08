@@ -3,7 +3,7 @@ import { useStore, TYPE_LABEL } from '../store.js';
 import { loadType } from '../lib/dataLoader.js';
 import { hasMatchPair, matchTargetType, findNearestInRows, widthHeightSimilarity } from '../lib/nearestMatch.js';
 import { nucorAvailability, AVAIL_LABEL, AVAIL_MARK } from '../lib/nucorAvailability.js';
-import { dongkukAvailable, DONGKUK_LABEL } from '../lib/dongkukAvailability.js';
+import { supplyCheckAvailable, supplyCheckLabel } from '../lib/materialAvailability.js';
 import ShapeCompareModal from './ShapeCompareModal.jsx';
 
 const seriesKey = (name) => name.split(/[X×]/)[0];
@@ -74,7 +74,7 @@ export default function ShapeList() {
         return !avail || availFilter[avail];
       })
     : hasDongkukFilter && excludeUnproduced
-      ? rows.filter((s) => dongkukAvailable(s) !== false)
+      ? rows.filter((s) => supplyCheckAvailable(s) !== false)
       : rows;
   const SORT_VAL = {
     W: (s) => parseFloat(s.mt.W),
@@ -118,7 +118,7 @@ export default function ShapeList() {
       )}
       {hasDongkukFilter && (
         <div className="avail-legend">
-          <label className="avail-filter" title={DONGKUK_LABEL[false]}>
+          <label className="avail-filter" title="H형강은 현대제철, 채널·앵글은 동국제강 생산가능 목록 기준">
             <input
               type="checkbox"
               checked={excludeUnproduced}
@@ -128,7 +128,7 @@ export default function ShapeList() {
           </label>
         </div>
       )}
-      {isKs && visibleRows.some((s) => dongkukAvailable(s) === false) && (
+      {isKs && visibleRows.some((s) => supplyCheckAvailable(s) === false) && (
         <p className="note" style={{ borderTop: 'none' }}>* 생산여부 확인 필요</p>
       )}
       <table className="list">
@@ -168,8 +168,8 @@ export default function ShapeList() {
                       {AVAIL_MARK[avail]}
                     </em>
                   )}
-                  {isKs && dongkukAvailable(s) === false && (
-                    <em className="dongkuk-badge is-no" title={DONGKUK_LABEL[false]}>*</em>
+                  {isKs && supplyCheckAvailable(s) === false && (
+                    <em className="dongkuk-badge is-no" title={supplyCheckLabel(s)}>*</em>
                   )}
                 </td>
                 <td className="mono ks">{isKs ? s.name : s.ks}</td>
