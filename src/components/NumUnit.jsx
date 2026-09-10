@@ -7,6 +7,8 @@
  * precision the caller already formatted (e.g. `toFixed(1)`) — this
  * component only re-lays-out that same string, it doesn't re-round it.
  */
+import UnitText from './UnitText.jsx';
+
 export default function NumUnit({ value, unit }) {
   const str = String(value);
   const dot = str.indexOf('.');
@@ -16,7 +18,7 @@ export default function NumUnit({ value, unit }) {
     <span className="num-cell">
       <span className="num-int">{intPart}</span>
       <span className="num-frac">{fracPart}</span>
-      <span className="num-unit">{unit}</span>
+      <span className="num-unit"><UnitText>{unit}</UnitText></span>
     </span>
   );
 }

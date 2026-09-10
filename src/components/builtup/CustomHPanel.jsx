@@ -4,6 +4,7 @@ import { ksLabel, usLabel } from './labels.js';
 import { drawShapeSVG } from '../../lib/sectionSvg.js';
 import { BHDimCards } from './BHDimTable.jsx';
 import BuiltupExtras from './BuiltupExtras.jsx';
+import UnitText from '../UnitText.jsx';
 
 const MM_TO_IN = 1 / 25.4;
 
@@ -85,16 +86,16 @@ export default function CustomHPanel() {
           <table className="props">
             <thead><tr><th>Symbol</th><th className="r">Imperial</th><th className="r">Metric</th><th>Description</th></tr></thead>
             <tbody>
-              <tr><td className="sym mono">A</td><td className="r mono">{shape.us.A} <em>in²</em></td><td className="r mono val-conv">{shape.mt.A} <em>mm²</em></td><td className="desc">단면적</td></tr>
-              <tr><td className="sym mono">Ix</td><td className="r mono">{propsIn.Ix.toFixed(1)} <em>in⁴</em></td><td className="r mono val-conv">{(propsIn.Ix * IN4_TO_MM4 / 1e6).toFixed(1)} <em>×10⁶ mm⁴</em></td><td className="desc">x축 관성모멘트</td></tr>
-              <tr><td className="sym mono">Iy</td><td className="r mono">{propsIn.Iy.toFixed(1)} <em>in⁴</em></td><td className="r mono val-conv">{(propsIn.Iy * IN4_TO_MM4 / 1e6).toFixed(1)} <em>×10⁶ mm⁴</em></td><td className="desc">y축 관성모멘트</td></tr>
-              <tr><td className="sym mono">Zx</td><td className="r mono">{propsIn.Zx.toFixed(2)} <em>in³</em></td><td className="r mono val-conv">{(propsIn.Zx * IN3_TO_MM3 / 1e3).toFixed(1)} <em>×10³ mm³</em></td><td className="desc">x축 소성단면계수</td></tr>
-              <tr><td className="sym mono">Zy</td><td className="r mono">{propsIn.Zy.toFixed(2)} <em>in³</em></td><td className="r mono val-conv">{(propsIn.Zy * IN3_TO_MM3 / 1e3).toFixed(1)} <em>×10³ mm³</em></td><td className="desc">y축 소성단면계수</td></tr>
-              <tr><td className="sym mono">J</td><td className="r mono">{propsIn.J.toFixed(3)} <em>in⁴</em></td><td className="r mono val-conv">{(propsIn.J * IN4_TO_MM4 / 1e3).toFixed(1)} <em>×10³ mm⁴</em></td><td className="desc">비틀림상수 (근사, 필릿 무시)</td></tr>
-              <tr><td className="sym mono">Cw</td><td className="r mono">{propsIn.Cw.toFixed(2)} <em>in⁶</em></td><td className="r mono val-conv">{(propsIn.Cw * IN6_TO_MM6 / 1e9).toFixed(2)} <em>×10⁹ mm⁶</em></td><td className="desc">뒤틀림상수 (근사)</td></tr>
-              <tr><td className="sym mono">ho</td><td className="r mono">{propsIn.ho.toFixed(2)} <em>in</em></td><td className="r mono val-conv">{(propsIn.ho * IN_TO_MM).toFixed(0)} <em>mm</em></td><td className="desc">플랜지 도심간 거리</td></tr>
-              <tr><td className="sym mono">rts</td><td className="r mono">{propsIn.rts?.toFixed(3) ?? '—'} <em>in</em></td><td className="r mono val-conv">{propsIn.rts != null ? (propsIn.rts * IN_TO_MM).toFixed(1) : '—'} <em>mm</em></td><td className="desc">횡좌굴 유효 회전반경 (근사)</td></tr>
-              <tr><td className="sym mono">W</td><td className="r mono">{shape.us.W} <em>lb/ft</em></td><td className="r mono val-conv">{shape.mt.W} <em>kg/m</em></td><td className="desc">단위중량</td></tr>
+              <tr><td className="sym mono">A</td><td className="r mono">{shape.us.A} <em><UnitText>in²</UnitText></em></td><td className="r mono val-conv">{shape.mt.A} <em><UnitText>mm²</UnitText></em></td><td className="desc">단면적</td></tr>
+              <tr><td className="sym mono">Ix</td><td className="r mono">{propsIn.Ix.toFixed(1)} <em><UnitText>in⁴</UnitText></em></td><td className="r mono val-conv">{(propsIn.Ix * IN4_TO_MM4 / 1e6).toFixed(1)} <em><UnitText>×10⁶ mm⁴</UnitText></em></td><td className="desc">x축 관성모멘트</td></tr>
+              <tr><td className="sym mono">Iy</td><td className="r mono">{propsIn.Iy.toFixed(1)} <em><UnitText>in⁴</UnitText></em></td><td className="r mono val-conv">{(propsIn.Iy * IN4_TO_MM4 / 1e6).toFixed(1)} <em><UnitText>×10⁶ mm⁴</UnitText></em></td><td className="desc">y축 관성모멘트</td></tr>
+              <tr><td className="sym mono">Zx</td><td className="r mono">{propsIn.Zx.toFixed(2)} <em><UnitText>in³</UnitText></em></td><td className="r mono val-conv">{(propsIn.Zx * IN3_TO_MM3 / 1e3).toFixed(1)} <em><UnitText>×10³ mm³</UnitText></em></td><td className="desc">x축 소성단면계수</td></tr>
+              <tr><td className="sym mono">Zy</td><td className="r mono">{propsIn.Zy.toFixed(2)} <em><UnitText>in³</UnitText></em></td><td className="r mono val-conv">{(propsIn.Zy * IN3_TO_MM3 / 1e3).toFixed(1)} <em><UnitText>×10³ mm³</UnitText></em></td><td className="desc">y축 소성단면계수</td></tr>
+              <tr><td className="sym mono">J</td><td className="r mono">{propsIn.J.toFixed(3)} <em><UnitText>in⁴</UnitText></em></td><td className="r mono val-conv">{(propsIn.J * IN4_TO_MM4 / 1e3).toFixed(1)} <em><UnitText>×10³ mm⁴</UnitText></em></td><td className="desc">비틀림상수 (근사, 필릿 무시)</td></tr>
+              <tr><td className="sym mono">Cw</td><td className="r mono">{propsIn.Cw.toFixed(2)} <em><UnitText>in⁶</UnitText></em></td><td className="r mono val-conv">{(propsIn.Cw * IN6_TO_MM6 / 1e9).toFixed(2)} <em><UnitText>×10⁹ mm⁶</UnitText></em></td><td className="desc">뒤틀림상수 (근사)</td></tr>
+              <tr><td className="sym mono">ho</td><td className="r mono">{propsIn.ho.toFixed(2)} <em><UnitText>in</UnitText></em></td><td className="r mono val-conv">{(propsIn.ho * IN_TO_MM).toFixed(0)} <em><UnitText>mm</UnitText></em></td><td className="desc">플랜지 도심간 거리</td></tr>
+              <tr><td className="sym mono">rts</td><td className="r mono">{propsIn.rts?.toFixed(3) ?? '—'} <em><UnitText>in</UnitText></em></td><td className="r mono val-conv">{propsIn.rts != null ? (propsIn.rts * IN_TO_MM).toFixed(1) : '—'} <em><UnitText>mm</UnitText></em></td><td className="desc">횡좌굴 유효 회전반경 (근사)</td></tr>
+              <tr><td className="sym mono">W</td><td className="r mono">{shape.us.W} <em><UnitText>lb/ft</UnitText></em></td><td className="r mono val-conv">{shape.mt.W} <em><UnitText>kg/m</UnitText></em></td><td className="desc">단위중량</td></tr>
             </tbody>
           </table>
           <p className="note">⚠ 계산값입니다 (필렛 미고려). Zx/Zy/J/Cw/rts는 사각 모서리(필렛 없음) 가정의 근사 계산이며 실제 설계 검토를 대체하지 않습니다. A572 GR50/A36 표기는 두께에 따른 일반적 유통 규격 안내이며, 실제 조달 가능 여부는 제작사에 확인하시기 바랍니다.</p>

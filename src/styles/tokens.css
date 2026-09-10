@@ -244,7 +244,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
   align-items:baseline;width:100%}
 .num-int{text-align:right}
 .num-frac{text-align:left}
-.num-unit{text-align:left;margin-left:10px;color:var(--tx-muted);font-size:.85em}
+.num-unit{text-align:left;margin-left:10px;color:var(--tx-muted);font-size:1em}
 .empty{padding:40px;text-align:center;color:var(--tx-muted)}
 
 /* tables ------------------------------------------------------------- */
@@ -267,7 +267,17 @@ th{padding:9px 18px;font-size:var(--fs-base);font-weight:700;letter-spacing:.04e
 td{padding:9px 18px;border-bottom:1px solid var(--bd-subtle);color:var(--tx-secondary)}
 tbody tr:last-child td{border-bottom:0}
 .r{text-align:right}
-td em{font-style:normal;font-size:var(--fs-xs);color:var(--tx-muted);margin-left:2px}
+td em{font-style:normal;font-size:var(--fs-base);color:var(--tx-muted);margin-left:2px}
+/* Unicode superscript glyphs (in⁴, ×10⁶ mm⁴...) sit small within their own
+ * glyph box regardless of font-size, so they still read as near-invisible
+ * even once the unit text is sized to match its number (above). A plain
+ * font-size bump enlarges the glyph but also grows the *line box* (and so
+ * every row's height, table-wide) since inline layout sizes a line to its
+ * tallest child - `transform: scale()` paints the glyph bigger without
+ * touching layout metrics at all, so row height stays exactly as it was.
+ * Color is inherited, unchanged. */
+.unit-exp{font-style:normal;font-size:inherit;line-height:1;vertical-align:baseline;
+  display:inline-block;transform:scale(1.3);transform-origin:left baseline}
 .list tbody tr{cursor:pointer}
 .list tbody tr:hover{background:var(--bg-hover)}
 .list tbody tr.series-band-1{background:var(--bg-inset)}

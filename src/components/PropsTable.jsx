@@ -1,5 +1,6 @@
 import { Fragment, useState } from 'react';
 import { KS_STANDARD } from '../store.js';
+import UnitText from './UnitText.jsx';
 
 // Shown by default; everything else (warping constants, perimeter figures,
 // Design-Guide-9 statical moments, etc.) is real data but rarely needed, so
@@ -70,8 +71,8 @@ function PropRow({ k, shape, isKs, defs }) {
   return (
     <tr>
       <td className="sym mono">{k}</td>
-      <td className={`r mono${isKs ? ' val-conv' : ''}`}>{shape.us[k] ?? '—'} <em>{ui}</em></td>
-      <td className={`r mono${isKs ? '' : ' val-conv'}`}>{shape.mt[k] ?? '—'} <em>{um}</em></td>
+      <td className={`r mono${isKs ? ' val-conv' : ''}`}>{shape.us[k] ?? '—'} <em><UnitText>{ui}</UnitText></em></td>
+      <td className={`r mono${isKs ? '' : ' val-conv'}`}>{shape.mt[k] ?? '—'} <em><UnitText>{um}</UnitText></em></td>
       <td className="desc">{defs[k]}</td>
     </tr>
   );

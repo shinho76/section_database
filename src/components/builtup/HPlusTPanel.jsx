@@ -7,6 +7,7 @@ import BHDimTable from './BHDimTable.jsx';
 import ShapeAutocomplete from './ShapeAutocomplete.jsx';
 import NumUnit from '../NumUnit.jsx';
 import BuiltupExtras from './BuiltupExtras.jsx';
+import UnitText from '../UnitText.jsx';
 
 const MM_TO_IN = 1 / 25.4;
 const H_TYPES = ['W', 'M', 'S', 'KSH'];
@@ -496,17 +497,17 @@ export default function HPlusTPanel({ baseKind }) {
           <table className="props">
             <thead><tr><th>Symbol</th><th className="r">Imperial</th><th className="r">Metric</th><th>Description</th></tr></thead>
             <tbody>
-              <tr><td className="sym mono">A</td><td className="r mono"><NumUnit value={composite.A.toFixed(2)} unit="in²" /></td><td className="r mono val-conv">{(composite.A * IN2_TO_MM2).toFixed(0)} <em>mm²</em></td><td className="desc">단면적</td></tr>
-              <tr><td className="sym mono">Ix</td><td className="r mono"><NumUnit value={composite.Ix.toFixed(1)} unit="in⁴" /></td><td className="r mono val-conv">{(composite.Ix * IN4_TO_MM4 / 1e6).toFixed(1)} <em>×10⁶ mm⁴</em></td><td className="desc">x축 관성모멘트 (합성 도심 기준)</td></tr>
-              <tr><td className="sym mono">Iy</td><td className="r mono"><NumUnit value={composite.Iy.toFixed(1)} unit="in⁴" /></td><td className="r mono val-conv">{(composite.Iy * IN4_TO_MM4 / 1e6).toFixed(1)} <em>×10⁶ mm⁴</em></td><td className="desc">y축 관성모멘트</td></tr>
-              <tr><td className="sym mono">rx</td><td className="r mono"><NumUnit value={composite.rx.toFixed(2)} unit="in" /></td><td className="r mono val-conv">{(composite.rx * IN_TO_MM).toFixed(0)} <em>mm</em></td><td className="desc">x축 회전반경</td></tr>
-              <tr><td className="sym mono">ry</td><td className="r mono"><NumUnit value={composite.ry.toFixed(2)} unit="in" /></td><td className="r mono val-conv">{(composite.ry * IN_TO_MM).toFixed(0)} <em>mm</em></td><td className="desc">y축 회전반경</td></tr>
-              {composite.Sx_top && <tr><td className="sym mono">Sx(top)</td><td className="r mono"><NumUnit value={composite.Sx_top.toFixed(1)} unit="in³" /></td><td className="r mono val-conv">{(composite.Sx_top * IN4_TO_MM4 / IN_TO_MM / 1e3).toFixed(1)} <em>×10³ mm³</em></td><td className="desc">상연 단면계수</td></tr>}
-              {composite.Sx_bot && <tr><td className="sym mono">Sx(bot)</td><td className="r mono"><NumUnit value={composite.Sx_bot.toFixed(1)} unit="in³" /></td><td className="r mono val-conv">{(composite.Sx_bot * IN4_TO_MM4 / IN_TO_MM / 1e3).toFixed(1)} <em>×10³ mm³</em></td><td className="desc">하연 단면계수</td></tr>}
-              {composite.Zx != null && <tr><td className="sym mono">Zx</td><td className="r mono"><NumUnit value={composite.Zx.toFixed(2)} unit="in³" /></td><td className="r mono val-conv">{(composite.Zx * IN3_TO_MM3 / 1e3).toFixed(1)} <em>×10³ mm³</em></td><td className="desc">x축 소성단면계수 (근사)</td></tr>}
-              {composite.Zy != null && <tr><td className="sym mono">Zy</td><td className="r mono"><NumUnit value={composite.Zy.toFixed(2)} unit="in³" /></td><td className="r mono val-conv">{(composite.Zy * IN3_TO_MM3 / 1e3).toFixed(1)} <em>×10³ mm³</em></td><td className="desc">y축 소성단면계수 (근사)</td></tr>}
-              {composite.J != null && <tr><td className="sym mono">J</td><td className="r mono"><NumUnit value={composite.J.toFixed(3)} unit="in⁴" /></td><td className="r mono val-conv">{(composite.J * IN4_TO_MM4 / 1e3).toFixed(1)} <em>×10³ mm⁴</em></td><td className="desc">비틀림상수 (근사, 필릿 무시)</td></tr>}
-              <tr><td className="sym mono">W</td><td className="r mono"><NumUnit value={composite.W.toFixed(1)} unit="lb/ft" /></td><td className="r mono val-conv">{(composite.W * LBFT_TO_KGM).toFixed(1)} <em>kg/m</em></td><td className="desc">단위중량</td></tr>
+              <tr><td className="sym mono">A</td><td className="r mono"><NumUnit value={composite.A.toFixed(2)} unit="in²" /></td><td className="r mono val-conv">{(composite.A * IN2_TO_MM2).toFixed(0)} <em><UnitText>mm²</UnitText></em></td><td className="desc">단면적</td></tr>
+              <tr><td className="sym mono">Ix</td><td className="r mono"><NumUnit value={composite.Ix.toFixed(1)} unit="in⁴" /></td><td className="r mono val-conv">{(composite.Ix * IN4_TO_MM4 / 1e6).toFixed(1)} <em><UnitText>×10⁶ mm⁴</UnitText></em></td><td className="desc">x축 관성모멘트 (합성 도심 기준)</td></tr>
+              <tr><td className="sym mono">Iy</td><td className="r mono"><NumUnit value={composite.Iy.toFixed(1)} unit="in⁴" /></td><td className="r mono val-conv">{(composite.Iy * IN4_TO_MM4 / 1e6).toFixed(1)} <em><UnitText>×10⁶ mm⁴</UnitText></em></td><td className="desc">y축 관성모멘트</td></tr>
+              <tr><td className="sym mono">rx</td><td className="r mono"><NumUnit value={composite.rx.toFixed(2)} unit="in" /></td><td className="r mono val-conv">{(composite.rx * IN_TO_MM).toFixed(0)} <em><UnitText>mm</UnitText></em></td><td className="desc">x축 회전반경</td></tr>
+              <tr><td className="sym mono">ry</td><td className="r mono"><NumUnit value={composite.ry.toFixed(2)} unit="in" /></td><td className="r mono val-conv">{(composite.ry * IN_TO_MM).toFixed(0)} <em><UnitText>mm</UnitText></em></td><td className="desc">y축 회전반경</td></tr>
+              {composite.Sx_top && <tr><td className="sym mono">Sx(top)</td><td className="r mono"><NumUnit value={composite.Sx_top.toFixed(1)} unit="in³" /></td><td className="r mono val-conv">{(composite.Sx_top * IN4_TO_MM4 / IN_TO_MM / 1e3).toFixed(1)} <em><UnitText>×10³ mm³</UnitText></em></td><td className="desc">상연 단면계수</td></tr>}
+              {composite.Sx_bot && <tr><td className="sym mono">Sx(bot)</td><td className="r mono"><NumUnit value={composite.Sx_bot.toFixed(1)} unit="in³" /></td><td className="r mono val-conv">{(composite.Sx_bot * IN4_TO_MM4 / IN_TO_MM / 1e3).toFixed(1)} <em><UnitText>×10³ mm³</UnitText></em></td><td className="desc">하연 단면계수</td></tr>}
+              {composite.Zx != null && <tr><td className="sym mono">Zx</td><td className="r mono"><NumUnit value={composite.Zx.toFixed(2)} unit="in³" /></td><td className="r mono val-conv">{(composite.Zx * IN3_TO_MM3 / 1e3).toFixed(1)} <em><UnitText>×10³ mm³</UnitText></em></td><td className="desc">x축 소성단면계수 (근사)</td></tr>}
+              {composite.Zy != null && <tr><td className="sym mono">Zy</td><td className="r mono"><NumUnit value={composite.Zy.toFixed(2)} unit="in³" /></td><td className="r mono val-conv">{(composite.Zy * IN3_TO_MM3 / 1e3).toFixed(1)} <em><UnitText>×10³ mm³</UnitText></em></td><td className="desc">y축 소성단면계수 (근사)</td></tr>}
+              {composite.J != null && <tr><td className="sym mono">J</td><td className="r mono"><NumUnit value={composite.J.toFixed(3)} unit="in⁴" /></td><td className="r mono val-conv">{(composite.J * IN4_TO_MM4 / 1e3).toFixed(1)} <em><UnitText>×10³ mm⁴</UnitText></em></td><td className="desc">비틀림상수 (근사, 필릿 무시)</td></tr>}
+              <tr><td className="sym mono">W</td><td className="r mono"><NumUnit value={composite.W.toFixed(1)} unit="lb/ft" /></td><td className="r mono val-conv">{(composite.W * LBFT_TO_KGM).toFixed(1)} <em><UnitText>kg/m</UnitText></em></td><td className="desc">단위중량</td></tr>
             </tbody>
           </table>
           <p className="note">단위: Imperial은 실측/계산 기준값, <span className="val-conv" style={{ display: 'inline' }}>Metric(흐리게 표시)</span>은 이 앱이 단위 환산한 값입니다. Zx/Zy/J는 복합단면 전체에 대한 근사 계산이며(Cw/rts는 단순 I단면이 아니므로 제공하지 않음) 실제 설계 검토를 대체하지 않습니다.</p>
