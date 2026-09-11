@@ -417,6 +417,10 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
 .home-section p{margin:0;font-size:16px;line-height:1.75;color:var(--tx-muted)}
 .home-quicklinks{display:flex;flex-wrap:wrap;gap:10px}
 .home-guide-btn{align-self:flex-start}
+.home-highlight{padding:20px 22px;border-radius:var(--r-lg);
+  background:var(--ac-glow);border:1px solid var(--bd-accent)}
+.home-highlight h2{color:var(--ac-main)}
+.home-highlight p{color:var(--tx-primary)}
 @media (max-width:600px){
   .home-view h1{font-size:26px}
   .home-lede{font-size:18px}
