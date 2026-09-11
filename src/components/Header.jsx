@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { useStore } from '../store.js';
 import SearchBox from './SearchBox.jsx';
 import BomModal from './BomModal.jsx';
+import UsageGuideModal from './UsageGuideModal.jsx';
 
 // Windows registers the `calculator:` URI scheme for the built-in Calculator
 // app. Browsers can't spawn native processes directly, so this is the only
@@ -21,6 +23,7 @@ function openFeedback() {
 
 export default function Header() {
   const { theme, toggleTheme, sidebarOpen, toggleSidebar, bom, bomOpen, toggleBom, activeKey, setActiveKey } = useStore();
+  const [showGuide, setShowGuide] = useState(false);
 
   return (
     <header>
@@ -30,8 +33,14 @@ export default function Header() {
       >
         ☰
       </button>
-      <span className="brand">Steel Weight</span>
+      <button type="button" className="brand" title="홈으로" onClick={() => setActiveKey('HOME')}>Steel Weight</button>
       <SearchBox />
+      <button
+        type="button" id="usage-guide" className="hdr-pill-btn" title="사용법 보기"
+        onClick={() => setShowGuide(true)}
+      >
+        사용법
+      </button>
       <button
         type="button" id="unitconv" className={`hdr-pill-btn${activeKey === 'UNITCONV' ? ' is-active' : ''}`}
         onClick={() => setActiveKey('UNITCONV')}
@@ -50,6 +59,7 @@ export default function Header() {
       </button>
       <button type="button" id="feedback" className="hdr-pill-btn" title="피드백 보내기" onClick={openFeedback}>피드백</button>
       {bomOpen && <BomModal onClose={toggleBom} />}
+      {showGuide && <UsageGuideModal onClose={() => setShowGuide(false)} />}
     </header>
   );
 }

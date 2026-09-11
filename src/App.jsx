@@ -21,12 +21,15 @@ import AnchorBoltView from './components/AnchorBoltView.jsx';
 import StudView from './components/StudView.jsx';
 import MaterialsView from './components/MaterialsView.jsx';
 import UnitConversionView from './components/UnitConversionView.jsx';
+import HomeView from './components/HomeView.jsx';
 
 export default function App() {
   const { activeKey, shape, query } = useStore();
 
   let main;
-  if (query.trim()) {
+  if (activeKey === 'HOME' && !query.trim()) {
+    main = <HomeView />;
+  } else if (query.trim()) {
     // The search box always searches the full inventory, independent of
     // whichever sidebar item is currently selected.
     main = <SearchResults />;

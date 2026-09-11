@@ -113,7 +113,7 @@ const initialBom = loadBom();
 let bomIdSeq = initialBom.reduce((max, b) => Math.max(max, b.id ?? 0), 0) + 1;
 
 export const useStore = create((set, get) => ({
-  activeKey: 'W',
+  activeKey: 'HOME',
   shape: null,
   theme: 'dark',
   query: '',
