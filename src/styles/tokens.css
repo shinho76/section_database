@@ -399,18 +399,30 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
 @media (max-width:700px){
   .modal-body .draw-grid,.modal-body .compare-grid{grid-template-columns:1fr}
 }
-.usage-guide-body{display:flex;flex-direction:column;gap:18px}
-.usage-guide-section h3{margin:0 0 6px;font-size:var(--fs-base);font-weight:700;color:var(--ac-main)}
-.usage-guide-section p{margin:0;font-size:var(--fs-sm);line-height:1.6;color:var(--tx-primary)}
+/* This modal and the home page are read as prose (paragraphs of running
+   text), unlike the rest of the app's dense data tables/labels - the
+   --fs-* scale tops out at 14px base for those, which reads as too small
+   for a block of sentences on a full-size screen, so these get their own
+   larger literal sizes rather than reusing the data-table scale. */
+.usage-guide-body{display:flex;flex-direction:column;gap:20px}
+.usage-guide-section h3{margin:0 0 8px;font-size:18px;font-weight:700;color:var(--ac-main)}
+.usage-guide-section p{margin:0 0 10px;font-size:16px;line-height:1.7;color:var(--tx-primary)}
+.usage-guide-section p:last-child{margin-bottom:0}
 
-.home-view{max-width:760px;margin:0 auto;padding:36px 20px 60px;display:flex;flex-direction:column;gap:28px}
-.home-view h1{margin:0;font-size:var(--fs-2xl);font-weight:800;color:var(--ac-main);letter-spacing:.02em}
-.home-lede{margin:0;font-size:var(--fs-lg);line-height:1.6;color:var(--tx-primary)}
-.home-section{display:flex;flex-direction:column;gap:12px}
-.home-section h2{margin:0;font-size:var(--fs-base);font-weight:700;color:var(--tx-primary)}
-.home-section p{margin:0;font-size:var(--fs-sm);line-height:1.7;color:var(--tx-muted)}
+.home-view{max-width:820px;margin:0 auto;padding:36px 20px 60px;display:flex;flex-direction:column;gap:30px}
+.home-view h1{margin:0;font-size:32px;font-weight:800;color:var(--ac-main);letter-spacing:.02em}
+.home-lede{margin:0;font-size:20px;line-height:1.6;color:var(--tx-primary)}
+.home-section{display:flex;flex-direction:column;gap:14px}
+.home-section h2{margin:0;font-size:19px;font-weight:700;color:var(--tx-primary)}
+.home-section p{margin:0;font-size:16px;line-height:1.75;color:var(--tx-muted)}
 .home-quicklinks{display:flex;flex-wrap:wrap;gap:10px}
 .home-guide-btn{align-self:flex-start}
+@media (max-width:600px){
+  .home-view h1{font-size:26px}
+  .home-lede{font-size:18px}
+  .home-section h2{font-size:17px}
+  .home-section p,.usage-guide-section p{font-size:15px}
+}
 .bh-preview{display:flex;align-items:center;justify-content:center;
   min-height:260px;background:var(--bg-inset)}
 .deck-tabs{display:flex;gap:6px;padding:10px 14px;flex-wrap:wrap}

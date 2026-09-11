@@ -89,7 +89,7 @@ const SECTIONS = [
 export default function UsageGuideModal({ onClose }) {
   return (
     <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal-panel" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 760 }}>
+      <div className="modal-panel" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 820 }}>
         <div className="modal-head">
           <h2>사용법 — 사이드바 항목별 안내</h2>
           <button className="modal-close" onClick={onClose} aria-label="닫기">×</button>
