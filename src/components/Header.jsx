@@ -34,13 +34,13 @@ export default function Header() {
         ☰
       </button>
       <button type="button" className="brand" title="홈으로" onClick={() => setActiveKey('HOME')}>Steel Weight</button>
-      <SearchBox />
       <button
         type="button" id="usage-guide" className="hdr-pill-btn" title="사용법 보기"
         onClick={() => setShowGuide(true)}
       >
         사용법
       </button>
+      <SearchBox />
       <button
         type="button" id="unitconv" className={`hdr-pill-btn${activeKey === 'UNITCONV' ? ' is-active' : ''}`}
         onClick={() => setActiveKey('UNITCONV')}
