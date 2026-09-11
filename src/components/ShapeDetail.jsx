@@ -1,17 +1,43 @@
 import { useEffect, useState } from 'react';
 import { useStore, displayType, KS_STANDARD } from '../store.js';
-import { loadDefs } from '../lib/dataLoader.js';
+import { loadDefs, loadType } from '../lib/dataLoader.js';
 import { supplyCheckAvailable, supplyCheckLabel, supplyCheckProducerName } from '../lib/materialAvailability.js';
+import { hasMatchPair, matchTargetType, findNearestInRows, widthHeightSimilarity } from '../lib/nearestMatch.js';
 import SectionSVG from './SectionSVG.jsx';
 import PropsTable from './PropsTable.jsx';
+import ShapeCompareModal from './ShapeCompareModal.jsx';
 
 export default function ShapeDetail({ shape }) {
-  const { activeKey, selectShape, addToBom } = useStore();
+  const { activeKey, selectShape, setActiveKey, addToBom } = useStore();
   const [defs, setDefs] = useState(null);
+  // Nearest AISC<->KS cross-reference for this one shape - same lookup
+  // ShapeList uses per row, run here for just the shape being viewed so a
+  // user who searched straight to a detail page (skipping the list) can
+  // still see and jump to the closest equivalent in the other standard.
+  const [match, setMatch] = useState(null); // { type, shape } | null
+  const [showCompare, setShowCompare] = useState(false);
 
   useEffect(() => { loadDefs().then(setDefs); }, []);
 
+  useEffect(() => {
+    setMatch(null);
+    setShowCompare(false);
+    if (!hasMatchPair(activeKey)) return;
+    let cancelled = false;
+    (async () => {
+      const targetType = matchTargetType(activeKey);
+      const targetRows = await loadType(targetType);
+      if (cancelled) return;
+      const best = findNearestInRows(shape, activeKey, targetRows);
+      if (best) setMatch({ type: targetType, shape: best });
+    })();
+    return () => { cancelled = true; };
+  }, [shape, activeKey]);
+
   if (!defs) return <div className="empty">불러오는 중…</div>;
+
+  const isKs = activeKey.startsWith('KS');
+  const sim = match ? widthHeightSimilarity(shape, activeKey, match.shape) : null;
 
   return (
     <>
@@ -38,6 +64,12 @@ export default function ShapeDetail({ shape }) {
             >
               🧺 물량 산정에 담기
             </button>
+            {match && (
+              <button type="button" className="chip chip-btn" onClick={() => setShowCompare(true)}>
+                ↔ 유사 {isKs ? 'AISC' : 'KS'} 단면 {match.shape.name}
+                {sim != null && <span className="match-sim">{sim.toFixed(0)}%</span>}
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -60,6 +92,15 @@ export default function ShapeDetail({ shape }) {
       </div>
 
       <PropsTable shape={shape} defs={defs} />
+
+      {showCompare && match && (
+        <ShapeCompareModal
+          a={shape}
+          b={match.shape}
+          onClose={() => setShowCompare(false)}
+          onGoto={() => { setActiveKey(match.type); selectShape(match.shape); setShowCompare(false); }}
+        />
+      )}
     </>
   );
 }
