@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useStore, TYPE_LABEL, NAV_ITEM_LABEL, DB_TYPES, displayType } from '../store.js';
-import { searchAll, resolveShape } from '../lib/dataLoader.js';
+import { searchAll, resolveShape, loadType } from '../lib/dataLoader.js';
+import { hasMatchPair, matchTargetType, findNearestInRows } from '../lib/nearestMatch.js';
 
 const HISTORY_KEY = 'aisc-search-history';
 const MAX_HISTORY = 8;
@@ -81,6 +82,33 @@ export default function SearchBox() {
   }, [query]);
 
   const groups = useMemo(() => groupResults(results), [results]);
+  // Nearest AISC<->KS match per visible dropdown row, key `${type}:${name}`
+  // -> the matched shape's name. Only resolves the rows actually shown (at
+  // most MAX_GROUP_ITEMS per group), not the full result set, since each
+  // lookup needs the full shape record (the lightweight search index only
+  // carries name/edi/ks).
+  const [matches, setMatches] = useState(new Map());
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const next = new Map();
+      for (const g of groups) {
+        if (!hasMatchPair(g.type)) continue;
+        const targetType = matchTargetType(g.type);
+        const targetRows = await loadType(targetType);
+        for (const item of g.items) {
+          const shape = await resolveShape(item);
+          if (cancelled) return;
+          if (!shape) continue;
+          const best = findNearestInRows(shape, g.type, targetRows);
+          if (best) next.set(`${g.type}:${item.name}`, best.name);
+        }
+      }
+      if (!cancelled) setMatches(next);
+    })();
+    return () => { cancelled = true; };
+  }, [groups]);
 
   const goto = async (entry) => {
     // Non-shape reference tables (WWR, rebar, bolts, purlin, ...) don't have
@@ -127,8 +155,10 @@ export default function SearchBox() {
               <div className="search-group-head">최근 검색</div>
               {history.map((h, i) => (
                 <button key={`${h.type}-${h.name}-${i}`} className="search-row" onClick={() => goto(h)}>
-                  <span className="search-row-name mono">{h.name}</span>
-                  <span className="search-row-type">{displayType(h.type)}</span>
+                  <span className="search-row-line">
+                    <span className="search-row-name mono">{h.name}</span>
+                    <span className="search-row-type">{displayType(h.type)}</span>
+                  </span>
                 </button>
               ))}
             </div>
@@ -136,13 +166,27 @@ export default function SearchBox() {
           {showResults && groups.map((g) => (
             <div className="search-group" key={g.type}>
               <div className="search-group-head">{TYPE_LABEL[g.type] || NAV_ITEM_LABEL[g.type] || g.type}</div>
-              {g.items.map((s, i) => (
-                <button key={`${s.type}-${s.name}-${i}`} className="search-row" onClick={() => goto(s)}>
-                  <span className="search-row-name mono">{s.name}</span>
-                  <span className="search-row-ks mono">{s.ks}</span>
-                  <span className="search-row-type">{displayType(s.type)}</span>
-                </button>
-              ))}
+              {g.items.map((s, i) => {
+                const match = matches.get(`${s.type}:${s.name}`);
+                return (
+                  <button key={`${s.type}-${s.name}-${i}`} className="search-row" onClick={() => goto(s)}>
+                    <span className="search-row-line">
+                      <span className="search-row-name mono">{s.name}</span>
+                      <span className="search-row-type">{displayType(s.type)}</span>
+                    </span>
+                    {(s.ks || match) && (
+                      <span className="search-row-line search-row-line-sub">
+                        {s.ks && <span className="search-row-ks mono">{s.ks}</span>}
+                        {match && (
+                          <span className="search-row-match mono" title={`가장 근접한 ${s.type.startsWith('KS') ? 'AISC' : 'KS'} 단면`}>
+                            {match}
+                          </span>
+                        )}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
               {g.total > MAX_GROUP_ITEMS && (
                 <div className="search-group-more">+{g.total - MAX_GROUP_ITEMS}개 더 (Enter로 전체 보기)</div>
               )}

@@ -95,6 +95,11 @@ export default function UsageGuideModal({ onClose }) {
           <button className="modal-close" onClick={onClose} aria-label="닫기">×</button>
         </div>
         <div className="modal-body usage-guide-body">
+          <p className="usage-guide-source">
+            데이터 출처: AISC 규격은 <b>AISC Steel Construction Manual Database V16.0</b>, KS 형강(H·L·T·C)은
+            <b> KS D 3502 : 2022</b> 기준입니다. 각형·원형강관 등 그 외 KS 항목은 상세 페이지에 표기된
+            개별 표준(KS D 3568, KS D 3566, KS D 3507 등)을 따릅니다.
+          </p>
           {SECTIONS.map((s) => (
             <section key={s.title} className="usage-guide-section">
               <h3>{s.title}</h3>

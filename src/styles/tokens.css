@@ -61,12 +61,16 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;a
 .search-group + .search-group{border-top:1px solid var(--bd-subtle);margin-top:4px}
 .search-group-head{padding:6px 10px 4px;font-size:var(--fs-2xs);font-weight:800;letter-spacing:.08em;
   text-transform:uppercase;color:var(--tx-muted)}
-.search-row{display:flex;align-items:baseline;gap:10px;width:100%;padding:8px 10px;
+.search-row{display:flex;flex-direction:column;gap:3px;width:100%;padding:8px 10px;
   background:none;border:0;border-radius:var(--r-sm);cursor:pointer;text-align:left;color:var(--tx-secondary)}
 .search-row:hover{background:var(--bg-hover);color:var(--tx-primary)}
+.search-row-line{display:flex;align-items:baseline;gap:10px;width:100%}
+.search-row-line-sub{gap:8px}
 .search-row-name{font-weight:700;color:var(--tx-primary);white-space:nowrap}
-.search-row-ks{flex:1;font-size:var(--fs-sm);color:var(--ac-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.search-row-type{margin-left:auto;font-size:var(--fs-2xs);color:var(--tx-muted);font-family:ui-monospace,monospace}
+.search-row-ks{flex:0 1 auto;font-size:var(--fs-sm);color:var(--ac-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.search-row-match{flex:0 1 auto;font-size:var(--fs-xs);color:var(--tx-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.search-row-match::before{content:'≈ ';color:var(--tx-muted)}
+.search-row-type{margin-left:auto;font-size:var(--fs-2xs);color:var(--tx-muted);font-family:ui-monospace,monospace;white-space:nowrap}
 .search-group-more{padding:4px 10px 6px;font-size:var(--fs-xs);color:var(--tx-muted)}
 .search-empty{padding:16px;text-align:center;font-size:var(--fs-sm);color:var(--tx-muted)}
 #theme{height:32px;padding:0 12px;border-radius:var(--r-md);cursor:pointer;
@@ -405,6 +409,10 @@ select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;
    for a block of sentences on a full-size screen, so these get their own
    larger literal sizes rather than reusing the data-table scale. */
 .usage-guide-body{display:flex;flex-direction:column;gap:20px}
+.usage-guide-source{margin:0;padding:10px 14px;border-radius:var(--r-md);
+  background:var(--bg-inset);border:1px solid var(--bd-subtle);
+  font-size:13px;line-height:1.6;color:var(--tx-muted)}
+.usage-guide-source b{color:var(--tx-primary)}
 .usage-guide-section h3{margin:0 0 8px;font-size:18px;font-weight:700;color:var(--ac-main)}
 .usage-guide-section p{margin:0 0 10px;font-size:16px;line-height:1.7;color:var(--tx-primary)}
 .usage-guide-section p:last-child{margin-bottom:0}
